@@ -52,6 +52,13 @@
       font-size: 13px;
     }
     .banner .stats b { color: var(--terracotta); font-weight: 700; }
+    .banner .time {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #8b7765;
+      font-variant-numeric: tabular-nums;
+    }
+    .banner .time b { color: var(--terracotta); font-weight: 600; }
 
     /* Legend (bottom-left) */
     .legend {
@@ -253,6 +260,7 @@
     <h1 id="banner-title">Camino del Norte</h1>
     <div class="sub" id="banner-sub">Loading journey…</div>
     <div class="stats" id="banner-stats"></div>
+    <div class="time" id="banner-time"></div>
   </div>
 
   <div class="legend">
@@ -323,8 +331,22 @@
       }
     );
 
-    const maptilerOutdoor = L.tileLayer(
-      "https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}.png?key=" + CONFIG.MAPTILER_KEY,
+    function makeEsriLabelsOverlay() {
+      return L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "Labels &copy; Esri",
+          maxZoom: 19,
+          pane: "overlayPane"
+        }
+      );
+    }
+
+    const esriImageryLabeled = L.layerGroup([esriImagery, makeEsriLabelsOverlay()]);
+
+    // MapTiler Aquarelle (retina-sharp 512px tiles)
+    const maptilerAquarelle = L.tileLayer(
+      "https://api.maptiler.com/maps/aquarelle/{z}/{x}/{y}.png?key=" + CONFIG.MAPTILER_KEY,
       {
         attribution: '\u0026copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> \u0026copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
         maxZoom: 18,
@@ -334,28 +356,18 @@
       }
     );
 
-    const mapboxOutdoors = L.tileLayer(
-      "https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/{z}/{x}/{y}?access_token=" + CONFIG.MAPBOX_TOKEN,
-      {
-        attribution: '\u0026copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> \u0026copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 18,
-        tileSize: 512,
-        zoomOffset: -1,
-        crossOrigin: true
-      }
-    );
-
-    // Esri Topo as default (no key required)
-    esriTopo.addTo(map);
+    // Esri Satellite + Labels as default (no key required)
+    esriImageryLabeled.addTo(map);
 
     const baseLayers = {
-      "Esri Topographic": esriTopo,
-      "Esri Satellite": esriImagery
+      "Esri Satellite + Labels": esriImageryLabeled,
+      "Esri Topographic": esriTopo
     };
-    if (CONFIG.MAPTILER_KEY) baseLayers["MapTiler Outdoor"] = maptilerOutdoor;
-    if (CONFIG.MAPBOX_TOKEN) baseLayers["Mapbox Outdoors"] = mapboxOutdoors;
+    if (CONFIG.MAPTILER_KEY) {
+      baseLayers["MapTiler Aquarelle"] = maptilerAquarelle;
+    }
 
-    L.control.layers(baseLayers, null, { position: "topright", collapsed: false }).addTo(map);
+    L.control.layers(baseLayers, null, { position: "topright", collapsed: true }).addTo(map);
 
     // -------------------------------------------------------------
     // LOAD DATA
@@ -459,6 +471,33 @@
         ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalMiles + "</b> miles walked</div>"
         : "";
     }
+
+    // Live Spain clock in the banner \u2014 uses Europe/Madrid so DST is automatic.
+    function renderSpainClock() {
+      var el = document.getElementById("banner-time");
+      if (!el) return;
+      try {
+        var fmt = new Intl.DateTimeFormat("en-US", {
+          timeZone: "Europe/Madrid",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+          timeZoneName: "short"
+        });
+        var parts = fmt.formatToParts(new Date());
+        var time = "", ampm = "", tzName = "";
+        parts.forEach(function (p) {
+          if (p.type === "hour" || p.type === "minute" || p.type === "literal") time += p.value;
+          else if (p.type === "dayPeriod") ampm = p.value;
+          else if (p.type === "timeZoneName") tzName = p.value;
+        });
+        el.innerHTML = "\ud83d\udd52 <b>" + time.trim() + " " + ampm + "</b> in Spain \u00b7 " + tzName;
+      } catch (e) {
+        el.textContent = "";
+      }
+    }
+    renderSpainClock();
+    setInterval(renderSpainClock, 30 * 1000);
 
     // Distance helper: km -> miles, rounded to 1 decimal (or whole number if >= 100)
     function kmToMiles(km) {
