@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Camino del Norte — Daily Tracker</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="">
+
+  <style>
+    :root {
+      --ink: #2b2118;
+      --cream: #f7f1e8;
+      --terracotta: #c0502b;
+      --terracotta-soft: rgba(192, 80, 43, 0.18);
+      --trail-past: #8b5a3c;
+      --trail-full: #9a8a76;
+      --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); }
+    #map { position: absolute; inset: 0; }
+
+    /* Header card */
+    .banner {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 500;
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      max-width: 320px;
+      line-height: 1.35;
+    }
+    .banner h1 {
+      margin: 0 0 2px 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .banner .sub { font-size: 13px; color: #6b5a48; }
+    .banner .stats {
+      margin-top: 8px;
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+    }
+    .banner .stats b { color: var(--terracotta); font-weight: 700; }
+
+    /* Legend (bottom-left) */
+    .legend {
+      position: absolute;
+      bottom: 22px;
+      left: 14px;
+      z-index: 500;
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .legend .row { display: flex; align-items: center; gap: 8px; }
+    .legend .swatch {
+      display: inline-block;
+      width: 18px;
+      height: 10px;
+      border-radius: 2px;
+    }
+    .legend .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
+    }
+
+    /* Popup styling */
+    .leaflet-popup-content-wrapper {
+      border-radius: 10px;
+      padding: 0;
+    }
+    .leaflet-popup-content {
+      margin: 0;
+      width: 260px !important;
+    }
+    .day-popup { font-family: inherit; color: var(--ink); }
+    .day-popup img {
+      display: block;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+      background: #ddd;
+    }
+    .day-popup .pad { padding: 10px 12px 12px 12px; }
+    .day-popup .hdr {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+      padding-right: 22px; /* reserve space for Leaflet's close X */
+    }
+    .day-popup .day {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .day-popup .date { font-size: 12px; color: #6b5a48; }
+    .day-popup .loc { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .day-popup .caption { font-size: 13px; line-height: 1.45; color: #3a2d22; }
+    .day-popup .km { font-size: 11px; color: #8b7765; margin-top: 6px; }
+
+    /* Current-day pulsing marker */
+    .current-marker {
+      width: 22px;
+      height: 22px;
+      background: var(--terracotta);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 rgba(192, 80, 43, 0.6);
+      animation: pulse 1.8s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(192, 80, 43, 0.55); }
+      70%  { box-shadow: 0 0 0 22px rgba(192, 80, 43, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(192, 80, 43, 0); }
+    }
+    .past-marker {
+      width: 12px;
+      height: 12px;
+      background: var(--trail-past);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Responsive: shrink banner on phones */
+    @media (max-width: 520px) {
+      .banner { max-width: calc(100% - 40px); }
+      .legend { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="banner">
+    <h1 id="banner-title">Camino del Norte</h1>
+    <div class="sub" id="banner-sub">Loading journey…</div>
+    <div class="stats" id="banner-stats"></div>
+  </div>
+
+  <div class="legend">
+    <div class="row"><span class="swatch" style="background: var(--trail-full); opacity: 0.55;"></span>Full route</div>
+    <div class="row"><span class="swatch" style="background: var(--terracotta);"></span>Walked so far</div>
+    <div class="row"><span class="dot" style="background: var(--trail-past);"></span>Past day (click!)</div>
+    <div class="row"><span class="dot" style="background: var(--terracotta); width: 14px; height: 14px;"></span>Most recent day</div>
+  </div>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <!-- Turf.js for nearest-point-on-line / line-slicing -->
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+
+  <script>
+    // -------------------------------------------------------------
+    // CONFIG - paste your keys here (see README for how to get them)
+    // -------------------------------------------------------------
+    const CONFIG = {
+      MAPTILER_KEY: "emnksKueX1bIKbJb2CSR",
+      MAPBOX_TOKEN: "pk.eyJ1IjoibWlrdXMzMSIsImEiOiJjbW9hNjB4N28wM21uMnFvaWQ1azNpdnNuIn0.8JL2073-UWgbSYFdN4VkyA"
+    };
+
+    // -------------------------------------------------------------
+    // INIT MAP
+    // -------------------------------------------------------------
+    const map = L.map("map", {
+      zoomControl: false,
+      scrollWheelZoom: true
+    }).setView([43.3, -4.8], 7);
+
+    L.control.zoom({ position: "topright" }).addTo(map);
+
+    // -------------------------------------------------------------
+    // BASEMAPS
+    // -------------------------------------------------------------
+    const esriTopo = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: "Tiles &copy; Esri",
+        maxZoom: 17
+      }
+    );
+
+    const esriImagery = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: "Tiles &copy; Esri",
+        maxZoom: 19
+      }
+    );
+
+    const maptilerOutdoor = L.tileLayer(
+      "https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}.png?key=" + CONFIG.MAPTILER_KEY,
+      {
+        attribution: '\u0026copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> \u0026copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
+        maxZoom: 18,
+        tileSize: 512,
+        zoomOffset: -1,
+        crossOrigin: true
+      }
+    );
+
+    const mapboxOutdoors = L.tileLayer(
+      "https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/{z}/{x}/{y}?access_token=" + CONFIG.MAPBOX_TOKEN,
+      {
+        attribution: '\u0026copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> \u0026copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+        tileSize: 512,
+        zoomOffset: -1,
+        crossOrigin: true
+      }
+    );
+
+    // Esri Topo as default (no key required)
+    esriTopo.addTo(map);
+
+    const baseLayers = {
+      "Esri Topographic": esriTopo,
+      "Esri Satellite": esriImagery
+    };
+    if (CONFIG.MAPTILER_KEY) baseLayers["MapTiler Outdoor"] = maptilerOutdoor;
+    if (CONFIG.MAPBOX_TOKEN) baseLayers["Mapbox Outdoors"] = mapboxOutdoors;
+
+    L.control.layers(baseLayers, null, { position: "topright", collapsed: false }).addTo(map);
+
+    // -------------------------------------------------------------
+    // LOAD DATA
+    // -------------------------------------------------------------
+    Promise.all([
+      fetch("data/route.geojson").then(r => r.json()),
+      fetch("data/journal.json").then(r => r.json())
+    ]).then(([routeData, journal]) => {
+      renderTrip(routeData, journal);
+    }).catch(err => {
+      console.error(err);
+      document.getElementById("banner-sub").textContent =
+        "Could not load route or journal data. See console.";
+    });
+
+    // -------------------------------------------------------------
+    // RENDER
+    // -------------------------------------------------------------
+    function renderTrip(routeData, journal) {
+      // 1. Draw the full route as a faint dashed line (the whole journey)
+      const fullRoute = L.geoJSON(routeData, {
+        style: {
+          color: "#9a8a76",
+          weight: 3,
+          opacity: 0.55,
+          dashArray: "4 7",
+          lineCap: "round"
+        }
+      }).addTo(map);
+
+      // Fit map to the route
+      map.fitBounds(fullRoute.getBounds(), { padding: [40, 40] });
+
+      // 2. Compute the "walked so far" portion of the route using turf
+      const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
+      const routeLine = routeData.features[0];          // Turf expects a Feature<LineString>
+      const startPt = turf.point(routeLine.geometry.coordinates[0]);
+
+      if (entries.length > 0) {
+        const latest = entries[entries.length - 1];
+        const latestPt = turf.point([latest.coords[1], latest.coords[0]]);  // [lng, lat]
+        const snapped = turf.nearestPointOnLine(routeLine, latestPt, { units: "kilometers" });
+        const walked = turf.lineSlice(startPt, snapped, routeLine);
+
+        L.geoJSON(walked, {
+          style: {
+            color: "#c0502b",
+            weight: 5,
+            opacity: 0.95,
+            lineCap: "round",
+            lineJoin: "round"
+          }
+        }).addTo(map);
+      }
+
+      // 3. Markers for each day's entry
+      const mostRecentDay = entries.length > 0 ? entries[entries.length - 1].day : null;
+
+      entries.forEach(entry => {
+        const isRecent = entry.day === mostRecentDay;
+        const icon = L.divIcon({
+          className: "",
+          html: '<div class="' + (isRecent ? "current-marker" : "past-marker") + '"></div>',
+          iconSize: isRecent ? [22, 22] : [12, 12],
+          iconAnchor: isRecent ? [11, 11] : [6, 6]
+        });
+
+        const marker = L.marker(entry.coords, {
+          icon: icon,
+          zIndexOffset: isRecent ? 1000 : 0,
+          riseOnHover: true
+        }).addTo(map);
+
+        marker.bindPopup(buildPopup(entry), {
+          maxWidth: 280,
+          minWidth: 260,
+          closeButton: true,
+          autoPan: true
+        });
+
+        // Auto-open the most recent day's popup on load
+        if (isRecent) {
+          setTimeout(function () { marker.openPopup(); }, 600);
+        }
+      });
+
+      // 4. Update the banner with stats
+      const totalDays = entries.length;
+      const totalKm = entries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
+      const latestLocation = entries.length ? entries[entries.length - 1].location : "";
+      const startDate = journal.startDate || "";
+      document.getElementById("banner-title").textContent =
+        (journal.pilgrim ? journal.pilgrim + " \u2014 " : "") + "Camino del Norte";
+      document.getElementById("banner-sub").textContent =
+        totalDays === 0
+          ? (startDate ? "Starting " + startDate : "Planning the journey\u2026")
+          : "Latest: " + latestLocation;
+      document.getElementById("banner-stats").innerHTML = totalDays
+        ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalKm + "</b> km walked</div>"
+        : "";
+    }
+
+    function buildPopup(e) {
+      const hasPhoto = e.photo && e.photo.length > 0;
+      const photoHtml = hasPhoto
+        ? '<img src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
+        : "";
+      const km = e.distanceKm ? '<div class="km">' + e.distanceKm + ' km walked</div>' : "";
+      return (
+        '<div class="day-popup">' +
+          photoHtml +
+          '<div class="pad">' +
+            '<div class="hdr">' +
+              '<span class="day">Day ' + e.day + '</span>' +
+              '<span class="date">' + escapeHtml(e.date || "") + '</span>' +
+            '</div>' +
+            '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
+            '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
+            km +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .split("&").join("&amp;")
+        .split("<").join("&lt;")
+        .split(">").join("&gt;")
+        .split('"').join("&quot;")
+        .split("'").join("&#039;");
+    }
+  </script>
+</body>
+</html>

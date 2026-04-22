@@ -1,0 +1,33 @@
+{
+  "pilgrim": "Sarah's 40th",
+  "startDate": "2026-06-18",
+  "entries": [
+    {
+      "day": 1,
+      "date": "2026-06-18",
+      "location": "Irun \u2192 San Sebastian (Donostia)",
+      "coords": [43.3183, -1.9812],
+      "distanceKm": 27,
+      "photo": "photos/day-01.jpg",
+      "caption": "First steps on the Del Norte! Climbed out of Irun, got my first coastal views, and collapsed into a hostel bunk in San Sebastian with sore feet and a huge grin."
+    },
+    {
+      "day": 2,
+      "date": "2026-06-19",
+      "location": "San Sebastian \u2192 Zarautz",
+      "coords": [43.2849, -2.1701],
+      "distanceKm": 22,
+      "photo": "photos/day-02.jpg",
+      "caption": "Rolling Basque hills, sheep, and a beautiful clifftop walk into Zarautz. Grabbed pintxos at sunset \u2014 this is going to be a good month."
+    },
+    {
+      "day": 3,
+      "date": "2026-06-20",
+      "location": "Zarautz \u2192 Deba",
+      "coords": [43.2980, -2.3520],
+      "distanceKm": 21,
+      "photo": "photos/day-03.jpg",
+      "caption": "Tough climb out of Getaria but the views from the ridge were unreal. Deba\u2019s little river town vibe is perfect for tonight."
+    }
+  ]
+}
