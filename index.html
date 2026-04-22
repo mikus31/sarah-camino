@@ -99,7 +99,60 @@
       object-fit: cover;
       border-radius: 10px 10px 0 0;
       background: #ddd;
+      cursor: zoom-in;
     }
+
+    /* Lightbox overlay */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(20, 15, 10, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 100%;
+      max-height: calc(100% - 120px);
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+    #lightbox-caption {
+      color: var(--cream);
+      font-size: 14px;
+      margin-top: 16px;
+      max-width: 720px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    #lightbox-caption .loc {
+      display: block;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: transparent;
+      color: var(--cream);
+      font-size: 36px;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 10px;
+      font-family: inherit;
+    }
+    #lightbox-close:hover { color: #fff; }
     .day-popup .pad { padding: 10px 12px 12px 12px; }
     .day-popup .hdr {
       display: flex;
@@ -166,6 +219,13 @@
     <div class="row"><span class="swatch" style="background: var(--terracotta);"></span>Walked so far</div>
     <div class="row"><span class="dot" style="background: var(--trail-past);"></span>Past day (click!)</div>
     <div class="row"><span class="dot" style="background: var(--terracotta); width: 14px; height: 14px;"></span>Most recent day</div>
+  </div>
+
+  <!-- Lightbox overlay (hidden until a photo is clicked) -->
+  <div id="lightbox" aria-hidden="true" role="dialog">
+    <button id="lightbox-close" aria-label="Close">&times;</button>
+    <img id="lightbox-img" alt="">
+    <div id="lightbox-caption"></div>
   </div>
 
   <!-- Leaflet -->
@@ -378,6 +438,48 @@
         .split('"').join("&quot;")
         .split("'").join("&#039;");
     }
+
+    // -------------------------------------------------------------
+    // LIGHTBOX - click any popup photo to enlarge
+    // -------------------------------------------------------------
+    var lightbox = document.getElementById("lightbox");
+    var lightboxImg = document.getElementById("lightbox-img");
+    var lightboxCaption = document.getElementById("lightbox-caption");
+    var lightboxClose = document.getElementById("lightbox-close");
+
+    function openLightbox(src, location, caption) {
+      lightboxImg.src = src;
+      lightboxCaption.innerHTML =
+        '<span class="loc">' + escapeHtml(location || "") + '</span>' +
+        escapeHtml(caption || "");
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+    }
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImg.src = "";
+    }
+
+    // Click any popup photo -> open lightbox with its caption
+    document.addEventListener("click", function (e) {
+      var img = e.target && e.target.closest ? e.target.closest(".day-popup img") : null;
+      if (!img) return;
+      var popup = img.closest(".day-popup");
+      var loc = popup && popup.querySelector(".loc") ? popup.querySelector(".loc").textContent : "";
+      var cap = popup && popup.querySelector(".caption") ? popup.querySelector(".caption").textContent : "";
+      openLightbox(img.src, loc, cap);
+    });
+
+    // Close on backdrop click or close button (but not on the image itself)
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox || e.target === lightboxClose) closeLightbox();
+    });
+
+    // Esc to close
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+    });
   </script>
 </body>
 </html>
