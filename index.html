@@ -153,6 +153,47 @@
       font-family: inherit;
     }
     #lightbox-close:hover { color: #fff; }
+
+    #lightbox-prev, #lightbox-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      border: none;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: background 0.15s, opacity 0.15s;
+      z-index: 1;
+    }
+    #lightbox-prev { left: 18px; }
+    #lightbox-next { right: 18px; }
+    #lightbox-prev:hover, #lightbox-next:hover { background: rgba(0, 0, 0, 0.75); }
+    #lightbox-prev[disabled], #lightbox-next[disabled] {
+      opacity: 0.25;
+      cursor: default;
+      pointer-events: none;
+    }
+    #lightbox-prev svg, #lightbox-next svg {
+      width: 28px;
+      height: 28px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    @media (max-width: 520px) {
+      #lightbox-prev, #lightbox-next { width: 48px; height: 48px; }
+      #lightbox-prev { left: 8px; }
+      #lightbox-next { right: 8px; }
+    }
     .day-popup .pad { padding: 10px 12px 12px 12px; }
     .day-popup .hdr {
       display: flex;
@@ -172,7 +213,7 @@
     .day-popup .date { font-size: 12px; color: #6b5a48; }
     .day-popup .loc { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
     .day-popup .caption { font-size: 13px; line-height: 1.45; color: #3a2d22; }
-    .day-popup .km { font-size: 11px; color: #8b7765; margin-top: 6px; }
+    .day-popup .miles { font-size: 11px; color: #8b7765; margin-top: 6px; }
 
     /* Current-day pulsing marker */
     .current-marker {
@@ -224,6 +265,12 @@
   <!-- Lightbox overlay (hidden until a photo is clicked) -->
   <div id="lightbox" aria-hidden="true" role="dialog">
     <button id="lightbox-close" aria-label="Close">&times;</button>
+    <button id="lightbox-prev" aria-label="Previous day">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button id="lightbox-next" aria-label="Next day">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
     <img id="lightbox-img" alt="">
     <div id="lightbox-caption"></div>
   </div>
@@ -243,6 +290,9 @@
       MAPTILER_KEY: "emnksKueX1bIKbJb2CSR",
       MAPBOX_TOKEN: "pk.eyJ1IjoibWlrdXMzMSIsImEiOiJjbW9hNjB4N28wM21uMnFvaWQ1azNpdnNuIn0.8JL2073-UWgbSYFdN4VkyA"
     };
+
+    // Shared: the full sorted list of journal entries (used by both markers and the lightbox)
+    var allEntries = [];
 
     // -------------------------------------------------------------
     // INIT MAP
@@ -341,6 +391,7 @@
 
       // 2. Compute the "walked so far" portion of the route using turf
       const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
+      allEntries = entries;
       const routeLine = routeData.features[0];          // Turf expects a Feature<LineString>
       const startPt = turf.point(routeLine.geometry.coordinates[0]);
 
@@ -395,6 +446,7 @@
       // 4. Update the banner with stats
       const totalDays = entries.length;
       const totalKm = entries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
+      const totalMiles = kmToMiles(totalKm);
       const latestLocation = entries.length ? entries[entries.length - 1].location : "";
       const startDate = journal.startDate || "";
       document.getElementById("banner-title").textContent =
@@ -404,16 +456,23 @@
           ? (startDate ? "Starting " + startDate : "Planning the journey\u2026")
           : "Latest: " + latestLocation;
       document.getElementById("banner-stats").innerHTML = totalDays
-        ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalKm + "</b> km walked</div>"
+        ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalMiles + "</b> miles walked</div>"
         : "";
+    }
+
+    // Distance helper: km -> miles, rounded to 1 decimal (or whole number if >= 100)
+    function kmToMiles(km) {
+      if (!km) return 0;
+      const mi = km * 0.621371;
+      return mi >= 100 ? Math.round(mi) : Math.round(mi * 10) / 10;
     }
 
     function buildPopup(e) {
       const hasPhoto = e.photo && e.photo.length > 0;
       const photoHtml = hasPhoto
-        ? '<img src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
+        ? '<img data-day="' + e.day + '" src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
         : "";
-      const km = e.distanceKm ? '<div class="km">' + e.distanceKm + ' km walked</div>' : "";
+      const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
       return (
         '<div class="day-popup">' +
           photoHtml +
@@ -424,7 +483,7 @@
             '</div>' +
             '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
             '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
-            km +
+            miles +
           '</div>' +
         '</div>'
       );
@@ -440,46 +499,86 @@
     }
 
     // -------------------------------------------------------------
-    // LIGHTBOX - click any popup photo to enlarge
+    // LIGHTBOX - click any popup photo to enlarge, then navigate with
+    // arrows / keyboard / swipe.
     // -------------------------------------------------------------
     var lightbox = document.getElementById("lightbox");
     var lightboxImg = document.getElementById("lightbox-img");
     var lightboxCaption = document.getElementById("lightbox-caption");
     var lightboxClose = document.getElementById("lightbox-close");
+    var lightboxPrev = document.getElementById("lightbox-prev");
+    var lightboxNext = document.getElementById("lightbox-next");
+    var currentLightboxIdx = -1;
 
-    function openLightbox(src, location, caption) {
-      lightboxImg.src = src;
+    function openLightboxAt(idx) {
+      if (idx < 0 || idx >= allEntries.length) return;
+      currentLightboxIdx = idx;
+      var entry = allEntries[idx];
+      lightboxImg.src = entry.photo;
+      lightboxImg.alt = entry.location || "";
       lightboxCaption.innerHTML =
-        '<span class="loc">' + escapeHtml(location || "") + '</span>' +
-        escapeHtml(caption || "");
+        '<span class="loc">Day ' + entry.day + ' \u00b7 ' + escapeHtml(entry.location || "") + '</span>' +
+        escapeHtml(entry.caption || "");
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
+      lightboxPrev.disabled = idx <= 0;
+      lightboxNext.disabled = idx >= allEntries.length - 1;
     }
     function closeLightbox() {
       lightbox.classList.remove("open");
       lightbox.setAttribute("aria-hidden", "true");
       lightboxImg.src = "";
+      currentLightboxIdx = -1;
+    }
+    function lightboxStep(delta) {
+      var next = currentLightboxIdx + delta;
+      if (next >= 0 && next < allEntries.length) openLightboxAt(next);
     }
 
-    // Click any popup photo -> open lightbox with its caption
+    // Click a popup photo -> open lightbox at that entry
     document.addEventListener("click", function (e) {
       var img = e.target && e.target.closest ? e.target.closest(".day-popup img") : null;
       if (!img) return;
-      var popup = img.closest(".day-popup");
-      var loc = popup && popup.querySelector(".loc") ? popup.querySelector(".loc").textContent : "";
-      var cap = popup && popup.querySelector(".caption") ? popup.querySelector(".caption").textContent : "";
-      openLightbox(img.src, loc, cap);
+      var day = parseInt(img.getAttribute("data-day"), 10);
+      var idx = allEntries.findIndex(function (x) { return x.day === day; });
+      if (idx >= 0) openLightboxAt(idx);
     });
 
-    // Close on backdrop click or close button (but not on the image itself)
+    // Prev / next buttons
+    lightboxPrev.addEventListener("click", function (e) { e.stopPropagation(); lightboxStep(-1); });
+    lightboxNext.addEventListener("click", function (e) { e.stopPropagation(); lightboxStep(1); });
+
+    // Close on backdrop click or close button (not on image, caption, or arrows)
     lightbox.addEventListener("click", function (e) {
       if (e.target === lightbox || e.target === lightboxClose) closeLightbox();
     });
 
-    // Esc to close
+    // Keyboard: Esc closes, arrows navigate
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+      if (!lightbox.classList.contains("open")) return;
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") lightboxStep(-1);
+      else if (e.key === "ArrowRight") lightboxStep(1);
     });
+
+    // Touch swipe (mobile): horizontal swipe > 50px = prev/next
+    var touchStartX = 0;
+    var touchStartY = 0;
+    lightbox.addEventListener("touchstart", function (e) {
+      if (e.changedTouches && e.changedTouches[0]) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }
+    }, { passive: true });
+    lightbox.addEventListener("touchend", function (e) {
+      if (!e.changedTouches || !e.changedTouches[0]) return;
+      var dx = e.changedTouches[0].screenX - touchStartX;
+      var dy = e.changedTouches[0].screenY - touchStartY;
+      // Must be primarily horizontal to count as a swipe
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        lightboxStep(dx > 0 ? -1 : 1);
+      }
+    }, { passive: true });
   </script>
 </body>
 </html>

@@ -77,7 +77,7 @@ When she sends you a photo and a note for Day N:
 Notes on the fields:
 
 - `coords` is `[latitude, longitude]` (in that order). Easiest way to get them: right-click the spot on [Google Maps](https://maps.google.com), the top entry in the menu is the lat/long — click it to copy.
-- `distanceKm` is optional but it's used for the "X km walked" total in the banner.
+- `distanceKm` is optional. Enter the day's distance in **kilometers** (Camino guidebooks list it that way) — the site converts it to miles automatically for both the per-day popup and the "X miles walked" banner total.
 - `day` must be unique. Whichever entry has the highest `day` number is styled as "most recent" (the pulsing marker).
 
 3. **Push to GitHub** (if using GitHub Pages — see below). The map updates for everyone within a minute or two.
@@ -150,7 +150,7 @@ The map will pick it up automatically the next time you load the page.
 
 - **Start-map framing.** The map auto-fits to the route bounds. If you want it to zoom to her current location instead, change the `map.fitBounds(...)` line near the top of the `renderTrip` function in `index.html` to `map.setView(latest.coords, 10);`.
 - **Colors.** All the palette is in the CSS `:root` block at the top of `index.html` — change `--terracotta`, `--trail-past`, `--trail-full`, `--cream` to taste.
-- **More stats.** The banner shows day count + km. You could add elevation gain, number of towns visited, etc. — see the `renderTrip` function where the banner is populated.
+- **More stats.** The banner shows day count + miles. You could add elevation gain, number of towns visited, etc. — see the `renderTrip` function where the banner is populated.
 - **An RSS-style "latest" feed** for family who want to subscribe rather than visit the page. Out of scope for v1 but doable.
 
 ## License
