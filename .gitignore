@@ -4,3 +4,6 @@ node_modules/
 .vscode/
 .idea/
 *.log
+
+# Admin tool \u2014 local only, never publish
+admin.html
