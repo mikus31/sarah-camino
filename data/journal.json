@@ -37,18 +37,6 @@
       "distanceKm": 21,
       "photo": "photos/day-03.jpg",
       "caption": "Tough climb out of Getaria but the views from the ridge were unreal. Deba’s little river town vibe is perfect for tonight."
-    },
-    {
-      "day": 444,
-      "date": "2026-06-21",
-      "location": "test",
-      "coords": [
-        43.3571,
-        -2.4932
-      ],
-      "caption": "test",
-      "distanceKm": 44,
-      "photo": "photos/day-444.jpg"
     }
   ]
 }
