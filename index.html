@@ -15,9 +15,9 @@
     :root {
       --ink: #2b2118;
       --cream: #f7f1e8;
-      --terracotta: #c0502b;
-      --terracotta-soft: rgba(192, 80, 43, 0.18);
-      --trail-past: #8b5a3c;
+      --camino-blue: #003399;
+      --camino-blue-soft: rgba(0, 51, 153, 0.18);
+      --camino-yellow: #FFCC00;
       --trail-full: #9a8a76;
       --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
@@ -51,14 +51,14 @@
       gap: 14px;
       font-size: 13px;
     }
-    .banner .stats b { color: var(--terracotta); font-weight: 700; }
+    .banner .stats b { color: var(--camino-blue); font-weight: 700; }
     .banner .time {
       margin-top: 6px;
       font-size: 12px;
       color: #8b7765;
       font-variant-numeric: tabular-nums;
     }
-    .banner .time b { color: var(--terracotta); font-weight: 600; }
+    .banner .time b { color: var(--camino-blue); font-weight: 600; }
 
     /* Legend (bottom-left) */
     .legend {
@@ -213,7 +213,7 @@
     .day-popup .day {
       font-size: 13px;
       font-weight: 700;
-      color: var(--terracotta);
+      color: var(--camino-blue);
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
@@ -226,21 +226,21 @@
     .current-marker {
       width: 22px;
       height: 22px;
-      background: var(--terracotta);
+      background: var(--camino-yellow);
       border: 3px solid #fff;
       border-radius: 50%;
-      box-shadow: 0 0 0 rgba(192, 80, 43, 0.6);
+      box-shadow: 0 0 0 rgba(255, 204, 0, 0.7);
       animation: pulse 1.8s ease-out infinite;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(192, 80, 43, 0.55); }
-      70%  { box-shadow: 0 0 0 22px rgba(192, 80, 43, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(192, 80, 43, 0); }
+      0%   { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
+      70%  { box-shadow: 0 0 0 22px rgba(255, 204, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
     }
     .past-marker {
       width: 12px;
       height: 12px;
-      background: var(--trail-past);
+      background: var(--camino-yellow);
       border: 2px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
@@ -265,9 +265,9 @@
 
   <div class="legend">
     <div class="row"><span class="swatch" style="background: var(--trail-full); opacity: 0.55;"></span>Full route</div>
-    <div class="row"><span class="swatch" style="background: var(--terracotta);"></span>Walked so far</div>
-    <div class="row"><span class="dot" style="background: var(--trail-past);"></span>Past day (click!)</div>
-    <div class="row"><span class="dot" style="background: var(--terracotta); width: 14px; height: 14px;"></span>Most recent day</div>
+    <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Walked so far</div>
+    <div class="row"><span class="dot" style="background: var(--camino-yellow);"></span>Past day (click!)</div>
+    <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div>
   </div>
 
   <!-- Lightbox overlay (hidden until a photo is clicked) -->
@@ -415,7 +415,7 @@
 
         L.geoJSON(walked, {
           style: {
-            color: "#c0502b",
+            color: "#003399",
             weight: 5,
             opacity: 0.95,
             lineCap: "round",
