@@ -3,40 +3,13 @@
   "startDate": "2026-06-18",
   "entries": [
     {
-      "day": 1,
+      "day": 0,
       "date": "2026-06-18",
-      "location": "Irun → San Sebastian (Donostia)",
-      "coords": [
-        43.3183,
-        -1.9812
-      ],
-      "distanceKm": 27,
-      "photo": "photos/day-01.jpg",
-      "caption": "First steps on the Del Norte! Climbed out of Irun, got my first coastal views, and collapsed into a hostel bunk in San Sebastian with sore feet and a huge grin."
-    },
-    {
-      "day": 2,
-      "date": "2026-06-19",
-      "location": "San Sebastian → Zarautz",
-      "coords": [
-        43.2849,
-        -2.1701
-      ],
-      "distanceKm": 22,
-      "photo": "photos/day-02.jpg",
-      "caption": "Rolling Basque hills, sheep, and a beautiful clifftop walk into Zarautz. Grabbed pintxos at sunset — this is going to be a good month."
-    },
-    {
-      "day": 3,
-      "date": "2026-06-20",
-      "location": "Zarautz → Deba",
-      "coords": [
-        43.298,
-        -2.352
-      ],
-      "distanceKm": 21,
-      "photo": "photos/day-03.jpg",
-      "caption": "Tough climb out of Getaria but the views from the ridge were unreal. Deba’s little river town vibe is perfect for tonight."
+      "location": "Irún — the start",
+      "coords": [43.338, -1.7893],
+      "distanceKm": 0,
+      "photo": "",
+      "caption": "Sarah arrives in Irún to begin her 40-day Camino del Norte. From Irún she'll follow the Bay of Biscay coast west through Basque country, across Cantabria and Asturias, then turn inland through Galicia to reach Santiago — about 513 miles (825 km)."
     }
   ]
 }

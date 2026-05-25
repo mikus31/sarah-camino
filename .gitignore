@@ -7,3 +7,9 @@ node_modules/
 
 # Admin tool \u2014 local only, never publish
 admin.html
+
+# Raw route source files \u2014 keep local, don't ship. The simplified
+# data/route.geojson is what the app uses at runtime.
+data/northern-route.json
+data/route-*.backup.geojson
+data/camino-de-fisterra-muxia.json

@@ -222,6 +222,28 @@
     .day-popup .caption { font-size: 13px; line-height: 1.45; color: #3a2d22; }
     .day-popup .miles { font-size: 11px; color: #8b7765; margin-top: 6px; }
 
+    /* Countdown block, shown inside the Day 0 popup pre-departure */
+    .day-popup .countdown {
+      margin: 8px 0 4px;
+      padding: 10px 8px;
+      background: var(--camino-blue-soft);
+      border-radius: 6px;
+      text-align: center;
+      line-height: 1.15;
+    }
+    .day-popup .countdown .cnt-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--camino-blue);
+    }
+    .day-popup .countdown .cnt-sub {
+      font-size: 11px;
+      color: #6b5a48;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+    }
+
     /* Current-day pulsing marker */
     .current-marker {
       width: 22px;
@@ -301,6 +323,24 @@
 
     // Shared: the full sorted list of journal entries (used by both markers and the lightbox)
     var allEntries = [];
+    var journalStartDate = "";   // set from journal.json; drives the Day 0 countdown
+    var journalPilgrim = "";
+
+    // Returns { days: N, pretty: "June 18" } where days is whole-day diff
+    // from local today to startDate (positive = future). Null if invalid.
+    function startsInText(startDateStr) {
+      if (!startDateStr) return null;
+      var parts = String(startDateStr).split("-");
+      if (parts.length !== 3) return null;
+      var start = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      if (isNaN(start)) return null;
+      var now = new Date();
+      var startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      var nowDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var days = Math.round((startDay - nowDay) / 86400000);
+      var pretty = start.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+      return { days: days, pretty: pretty };
+    }
 
     // -------------------------------------------------------------
     // INIT MAP
@@ -389,6 +429,7 @@
     function renderTrip(routeData, journal) {
       // 1. Draw the full route as a faint dashed line (the whole journey)
       const fullRoute = L.geoJSON(routeData, {
+        attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
         style: {
           color: "#9a8a76",
           weight: 3,
@@ -404,11 +445,16 @@
       // 2. Compute the "walked so far" portion of the route using turf
       const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
       allEntries = entries;
+      journalStartDate = journal.startDate || "";
+      journalPilgrim = journal.pilgrim || "";
+      const walkedEntries = entries.filter(function (e) { return e.day >= 1; });
       const routeLine = routeData.features[0];          // Turf expects a Feature<LineString>
       const startPt = turf.point(routeLine.geometry.coordinates[0]);
 
-      if (entries.length > 0) {
-        const latest = entries[entries.length - 1];
+      // Only draw the walked-line once at least one walking day has happened.
+      // Pre-launch (only Day 0), there's nothing to draw.
+      if (walkedEntries.length > 0) {
+        const latest = walkedEntries[walkedEntries.length - 1];
         const latestPt = turf.point([latest.coords[1], latest.coords[0]]);  // [lng, lat]
         const snapped = turf.nearestPointOnLine(routeLine, latestPt, { units: "kilometers" });
         const walked = turf.lineSlice(startPt, snapped, routeLine);
@@ -455,21 +501,34 @@
         }
       });
 
-      // 4. Update the banner with stats
-      const totalDays = entries.length;
-      const totalKm = entries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
+      // 4. Update the banner with stats. Day 0 doesn't count as "walked".
+      const totalDays = walkedEntries.length;
+      const totalKm = walkedEntries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
       const totalMiles = kmToMiles(totalKm);
-      const latestLocation = entries.length ? entries[entries.length - 1].location : "";
-      const startDate = journal.startDate || "";
       document.getElementById("banner-title").textContent =
-        (journal.pilgrim ? journal.pilgrim + " \u2014 " : "") + "Camino del Norte";
-      document.getElementById("banner-sub").textContent =
-        totalDays === 0
-          ? (startDate ? "Starting " + startDate : "Planning the journey\u2026")
-          : "Latest: " + latestLocation;
+        (journalPilgrim ? journalPilgrim + " \u2014 " : "") + "Camino del Norte";
+      renderBannerSub();
       document.getElementById("banner-stats").innerHTML = totalDays
         ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalMiles + "</b> miles walked</div>"
         : "";
+    }
+
+    // Banner subtitle: countdown pre-launch, "Latest: ..." once walking.
+    // Pulled out so it can be ticked from the clock interval.
+    function renderBannerSub() {
+      var el = document.getElementById("banner-sub");
+      if (!el) return;
+      var walked = (allEntries || []).filter(function (e) { return e.day >= 1; });
+      if (walked.length > 0) {
+        el.textContent = "Latest: " + walked[walked.length - 1].location;
+        return;
+      }
+      var c = startsInText(journalStartDate);
+      if (!c) { el.textContent = "Planning the journey\u2026"; return; }
+      if (c.days > 1) el.textContent = "Starts in " + c.days + " days \u00b7 " + c.pretty;
+      else if (c.days === 1) el.textContent = "Starts tomorrow \u00b7 " + c.pretty;
+      else if (c.days === 0) el.textContent = "Walking today! \u00b7 " + c.pretty;
+      else el.textContent = "Underway since " + c.pretty;
     }
 
     // Live Spain clock in the banner \u2014 uses Europe/Madrid so DST is automatic.
@@ -497,7 +556,10 @@
       }
     }
     renderSpainClock();
-    setInterval(renderSpainClock, 30 * 1000);
+    setInterval(function () {
+      renderSpainClock();
+      renderBannerSub();   // keep the countdown fresh if the page is left open
+    }, 30 * 1000);
 
     // Distance helper: km -> miles, rounded to 1 decimal (or whole number if >= 100)
     function kmToMiles(km) {
@@ -512,15 +574,36 @@
         ? '<img data-day="' + e.day + '" src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
         : "";
       const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
+      const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
+
+      // For Day 0, prepend a live countdown to departure.
+      let countdownHtml = "";
+      if (e.day === 0) {
+        const c = startsInText(journalStartDate);
+        if (c) {
+          let num, sub;
+          if (c.days > 1) { num = c.days + " days"; sub = "until departure"; }
+          else if (c.days === 1) { num = "Tomorrow"; sub = "she starts walking"; }
+          else if (c.days === 0) { num = "Today!"; sub = "the journey begins"; }
+          else { num = "Underway"; sub = "the journey has begun"; }
+          countdownHtml =
+            '<div class="countdown">' +
+              '<div class="cnt-num">' + num + '</div>' +
+              '<div class="cnt-sub">' + sub + '</div>' +
+            '</div>';
+        }
+      }
+
       return (
         '<div class="day-popup">' +
           photoHtml +
           '<div class="pad">' +
             '<div class="hdr">' +
-              '<span class="day">Day ' + e.day + '</span>' +
+              '<span class="day">' + dayLabel + '</span>' +
               '<span class="date">' + escapeHtml(e.date || "") + '</span>' +
             '</div>' +
             '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
+            countdownHtml +
             '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
             miles +
           '</div>' +
