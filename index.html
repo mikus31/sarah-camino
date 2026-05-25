@@ -47,7 +47,6 @@
       --camino-blue: #003399;
       --camino-blue-soft: rgba(0, 51, 153, 0.18);
       --camino-yellow: #FFCC00;
-      --trail-full: #9a8a76;
       --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
 
@@ -108,6 +107,17 @@
       width: 18px;
       height: 10px;
       border-radius: 2px;
+    }
+    /* "Full route" swatch: a dashed line approximation of how the unwalked
+       portion appears on the map. Same Camino blue as the walked line, but
+       dashed and at lower opacity to convey "still to come". */
+    .legend .swatch-dashed {
+      background: transparent;
+      border-radius: 0;
+      border-top: 3px dashed var(--camino-blue);
+      opacity: 0.65;
+      align-self: center;
+      height: 0;
     }
     .legend .dot {
       display: inline-block;
@@ -315,7 +325,7 @@
   </div>
 
   <div class="legend">
-    <div class="row"><span class="swatch" style="background: var(--trail-full); opacity: 0.55;"></span>Full route</div>
+    <div class="row"><span class="swatch swatch-dashed" aria-hidden="true"></span>Full route</div>
     <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Walked so far</div>
     <div class="row"><span class="dot" style="background: var(--camino-yellow);"></span>Past day (click!)</div>
     <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div>
@@ -456,14 +466,16 @@
     // RENDER
     // -------------------------------------------------------------
     function renderTrip(routeData, journal) {
-      // 1. Draw the full route as a faint dashed line (the whole journey)
+      // 1. Draw the full route as a faint dashed Camino blue line. Same color
+      //    as the bold walked-so-far line below, but dashed and lower-opacity
+      //    so the visual reads as a progress bar: solid = walked, faint = still to come.
       const fullRoute = L.geoJSON(routeData, {
         attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
         style: {
-          color: "#9a8a76",
+          color: "#003399",          // matches --camino-blue / walked-line color
           weight: 3,
-          opacity: 0.55,
-          dashArray: "4 7",
+          opacity: 0.65,
+          dashArray: "6 5",
           lineCap: "round"
         }
       }).addTo(map);
