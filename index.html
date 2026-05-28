@@ -47,6 +47,7 @@
       --camino-blue: #003399;
       --camino-blue-soft: rgba(0, 51, 153, 0.18);
       --camino-yellow: #FFCC00;
+      --past-day: #a8915a;            /* dulled warm-tan version of yellow for past days */
       --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
 
@@ -301,7 +302,7 @@
     .past-marker {
       width: 12px;
       height: 12px;
-      background: var(--camino-yellow);
+      background: var(--past-day);
       border: 2px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
@@ -327,7 +328,7 @@
   <div class="legend">
     <div class="row"><span class="swatch swatch-dashed" aria-hidden="true"></span>Full route</div>
     <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Walked so far</div>
-    <div class="row"><span class="dot" style="background: var(--camino-yellow);"></span>Past day (click!)</div>
+    <div class="row"><span class="dot" style="background: var(--past-day);"></span>Past day (click!)</div>
     <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div>
   </div>
 
