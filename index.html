@@ -88,6 +88,13 @@
       font-variant-numeric: tabular-nums;
     }
     .banner .time b { color: var(--camino-blue); font-weight: 600; }
+    .banner .weather {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #8b7765;
+      font-variant-numeric: tabular-nums;
+    }
+    .banner .weather b { color: var(--camino-blue); font-weight: 600; }
 
     /* Legend (bottom-left) */
     .legend {
@@ -323,6 +330,7 @@
     <div class="sub" id="banner-sub">Loading journey…</div>
     <div class="stats" id="banner-stats"></div>
     <div class="time" id="banner-time"></div>
+    <div class="weather" id="banner-weather"></div>
   </div>
 
   <div class="legend">
@@ -553,6 +561,12 @@
       document.getElementById("banner-stats").innerHTML = totalDays
         ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalMiles + "</b> miles walked</div>"
         : "";
+
+      // Kick off weather for the most recent entry's location
+      if (entries.length > 0) {
+        var latestEntry = entries[entries.length - 1];
+        fetchAndRenderWeather(latestEntry.coords[0], latestEntry.coords[1]);
+      }
     }
 
     // Banner subtitle: countdown pre-launch, "Latest: ..." once walking.
@@ -572,6 +586,73 @@
       else if (c.days === 0) el.textContent = "Walking today! \u00b7 " + c.pretty;
       else el.textContent = "Underway since " + c.pretty;
     }
+
+    // ---------- Weather (Open-Meteo, no API key required) ----------
+    // WMO weather code -> emoji + short label. Day icons; clear-sky swaps
+    // to the moon at night via the is_day flag.
+    var WEATHER_CODES = {
+      0:  { day: "\u2600\ufe0f",   night: "\ud83c\udf19", label: "clear sky" },
+      1:  { day: "\ud83c\udf24\ufe0f", night: "\ud83c\udf19", label: "mostly clear" },
+      2:  { day: "\u26c5",         night: "\u2601\ufe0f",     label: "partly cloudy" },
+      3:  { day: "\u2601\ufe0f",   night: "\u2601\ufe0f",     label: "overcast" },
+      45: { day: "\ud83c\udf2b\ufe0f", night: "\ud83c\udf2b\ufe0f", label: "fog" },
+      48: { day: "\ud83c\udf2b\ufe0f", night: "\ud83c\udf2b\ufe0f", label: "rime fog" },
+      51: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "light drizzle" },
+      53: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "drizzle" },
+      55: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "heavy drizzle" },
+      61: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "light rain" },
+      63: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "rain" },
+      65: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "heavy rain" },
+      71: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "light snow" },
+      73: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow" },
+      75: { day: "\u2744\ufe0f",       night: "\u2744\ufe0f",       label: "heavy snow" },
+      77: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow grains" },
+      80: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "rain showers" },
+      81: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "rain showers" },
+      82: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "violent showers" },
+      85: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow showers" },
+      86: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow showers" },
+      95: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm" },
+      96: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm + hail" },
+      99: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm + hail" }
+    };
+
+    var lastWeatherCoords = null;   // remember coords for the refresh interval
+
+    function fetchAndRenderWeather(lat, lng) {
+      lastWeatherCoords = [lat, lng];
+      var url = "https://api.open-meteo.com/v1/forecast"
+        + "?latitude=" + encodeURIComponent(lat)
+        + "&longitude=" + encodeURIComponent(lng)
+        + "&current=temperature_2m,weather_code,is_day"
+        + "&temperature_unit=fahrenheit"
+        + "&timezone=Europe%2FMadrid";
+
+      fetch(url)
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function (data) {
+          var el = document.getElementById("banner-weather");
+          if (!el || !data.current) return;
+          var t = Math.round(data.current.temperature_2m);
+          var code = data.current.weather_code;
+          var isDay = data.current.is_day === 1;
+          var info = WEATHER_CODES[code] || { day: "", night: "", label: "" };
+          var icon = isDay ? info.day : info.night;
+          el.innerHTML = icon + " <b>" + t + "\u00b0F</b>"
+            + (info.label ? " \u00b7 " + info.label : "");
+        })
+        .catch(function () {
+          // Hide quietly on failure; weather is non-essential
+          var el = document.getElementById("banner-weather");
+          if (el) el.textContent = "";
+        });
+    }
+
+    function refreshWeather() {
+      if (lastWeatherCoords) fetchAndRenderWeather(lastWeatherCoords[0], lastWeatherCoords[1]);
+    }
+    // Refresh weather every 15 minutes
+    setInterval(refreshWeather, 15 * 60 * 1000);
 
     // Live Spain clock in the banner \u2014 uses Europe/Madrid so DST is automatic.
     function renderSpainClock() {
