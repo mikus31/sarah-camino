@@ -48,6 +48,7 @@
       --camino-blue-soft: rgba(0, 51, 153, 0.18);
       --camino-yellow: #FFCC00;
       --past-day: #a8915a;            /* dulled warm-tan version of yellow for past days */
+      --terracotta: #c0502b;          /* dashed full-route color */
       --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
 
@@ -116,14 +117,13 @@
       height: 10px;
       border-radius: 2px;
     }
-    /* "Full route" swatch: a dashed line approximation of how the unwalked
-       portion appears on the map. Same Camino blue as the walked line, but
-       dashed and at lower opacity to convey "still to come". */
+    /* "Full route" swatch: a dashed terracotta line approximation of how the
+       unwalked portion appears on the map. */
     .legend .swatch-dashed {
       background: transparent;
       border-radius: 0;
-      border-top: 3px dashed var(--camino-blue);
-      opacity: 0.65;
+      border-top: 3px dashed var(--terracotta);
+      opacity: 0.85;
       align-self: center;
       height: 0;
     }
@@ -475,16 +475,16 @@
     // RENDER
     // -------------------------------------------------------------
     function renderTrip(routeData, journal) {
-      // 1. Draw the full route as a faint dashed Camino blue line. Same color
-      //    as the bold walked-so-far line below, but dashed and lower-opacity
-      //    so the visual reads as a progress bar: solid = walked, faint = still to come.
+      // 1. Draw the full route as a dashed terracotta line. Warm color
+      //    contrasts well against satellite + topo basemaps. Wide dash gaps
+      //    so the dashes read distinctly even when zoomed all the way out.
       const fullRoute = L.geoJSON(routeData, {
         attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
         style: {
-          color: "#003399",          // matches --camino-blue / walked-line color
+          color: "#c0502b",          // matches --terracotta
           weight: 3,
-          opacity: 0.65,
-          dashArray: "6 5",
+          opacity: 0.85,
+          dashArray: "5 12",
           lineCap: "round"
         }
       }).addTo(map);
@@ -555,11 +555,15 @@
       const totalDays = walkedEntries.length;
       const totalKm = walkedEntries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
       const totalMiles = kmToMiles(totalKm);
+      const totalAscentM = walkedEntries.reduce(function (s, e) { return s + (e.ascentM || 0); }, 0);
+      const totalAscentFt = metersToFeet(totalAscentM);
       document.getElementById("banner-title").textContent =
         (journalPilgrim ? journalPilgrim + " \u2014 " : "") + "Camino del Norte";
       renderBannerSub();
       document.getElementById("banner-stats").innerHTML = totalDays
-        ? "<div>Day <b>" + totalDays + "</b></div><div><b>" + totalMiles + "</b> miles walked</div>"
+        ? "<div>Day <b>" + totalDays + "</b></div>"
+          + "<div><b>" + totalMiles + "</b> mi</div>"
+          + (totalAscentFt > 0 ? "<div><b>" + totalAscentFt.toLocaleString() + "</b> ft climbed</div>" : "")
         : "";
 
       // Kick off weather for the most recent entry's location
@@ -690,6 +694,11 @@
       const mi = km * 0.621371;
       return mi >= 100 ? Math.round(mi) : Math.round(mi * 10) / 10;
     }
+    // Ascent helper: meters -> feet, integer
+    function metersToFeet(m) {
+      if (!m) return 0;
+      return Math.round(m * 3.28084);
+    }
 
     function buildPopup(e) {
       const hasPhoto = e.photo && e.photo.length > 0;
@@ -697,6 +706,7 @@
         ? '<img data-day="' + e.day + '" src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
         : "";
       const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
+      const ascent = e.ascentM ? '<div class="miles">' + metersToFeet(e.ascentM).toLocaleString() + ' ft ascent</div>' : "";
       const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
 
       // For Day 0, prepend a live countdown to departure.
@@ -729,6 +739,7 @@
             countdownHtml +
             '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
             miles +
+            ascent +
           '</div>' +
         '</div>'
       );
