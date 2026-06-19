@@ -6,11 +6,27 @@
       "day": 0,
       "date": "2026-06-18",
       "location": "Irún — the start",
-      "coords": [43.338, -1.7893],
+      "coords": [
+        43.338,
+        -1.7893
+      ],
       "distanceKm": 0,
       "ascentM": 0,
       "photo": "",
       "caption": "Sarah arrives in Irún to begin her 40-day Camino del Norte. From Irún she'll follow the coast of the Cantabrian Sea west through Basque country, across Cantabria and Asturias, then turn inland through Galicia to reach Santiago — about 513 miles (825 km)."
+    },
+    {
+      "day": 1,
+      "date": "2026-06-19",
+      "location": "San Sebastián",
+      "coords": [
+        43.3179,
+        -1.9754
+      ],
+      "caption": "Just got settled into hostel. Going to shower and then FOOD!!",
+      "distanceKm": 29.548,
+      "ascentM": 1008.3,
+      "photo": "photos/day-01.jpg"
     }
   ]
 }
