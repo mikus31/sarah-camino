@@ -27,6 +27,19 @@
       "distanceKm": 29.548,
       "ascentM": 1008.3,
       "photo": "photos/day-01.jpg"
+    },
+    {
+      "day": 2,
+      "date": "2026-06-20",
+      "location": "Getaria",
+      "coords": [
+        43.3032,
+        -2.2033
+      ],
+      "caption": "Have I told you how insane the hydrangeas are here?!? There's sooo many. They're so big. I've seen color variations I've never seen before. They're in full bloom. It's incredible.",
+      "distanceKm": 26.055,
+      "ascentM": 741.9,
+      "photo": "photos/day-02.jpg"
     }
   ]
 }
