@@ -560,9 +560,10 @@
       document.getElementById("banner-title").textContent =
         (journalPilgrim ? journalPilgrim + " \u2014 " : "") + "Camino del Norte";
       renderBannerSub();
+      const daysWord = totalDays === 1 ? "day" : "days";
       document.getElementById("banner-stats").innerHTML = totalDays
-        ? "<div>Day <b>" + totalDays + "</b></div>"
-          + "<div>Total: <b>" + totalMiles + "</b> mi"
+        ? "<div>Total: <b>" + totalDays + "</b> " + daysWord
+          + " &middot; <b>" + totalMiles + "</b> mi"
           + (totalAscentFt > 0 ? " &middot; <b>" + totalAscentFt.toLocaleString() + "</b> ft climbed" : "")
           + "</div>"
         : "";
