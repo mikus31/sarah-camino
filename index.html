@@ -562,8 +562,9 @@
       renderBannerSub();
       document.getElementById("banner-stats").innerHTML = totalDays
         ? "<div>Day <b>" + totalDays + "</b></div>"
-          + "<div><b>" + totalMiles + "</b> mi</div>"
-          + (totalAscentFt > 0 ? "<div><b>" + totalAscentFt.toLocaleString() + "</b> ft climbed</div>" : "")
+          + "<div>Total: <b>" + totalMiles + "</b> mi"
+          + (totalAscentFt > 0 ? " &middot; <b>" + totalAscentFt.toLocaleString() + "</b> ft climbed" : "")
+          + "</div>"
         : "";
 
       // Kick off weather for the most recent entry's location
