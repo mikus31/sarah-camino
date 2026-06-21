@@ -40,6 +40,19 @@
       "distanceKm": 26.055,
       "ascentM": 741.9,
       "photo": "photos/day-02.jpg"
+    },
+    {
+      "day": 3,
+      "date": "2026-06-21",
+      "location": "Deba",
+      "coords": [
+        43.2987,
+        -2.3531
+      ],
+      "caption": "We made it to a bar for the World Cup, saw Spain score so the girls decided we're going to the beach. The water here is amazing! Just got back from swimming in the ocean!",
+      "distanceKm": 20.246,
+      "ascentM": 664.8,
+      "photo": "photos/day-03.jpg"
     }
   ]
 }
