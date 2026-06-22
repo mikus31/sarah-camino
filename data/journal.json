@@ -53,6 +53,19 @@
       "distanceKm": 20.246,
       "ascentM": 664.8,
       "photo": "photos/day-03.jpg"
+    },
+    {
+      "day": 4,
+      "date": "2026-06-22",
+      "location": "Marquina-Jeméin",
+      "coords": [
+        43.27,
+        -2.4977
+      ],
+      "caption": "Today was literally HELL!! It was SO HARD! SO HOT! And limited shade. 15+ miles. At least the views were pretty for a while!",
+      "distanceKm": 24.285,
+      "ascentM": 1160.7,
+      "photo": "photos/day-04.jpg"
     }
   ]
 }
