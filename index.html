@@ -89,6 +89,12 @@
       font-variant-numeric: tabular-nums;
     }
     .banner .time b { color: var(--camino-blue); font-weight: 600; }
+    .banner .remaining {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #6b5a48;
+    }
+    .banner .remaining b { color: var(--terracotta); font-weight: 700; }
     .banner .weather {
       margin-top: 4px;
       font-size: 12px;
@@ -329,6 +335,7 @@
     <h1 id="banner-title">Camino del Norte</h1>
     <div class="sub" id="banner-sub">Loading journey…</div>
     <div class="stats" id="banner-stats"></div>
+    <div class="remaining" id="banner-remaining"></div>
     <div class="time" id="banner-time"></div>
     <div class="weather" id="banner-weather"></div>
   </div>
@@ -567,6 +574,30 @@
           + (totalAscentFt > 0 ? " &middot; <b>" + totalAscentFt.toLocaleString() + "</b> ft climbed" : "")
           + "</div>"
         : "";
+
+      // 5. Compute remaining distance to Santiago and the Finisterre stretch goal.
+      //    Total route length comes from the geometry; Finisterre extension is the
+      //    well-documented ~89 km traditional pilgrim walk from Santiago to Cabo Fisterra.
+      const FINISTERRE_EXTENSION_KM = 89;
+      const totalRouteKm = turf.length(routeLine, { units: "kilometers" });
+      const remainingSantiagoKm = Math.max(0, totalRouteKm - totalKm);
+      const remainingFinisterreKm = remainingSantiagoKm + FINISTERRE_EXTENSION_KM;
+      const remainingSantiagoMi = kmToMiles(remainingSantiagoKm);
+      const remainingFinisterreMi = kmToMiles(remainingFinisterreKm);
+
+      var remHtml;
+      if (remainingSantiagoKm > 0.5) {
+        // Standard case: still walking toward Santiago
+        remHtml = "<b>" + remainingSantiagoMi + "</b> mi to Santiago "
+                + "(<b>" + remainingFinisterreMi + "</b> mi to Finisterre)";
+      } else if (remainingFinisterreKm > 0.5) {
+        // Santiago reached, still going toward Finisterre
+        remHtml = "Santiago reached · <b>" + remainingFinisterreMi + "</b> mi to Finisterre";
+      } else {
+        // Both reached
+        remHtml = "Finisterre reached 🌊";
+      }
+      document.getElementById("banner-remaining").innerHTML = remHtml;
 
       // Kick off weather for the most recent entry's location
       if (entries.length > 0) {
