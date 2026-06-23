@@ -66,6 +66,19 @@
       "distanceKm": 24.285,
       "ascentM": 1160.7,
       "photo": "photos/day-04.jpg"
+    },
+    {
+      "day": 5,
+      "date": "2026-06-23",
+      "location": "Mendata",
+      "coords": [
+        43.2979,
+        -2.6389
+      ],
+      "caption": "The trail is like every hike I've ever done all rolled into one. Some parts look like Louisiana, Alabama, or Arkansas, others like Utah and Arizona, and then definitely Hawaii -- and even threw in some Peruvian Incan stairs!",
+      "distanceKm": 17.992,
+      "ascentM": 593.4,
+      "photo": "photos/day-05.jpg"
     }
   ]
 }
