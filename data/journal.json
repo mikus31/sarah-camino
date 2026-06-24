@@ -79,6 +79,19 @@
       "distanceKm": 17.992,
       "ascentM": 593.4,
       "photo": "photos/day-05.jpg"
+    },
+    {
+      "day": 6,
+      "date": "2026-06-24",
+      "location": "Muxika",
+      "coords": [
+        43.3031,
+        -2.7252
+      ],
+      "caption": "My walking stick I found and my first signatures! I gave my stick to a carpenter to sign. He asked if he could carve into it. It's exciting to see what he did, and a guy from Japan signed too!",
+      "distanceKm": 14.066,
+      "ascentM": 459,
+      "photo": "photos/day-06.jpg"
     }
   ]
 }
