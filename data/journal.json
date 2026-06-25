@@ -92,6 +92,19 @@
       "distanceKm": 14.066,
       "ascentM": 459,
       "photo": "photos/day-06.jpg"
+    },
+    {
+      "day": 7,
+      "date": "2026-06-25",
+      "location": "Bilbao",
+      "coords": [
+        43.2578,
+        -2.9104
+      ],
+      "caption": "I went to the 7:00 mass at the basilica near the albergue. The church is so beautiful. I didn't understand a single thing at the mass except padre, madre, and papa Leon ... and tu!",
+      "distanceKm": 19.167,
+      "ascentM": 355.7,
+      "photo": "photos/day-07.jpg"
     }
   ]
 }
