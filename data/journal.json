@@ -105,6 +105,19 @@
       "distanceKm": 19.167,
       "ascentM": 355.7,
       "photo": "photos/day-07.jpg"
+    },
+    {
+      "day": 8,
+      "date": "2026-06-26",
+      "location": "Portugalete",
+      "coords": [
+        43.3215,
+        -3.0189
+      ],
+      "caption": "I slept in, walked almost 10 miles, got to the town at 12:30, explored, went to a restaurant had a coke, went to the Irish pub, waited for albergue to open, showered, did laundry, rested, went to the store, iced my knee and it's not quite 6!",
+      "distanceKm": 15.755,
+      "ascentM": 326.4,
+      "photo": "photos/day-08.jpg"
     }
   ]
 }
