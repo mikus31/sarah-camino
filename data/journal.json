@@ -118,6 +118,19 @@
       "distanceKm": 15.755,
       "ascentM": 326.4,
       "photo": "photos/day-08.jpg"
+    },
+    {
+      "day": 9,
+      "date": "2026-06-27",
+      "location": "Castro Urdiales",
+      "coords": [
+        43.3882,
+        -3.2307
+      ],
+      "caption": "Today might have been my favorite yet!! It was hard because we're back to longer distances but we were along the coast with views of the gorgeous ocean for at least most of the route. Day 1 is still a close second.",
+      "distanceKm": 28.856,
+      "ascentM": 628.8,
+      "photo": "photos/day-09.jpg"
     }
   ]
 }
