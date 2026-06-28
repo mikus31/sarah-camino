@@ -131,6 +131,19 @@
       "distanceKm": 28.856,
       "ascentM": 628.8,
       "photo": "photos/day-09.jpg"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-28",
+      "location": "Lardeo",
+      "coords": [
+        43.4106,
+        -3.411
+      ],
+      "caption": "Another amazing day on the trail. Zulu was everywhere. Starting off with 22.2 km to go at a break in the trail (we consider anything 2-2-2 a sign from Zulu). Also, I watched a calf be born! I'm staying in a monastery tonight and they had a small service with a pilgrim's blessing at the end where a nun prayed over each of us individually. Everything was in Spanish and then English. At one point, the nun walked over and said \"you speak English, right?\" I said yes and she handed me the microphone and book and asked me to read the English passage! IYKYK how big a deal that is for me!",
+      "distanceKm": 30.674,
+      "ascentM": 777.2,
+      "photo": "photos/day-10.jpg"
     }
   ]
 }
