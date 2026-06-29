@@ -144,6 +144,19 @@
       "distanceKm": 30.674,
       "ascentM": 777.2,
       "photo": "photos/day-10.jpg"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-29",
+      "location": "Güemes",
+      "coords": [
+        43.447,
+        -3.6451
+      ],
+      "caption": "Finally busted out the rain gear. It was raining as we left Laredo and had to put on all the rain things. Walked in my sandals the first 10 miles which was a nice break from my boots. A lot of us are feeling the blisters coming on from walking with wet feet (thank you for the blister pads Emily and Megan!!). I got to walk with my two American friends most of the day which was nice as it was flat and a lot of city and concrete.",
+      "distanceKm": 28.147,
+      "ascentM": 370.6,
+      "photo": "photos/day-11.jpg"
     }
   ]
 }
