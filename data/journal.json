@@ -157,6 +157,19 @@
       "distanceKm": 28.147,
       "ascentM": 370.6,
       "photo": "photos/day-11.jpg"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-30",
+      "location": "Santander",
+      "coords": [
+        43.4601,
+        -3.8094
+      ],
+      "caption": "Ernesto, the 89-year-old priest and albergue owner, signed my walking stick this morning. He enjoyed sharing the history of the property and its significance with all his guests. The roughly 6+miles than ran along the coast today were absolutely stunning and the clouds made for a dramatic and moody sky. Some frustration toward the end due to unmarked path but in the end I mae it and today's trail ended with a ferry ride into Santander.",
+      "distanceKm": 20.744,
+      "ascentM": 340.8,
+      "photo": "photos/day-12.jpg"
     }
   ]
 }
