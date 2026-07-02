@@ -170,6 +170,19 @@
       "distanceKm": 20.744,
       "ascentM": 340.8,
       "photo": "photos/day-12.jpg"
+    },
+    {
+      "day": 13,
+      "date": "2026-07-01",
+      "location": "Barreda",
+      "coords": [
+        43.3746,
+        -4.041
+      ],
+      "caption": "It's hard to find the words to describe how wonderful today was. A group of us chose to do the coastal route (not even on my app!) and it was breathtaking to say the least. It had its challenges but we were rewarded with views so amazing the pictures don't do it justice (and the pictures are amazing!!).",
+      "distanceKm": 28.775,
+      "ascentM": 452.6,
+      "photo": "photos/day-13.jpg"
     }
   ]
 }
