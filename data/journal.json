@@ -183,6 +183,19 @@
       "distanceKm": 28.775,
       "ascentM": 452.6,
       "photo": "photos/day-13.jpg"
+    },
+    {
+      "day": 14,
+      "date": "2026-07-03",
+      "location": "Comillas",
+      "coords": [
+        43.3839,
+        -4.2878
+      ],
+      "caption": "We said goodbye to our Zola girl yesterday which forced me to have a much-needed rest day. Today the trail was a mix of mountain views, rolling hills, and beautiful sea views, sometimes all at once. I was surprised to see the ocean as I thought we'd be too far away. There was a wonderful breeze throughout the day and some beautiful churches open with stamps!!",
+      "distanceKm": 23.207,
+      "ascentM": 559.9,
+      "photo": "photos/day-14.jpg"
     }
   ]
 }
