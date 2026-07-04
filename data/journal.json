@@ -196,6 +196,19 @@
       "distanceKm": 23.207,
       "ascentM": 559.9,
       "photo": "photos/day-14.jpg"
+    },
+    {
+      "day": 15,
+      "date": "2026-07-04",
+      "location": "La Franca",
+      "coords": [
+        43.3861,
+        -4.5747
+      ],
+      "caption": "Almost 21-mile day done! Roughly 80 percent concrete so a lot of pounding but beautiful ocean and mountain views for the first half before turning inland. Definitely warmed up toward the end and was a humid day. Hopefully there's not too many more long distance days!!",
+      "distanceKm": 33.507,
+      "ascentM": 698.6,
+      "photo": "photos/day-15.jpg"
     }
   ]
 }
