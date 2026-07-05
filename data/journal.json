@@ -209,6 +209,19 @@
       "distanceKm": 33.507,
       "ascentM": 698.6,
       "photo": "photos/day-15.jpg"
+    },
+    {
+      "day": 16,
+      "date": "2026-07-05",
+      "location": "Llanes",
+      "coords": [
+        43.4214,
+        -4.7565
+      ],
+      "caption": "I took the coastal route today and although we didn't see the ocean as much as I expected, when we did it was a dramatic, jagged coast weathered by waves. We even went by bufones that make sound like thunder when the waves come near. Today's \"short\" distance allowed me and a group of friends the opportunity to relax at the beach. The ocean felt like a cold plunge and was amazing for our tired legs and feet!",
+      "distanceKm": 21.919,
+      "ascentM": 428.9,
+      "photo": "photos/day-16.jpg"
     }
   ]
 }
