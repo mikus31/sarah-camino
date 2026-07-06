@@ -222,6 +222,19 @@
       "distanceKm": 21.919,
       "ascentM": 428.9,
       "photo": "photos/day-16.jpg"
+    },
+    {
+      "day": 17,
+      "date": "2026-07-06",
+      "location": "San Esteban",
+      "coords": [
+        43.4643,
+        -5.1108
+      ],
+      "caption": "Another 22 miles (in the heat!) closer to Santiago. Today was walk with friends day! Kyla and I knocked out the first 11 before breaking for coffee and then parting ways. I got a little lost in the next few miles but found my way back to the trail and then stumbled into Tina at a cafe. We walked the final 4 miles to the albergue and met up with some other familiar faces. We made dinner together at the albergue and enjoyed a peaceful night in.",
+      "distanceKm": 36.564,
+      "ascentM": 581.6,
+      "photo": "photos/day-17.jpg"
     }
   ]
 }
