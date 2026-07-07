@@ -235,6 +235,19 @@
       "distanceKm": 36.564,
       "ascentM": 581.6,
       "photo": "photos/day-17.jpg"
+    },
+    {
+      "day": 18,
+      "date": "2026-07-07",
+      "location": "Villaviciosa",
+      "coords": [
+        43.4849,
+        -5.3584
+      ],
+      "caption": "First half of the day flew by as Tina and I knocked out 6.5 miles while talking. We sat at a cafe to enjoy breakfast before parting ways as that was her stop for the day. Even though the fog and clouds kept the temperature down, the afternoon seemed to crawl. I made it to a very nice albergue where we got a private showing of the church next door and a group of us played card games!",
+      "distanceKm": 24.961,
+      "ascentM": 560.8,
+      "photo": "photos/day-18.jpg"
     }
   ]
 }
