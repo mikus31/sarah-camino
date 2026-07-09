@@ -261,6 +261,19 @@
       "distanceKm": 32.992,
       "ascentM": 853.7,
       "photo": "photos/day-19.jpg"
+    },
+    {
+      "day": 20,
+      "date": "2026-07-09",
+      "location": "Avilés",
+      "coords": [
+        43.551,
+        -5.9191
+      ],
+      "caption": "So thankful I ran into Franklin today. After a few back-to-back long days I was thinking about only walking as far as I felt and then hopping a bus to the albergue because there's not a lot of options to shorten today. Met up with Franklin around mile 8 and we finished the day strong!! My feet are sore and tired. Thankful tomorrow is a \"short\" day -- only 14ish miles!",
+      "distanceKm": 36.677,
+      "ascentM": 386.8,
+      "photo": "photos/day-20.jpg"
     }
   ]
 }
