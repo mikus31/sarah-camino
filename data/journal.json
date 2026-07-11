@@ -274,6 +274,19 @@
       "distanceKm": 36.677,
       "ascentM": 386.8,
       "photo": "photos/day-20.jpg"
+    },
+    {
+      "day": 21,
+      "date": "2026-07-10",
+      "location": "La Pumariega",
+      "coords": [
+        43.5414,
+        -6.0949
+      ],
+      "caption": "It was one of those days with Hawaii type rain. Misty long enough to get you wet but not quite enough for rain gear. I did put on the poncho to protect my bag. Tonight we enjoyed watching Spain beat Belgium in the World Cup at the albergue. A group of peregrinos who don't speak the same language bonding over food, vino, and futbol!",
+      "distanceKm": 23.529,
+      "ascentM": 396.2,
+      "photo": "photos/day-21.jpg"
     }
   ]
 }
