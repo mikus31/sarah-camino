@@ -287,6 +287,19 @@
       "distanceKm": 21.501,
       "ascentM": 485.5,
       "photo": "photos/day-21.jpg"
+    },
+    {
+      "day": 22,
+      "date": "2026-07-11",
+      "location": "Soto de Luiña",
+      "coords": [
+        43.5636,
+        -6.2308
+      ],
+      "caption": "One of our shortest Camino walks right around 10 miles. What we lacked in distance we made up for in elevation as the day went up and down, up and down. The great thing about a short day is I slept in, hiked and made it to the next town before check-in time! I met up with my new Spanish friends who were so happy to see me as I brought some items they had left at the albergue. We enjoyed a wonderful meal together at a restaurant and then lots of drinks back at the albergue. Oh also my knees felt pretty good today!",
+      "distanceKm": 18.862,
+      "ascentM": 365.8,
+      "photo": "photos/day-22.jpg"
     }
   ]
 }
