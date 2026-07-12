@@ -300,6 +300,19 @@
       "distanceKm": 18.862,
       "ascentM": 365.8,
       "photo": "photos/day-22.jpg"
+    },
+    {
+      "day": 23,
+      "date": "2026-07-12",
+      "location": "Cueva",
+      "coords": [
+        43.5461,
+        -6.466
+      ],
+      "caption": "Our route options today -- hard or harder. The coast or the mountains. Even though the mountains are the \"official route\" both the app and our albergue host strongly advised against taking it. The coastal route did not lack in elevation changes but gave us magnificient views throughout the day. It reminded me of Hawaii changing between tropical rainforest vibes to coast to farmland and the humidity that accompanies the island vibes! Back at the albergue dinner and drinks with friends and then a trek to the beach at 11p with a few other adventurous souls.",
+      "distanceKm": 26.957,
+      "ascentM": 457.2,
+      "photo": "photos/day-23.jpg"
     }
   ]
 }
