@@ -313,6 +313,19 @@
       "distanceKm": 26.957,
       "ascentM": 457.2,
       "photo": "photos/day-23.jpg"
+    },
+    {
+      "day": 24,
+      "date": "2026-07-13",
+      "location": "Piñera",
+      "coords": [
+        43.5442,
+        -6.6742
+      ],
+      "caption": "I'm learning that one of the hardest parts of the Camino is saying goodbye to friends. Tomorrow we say goodbye to two guys who have become dear friends in a few days. We enjoyed one last night together over food, drinks, and making memories. Until we meet again!",
+      "distanceKm": 24.124,
+      "ascentM": 507.2,
+      "photo": "photos/day-24.jpg"
     }
   ]
 }
