@@ -326,6 +326,19 @@
       "distanceKm": 24.124,
       "ascentM": 507.2,
       "photo": "photos/day-24.jpg"
+    },
+    {
+      "day": 25,
+      "date": "2026-07-14",
+      "location": "La Caridad",
+      "coords": [
+        43.5494,
+        -6.8256
+      ],
+      "caption": "No words from Sarah yet for today's entry, so ... hi! This is Michael, I've been updating the map every day since she began her Camino. Thanks for following her pilgrimage across Spain this summer. She did send a picture for today and I'll update the words when they come, but for now, adios and Buen Camino Sarah!",
+      "distanceKm": 14.774,
+      "ascentM": 182.9,
+      "photo": "photos/day-25.jpg"
     }
   ]
 }
