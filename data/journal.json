@@ -339,6 +339,19 @@
       "distanceKm": 14.774,
       "ascentM": 182.9,
       "photo": "photos/day-25.jpg"
+    },
+    {
+      "day": 26,
+      "date": "2026-07-15",
+      "location": "Celeirós",
+      "coords": [
+        43.5068,
+        -7.0986
+      ],
+      "caption": "I almost cried when Marga left today. We went from a quizzical look and \"I'm sorry I understand but don't speak much English\" to good friends and her being my translator in a few short days. And she found me a black ink pen in Spain (which apparently is damn near impossible). I'm also saying goodbye to the sea (for now!).",
+      "distanceKm": 31.752,
+      "ascentM": 451.7,
+      "photo": "photos/day-26.jpg"
     }
   ]
 }
