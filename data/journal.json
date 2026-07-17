@@ -365,6 +365,19 @@
       "distanceKm": 19.698,
       "ascentM": 365.8,
       "photo": "photos/day-27.jpg"
+    },
+    {
+      "day": 28,
+      "date": "2026-07-17",
+      "location": "Abadín",
+      "coords": [
+        43.3676,
+        -7.468
+      ],
+      "caption": "One week until I reach Santiago!! Today's walk was beautiful with rolling hills and mountains but the elevation gains gave me flashbacks to week 1. We have definitely added more pilgrims to the mix and the route and albergues are more full.",
+      "distanceKm": 21.984,
+      "ascentM": 937.9,
+      "photo": "photos/day-28.jpg"
     }
   ]
 }
