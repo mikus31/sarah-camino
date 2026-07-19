@@ -378,6 +378,19 @@
       "distanceKm": 21.984,
       "ascentM": 937.9,
       "photo": "photos/day-28.jpg"
+    },
+    {
+      "day": 29,
+      "date": "2026-07-18",
+      "location": "Vilalba",
+      "coords": [
+        43.3082,
+        -7.6607
+      ],
+      "caption": "The weather today was phenomenal -- cool and breezy. No major elevation changes which was a plus after yesterday!! I finished early (12:15p) and had plenty of time to hang out with friends -- old and new -- at the albergue!",
+      "distanceKm": 19.827,
+      "ascentM": 310.6,
+      "photo": "photos/day-29.jpg"
     }
   ]
 }
