@@ -391,6 +391,19 @@
       "distanceKm": 19.827,
       "ascentM": 310.6,
       "photo": "photos/day-29.jpg"
+    },
+    {
+      "day": 30,
+      "date": "2026-07-19",
+      "location": "Parga",
+      "coords": [
+        43.1582,
+        -7.8382
+      ],
+      "caption": "Big day today! GEAUX ESPAGNA!! ⚽️🏆 and I crossed the 100km left marker today!! 🥾🥾🥾",
+      "distanceKm": 28.856,
+      "ascentM": 411.5,
+      "photo": "photos/day-30.jpg"
     }
   ]
 }
