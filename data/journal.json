@@ -404,6 +404,19 @@
       "distanceKm": 28.856,
       "ascentM": 411.5,
       "photo": "photos/day-30.jpg"
+    },
+    {
+      "day": 31,
+      "date": "2026-07-20",
+      "location": "Sobrado",
+      "coords": [
+        43.0386,
+        -8.023
+      ],
+      "caption": "Today’s walk was beautiful and reminded me some of Louisiana and some of our time in Iowa. I really liked the priest at mass and he joined a group of us at dinner for a bit. I got to hang out with a group from Wisconsin that I’ve crossed paths with a few times this week. Crazy how time goes so fast and seems like I’ve been here forever at the same time. 🌾🌽☀️🐄⛪",
+      "distanceKm": 31.994,
+      "ascentM": 518.2,
+      "photo": "photos/day-31.jpg"
     }
   ]
 }
