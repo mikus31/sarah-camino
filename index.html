@@ -579,7 +579,11 @@
       //    Total route length comes from the geometry; Finisterre extension is the
       //    well-documented ~89 km traditional pilgrim walk from Santiago to Cabo Fisterra.
       const FINISTERRE_EXTENSION_KM = 89;
-      const totalRouteKm = turf.length(routeLine, { units: "kilometers" });
+      // Our OSM-derived geometry (819 km) is a few km short of published Camino
+      // del Norte figures (~828 km). Bump the total so the "miles to Santiago"
+      // display matches guidebooks and pilgrim reports.
+      const SANTIAGO_EXTRA_KM = 9;
+      const totalRouteKm = turf.length(routeLine, { units: "kilometers" }) + SANTIAGO_EXTRA_KM;
       const remainingSantiagoKm = Math.max(0, totalRouteKm - totalKm);
       const remainingFinisterreKm = remainingSantiagoKm + FINISTERRE_EXTENSION_KM;
       const remainingSantiagoMi = kmToMiles(remainingSantiagoKm);
