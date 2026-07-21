@@ -417,6 +417,19 @@
       "distanceKm": 31.994,
       "ascentM": 518.2,
       "photo": "photos/day-31.jpg"
+    },
+    {
+      "day": 32,
+      "date": "2026-07-21",
+      "location": "A Calle",
+      "coords": [
+        42.9153,
+        -8.2433
+      ],
+      "caption": "Today we combined with the Camino Francés and had a huge influx of peregrinos. About 30 km (18.6 miles) to get to Santiago. I will definitely be there by Thursday but depending on how tomorrow goes I may reach Santiago tomorrow. 🥳🥳 So bittersweet as I will say goodbye to so many friends in the next few days before heading to Muxia and Finisterre. ❤️❤️❤️",
+      "distanceKm": 28.646,
+      "ascentM": 411.5,
+      "photo": "photos/day-32.jpg"
     }
   ]
 }
