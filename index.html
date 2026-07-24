@@ -552,14 +552,24 @@
 
       // Build a "journey line" for walked-line slicing. If we have the extension
       // data, concatenate the Norte + the extension's main trunk (F0 = Santiago
-      // to Fisterra, single continuous LineString) so the walked-line can extend
-      // past Santiago along the stretch goal naturally.
+      // to Fisterra) so the walked-line can extend past Santiago along the
+      // stretch goal naturally.
       let journeyLine = routeLine;
       if (extensionData && extensionData.features.length > 0) {
-        const extCoords = extensionData.features[0].geometry.coordinates;
-        // Concat, skipping F0's first point (essentially the same as route's last point)
-        const combined = routeLine.geometry.coordinates.concat(extCoords.slice(1));
-        journeyLine = turf.lineString(combined);
+        const extGeom = extensionData.features[0].geometry;
+        // Extract the first LineString from the extension. F0 may be either
+        // a LineString directly, or a MultiLineString whose first segment is the trunk.
+        let extCoords;
+        if (extGeom.type === "LineString") {
+          extCoords = extGeom.coordinates;
+        } else if (extGeom.type === "MultiLineString" && extGeom.coordinates.length > 0) {
+          extCoords = extGeom.coordinates[0];
+        }
+        if (extCoords && extCoords.length > 1) {
+          // Concat, skipping F0's first point (essentially the same as route's last point)
+          const combined = routeLine.geometry.coordinates.concat(extCoords.slice(1));
+          journeyLine = turf.lineString(combined);
+        }
       }
       const startPt = turf.point(journeyLine.geometry.coordinates[0]);
 
