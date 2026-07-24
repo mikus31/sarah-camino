@@ -12,7 +12,6 @@ admin.html
 # data/route.geojson is what the app uses at runtime.
 data/northern-route.json
 data/route-*.backup.geojson
-data/camino-de-fisterra-muxia.json
 
 # Raw OG image source (kept local for re-cropping). The cropped 1200x630
 # og-image.jpg is what ships.
