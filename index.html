@@ -125,6 +125,13 @@
     }
     /* "Full route" swatch: a dashed terracotta line approximation of how the
        unwalked portion appears on the map. */
+    .legend .scallop-mini {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .legend .scallop-mini svg { display: block; width: 100%; height: 100%; }
     .legend .swatch-dashed {
       background: transparent;
       border-radius: 0;
@@ -312,6 +319,19 @@
       70%  { box-shadow: 0 0 0 22px rgba(255, 204, 0, 0); }
       100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
     }
+    /* Santiago milestone marker: the pilgrim scallop shell. Slightly larger
+       than the current marker and always bright yellow — never fades. */
+    .santiago-marker {
+      width: 28px;
+      height: 28px;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+    }
+    .santiago-marker svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .past-marker {
       width: 12px;
       height: 12px;
@@ -345,6 +365,7 @@
     <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Walked so far</div>
     <div class="row"><span class="dot" style="background: var(--past-day);"></span>Past day (click!)</div>
     <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div>
+    <div class="row"><span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/><g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="24" x2="6.5" y2="18.5"/><line x1="16" y1="24" x2="10" y2="11"/><line x1="16" y1="24" x2="16" y2="8"/><line x1="16" y1="24" x2="22" y2="11"/><line x1="16" y1="24" x2="25.5" y2="18.5"/></g></svg></span>Santiago</div>
   </div>
 
   <!-- Lightbox overlay (hidden until a photo is clicked) -->
@@ -469,9 +490,12 @@
     // -------------------------------------------------------------
     Promise.all([
       fetch("data/route.geojson").then(r => r.json()),
-      fetch("data/journal.json").then(r => r.json())
-    ]).then(([routeData, journal]) => {
-      renderTrip(routeData, journal);
+      fetch("data/journal.json").then(r => r.json()),
+      // Finisterre-Muxía extension (stretch goal beyond Santiago). Optional —
+      // if the file is missing or fails to load, the extension just doesn't render.
+      fetch("data/camino-de-fisterra-muxia.json").then(r => r.ok ? r.json() : null).catch(() => null)
+    ]).then(([routeData, journal, extensionData]) => {
+      renderTrip(routeData, journal, extensionData);
     }).catch(err => {
       console.error(err);
       document.getElementById("banner-sub").textContent =
@@ -481,7 +505,7 @@
     // -------------------------------------------------------------
     // RENDER
     // -------------------------------------------------------------
-    function renderTrip(routeData, journal) {
+    function renderTrip(routeData, journal, extensionData) {
       // 1. Draw the full route as a dashed terracotta line. Warm color
       //    contrasts well against satellite + topo basemaps. Wide dash gaps
       //    so the dashes read distinctly even when zoomed all the way out.
@@ -496,25 +520,56 @@
         }
       }).addTo(map);
 
-      // Fit map to the route
-      map.fitBounds(fullRoute.getBounds(), { padding: [40, 40] });
+      // 1b. Draw the Finisterre-Muxía extension (stretch goal beyond Santiago),
+      //     if the file loaded. Same terracotta dashed style — reads as more
+      //     of the "route yet to walk" visual.
+      let extensionRoute = null;
+      if (extensionData) {
+        extensionRoute = L.geoJSON(extensionData, {
+          style: {
+            color: "#c0502b",
+            weight: 3,
+            opacity: 0.85,
+            dashArray: "5 12",
+            lineCap: "round"
+          }
+        }).addTo(map);
+      }
 
-      // 2. Compute the "walked so far" portion of the route using turf
+      // Fit map to the combined route (main + extension if present)
+      const boundsSource = extensionRoute
+        ? L.featureGroup([fullRoute, extensionRoute])
+        : fullRoute;
+      map.fitBounds(boundsSource.getBounds(), { padding: [40, 40] });
+
+      // 2. Compute the "walked so far" portion of the route using turf.
       const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
       allEntries = entries;
       journalStartDate = journal.startDate || "";
       journalPilgrim = journal.pilgrim || "";
       const walkedEntries = entries.filter(function (e) { return e.day >= 1; });
       const routeLine = routeData.features[0];          // Turf expects a Feature<LineString>
-      const startPt = turf.point(routeLine.geometry.coordinates[0]);
+
+      // Build a "journey line" for walked-line slicing. If we have the extension
+      // data, concatenate the Norte + the extension's main trunk (F0 = Santiago
+      // to Fisterra, single continuous LineString) so the walked-line can extend
+      // past Santiago along the stretch goal naturally.
+      let journeyLine = routeLine;
+      if (extensionData && extensionData.features.length > 0) {
+        const extCoords = extensionData.features[0].geometry.coordinates;
+        // Concat, skipping F0's first point (essentially the same as route's last point)
+        const combined = routeLine.geometry.coordinates.concat(extCoords.slice(1));
+        journeyLine = turf.lineString(combined);
+      }
+      const startPt = turf.point(journeyLine.geometry.coordinates[0]);
 
       // Only draw the walked-line once at least one walking day has happened.
       // Pre-launch (only Day 0), there's nothing to draw.
       if (walkedEntries.length > 0) {
         const latest = walkedEntries[walkedEntries.length - 1];
         const latestPt = turf.point([latest.coords[1], latest.coords[0]]);  // [lng, lat]
-        const snapped = turf.nearestPointOnLine(routeLine, latestPt, { units: "kilometers" });
-        const walked = turf.lineSlice(startPt, snapped, routeLine);
+        const snapped = turf.nearestPointOnLine(journeyLine, latestPt, { units: "kilometers" });
+        const walked = turf.lineSlice(startPt, snapped, journeyLine);
 
         L.geoJSON(walked, {
           style: {
@@ -530,18 +585,52 @@
       // 3. Markers for each day's entry
       const mostRecentDay = entries.length > 0 ? entries[entries.length - 1].day : null;
 
+      // Scallop-shell SVG for the Santiago milestone marker
+      const SCALLOP_SVG =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
+          '<circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/>' +
+          '<path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/>' +
+          '<g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+            '<line x1="16" y1="24" x2="6.5" y2="18.5"/>' +
+            '<line x1="16" y1="24" x2="10" y2="11"/>' +
+            '<line x1="16" y1="24" x2="16" y2="8"/>' +
+            '<line x1="16" y1="24" x2="22" y2="11"/>' +
+            '<line x1="16" y1="24" x2="25.5" y2="18.5"/>' +
+          '</g>' +
+        '</svg>';
+
       entries.forEach(entry => {
+        const isSantiago = /santiago/i.test(entry.location || "");
         const isRecent = entry.day === mostRecentDay;
+
+        let iconHtml, iconSize, iconAnchor, zIdx;
+        if (isSantiago) {
+          iconHtml = '<div class="santiago-marker">' + SCALLOP_SVG + '</div>';
+          iconSize = [28, 28];
+          iconAnchor = [14, 14];
+          zIdx = 500;   // above past markers, below the pulsing current-marker
+        } else if (isRecent) {
+          iconHtml = '<div class="current-marker"></div>';
+          iconSize = [22, 22];
+          iconAnchor = [11, 11];
+          zIdx = 1000;
+        } else {
+          iconHtml = '<div class="past-marker"></div>';
+          iconSize = [12, 12];
+          iconAnchor = [6, 6];
+          zIdx = 0;
+        }
+
         const icon = L.divIcon({
           className: "",
-          html: '<div class="' + (isRecent ? "current-marker" : "past-marker") + '"></div>',
-          iconSize: isRecent ? [22, 22] : [12, 12],
-          iconAnchor: isRecent ? [11, 11] : [6, 6]
+          html: iconHtml,
+          iconSize: iconSize,
+          iconAnchor: iconAnchor
         });
 
         const marker = L.marker(entry.coords, {
           icon: icon,
-          zIndexOffset: isRecent ? 1000 : 0,
+          zIndexOffset: zIdx,
           riseOnHover: true
         }).addTo(map);
 
@@ -585,7 +674,10 @@
       const SANTIAGO_EXTRA_KM = 9;
       const totalRouteKm = turf.length(routeLine, { units: "kilometers" }) + SANTIAGO_EXTRA_KM;
       const remainingSantiagoKm = Math.max(0, totalRouteKm - totalKm);
-      const remainingFinisterreKm = remainingSantiagoKm + FINISTERRE_EXTENSION_KM;
+      // Once she walks past Santiago, decrement the Finisterre remaining by the
+      // amount she's covered on the extension.
+      const walkedPastSantiagoKm = Math.max(0, totalKm - totalRouteKm);
+      const remainingFinisterreKm = remainingSantiagoKm + Math.max(0, FINISTERRE_EXTENSION_KM - walkedPastSantiagoKm);
       const remainingSantiagoMi = kmToMiles(remainingSantiagoKm);
       const remainingFinisterreMi = kmToMiles(remainingFinisterreKm);
 
