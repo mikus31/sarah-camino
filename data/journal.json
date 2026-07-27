@@ -469,6 +469,19 @@
       "distanceKm": 28.872,
       "ascentM": 696.5,
       "photo": "photos/day-35.jpg"
+    },
+    {
+      "day": 36,
+      "date": "2026-07-27",
+      "location": "Vilastose",
+      "coords": [
+        43.049,
+        -9.153
+      ],
+      "caption": "As my time in Spain draws closer to ending, I’m realizing the Camino never ends. We’re always walking along our friends, neighbors, and strangers. We’re called to help and love one another and give grace to those around us just as we do on the Camino. Buen Camino.",
+      "distanceKm": 23.641,
+      "ascentM": 304.8,
+      "photo": "photos/day-36.jpg"
     }
   ]
 }
