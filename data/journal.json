@@ -482,6 +482,19 @@
       "distanceKm": 23.641,
       "ascentM": 304.8,
       "photo": "photos/day-36.jpg"
+    },
+    {
+      "day": 37,
+      "date": "2026-07-28",
+      "location": "Muxía",
+      "coords": [
+        43.1014,
+        -9.2154
+      ],
+      "caption": "Muxia (Moo-She-A) is absolutely beautiful!! The water is crystal clear and refreshingly chilly 🌊 Big day tomorrow in both distance and destination!! 🥾🌊🌎",
+      "distanceKm": 17.783,
+      "ascentM": 362.7,
+      "photo": "photos/day-37.jpg"
     }
   ]
 }
