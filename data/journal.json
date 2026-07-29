@@ -495,6 +495,19 @@
       "distanceKm": 17.783,
       "ascentM": 362.7,
       "photo": "photos/day-37.jpg"
+    },
+    {
+      "day": 38,
+      "date": "2026-07-29",
+      "location": "Finisterre",
+      "coords": [
+        42.9051,
+        -9.2638
+      ],
+      "caption": "I made it to the end of the world!! And got a semi-private bed tonight!!",
+      "distanceKm": 33.796,
+      "ascentM": 802.5,
+      "photo": "photos/day-38.jpg"
     }
   ]
 }
