@@ -691,11 +691,24 @@
       const remainingSantiagoMi = kmToMiles(remainingSantiagoKm);
       const remainingFinisterreMi = kmToMiles(remainingFinisterreKm);
 
+      // Detect if she took the Muxía branch and has arrived there. The coastal
+      // Muxía → Fisterra walk is ~29 km / ~18 mi if she continues to Finisterre.
+      const MUXIA_TO_FINISTERRE_KM = 29;
+      const latestWalkedLocation = walkedEntries.length > 0
+        ? (walkedEntries[walkedEntries.length - 1].location || "")
+        : "";
+      const atMuxia = /mux[ií]a/i.test(latestWalkedLocation);
+
       var remHtml;
       if (remainingSantiagoKm > 0.5) {
         // Standard case: still walking toward Santiago
         remHtml = "<b>" + remainingSantiagoMi + "</b> mi to Santiago "
                 + "(<b>" + remainingFinisterreMi + "</b> mi to Finisterre)";
+      } else if (atMuxia) {
+        // Muxía reached — she took the northern branch. Still ~18 mi coastal
+        // walk south to Finisterre if she chooses to continue.
+        const muxiaToFisterraMi = kmToMiles(MUXIA_TO_FINISTERRE_KM);
+        remHtml = "Muxía reached · <b>" + muxiaToFisterraMi + "</b> mi to Finisterre";
       } else if (remainingFinisterreKm > 0.5) {
         // Santiago reached, still going toward Finisterre
         remHtml = "Santiago reached · <b>" + remainingFinisterreMi + "</b> mi to Finisterre";
