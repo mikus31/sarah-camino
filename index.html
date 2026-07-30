@@ -373,10 +373,10 @@
   </div>
 
   <div class="legend">
-    <div class="row"><span class="swatch swatch-dashed" aria-hidden="true"></span>Full route</div>
-    <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Walked so far</div>
-    <div class="row"><span class="dot" style="background: var(--past-day);"></span>Past day (click!)</div>
-    <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div>
+    <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Sarah's Camino</div>
+    <div class="row"><span class="dot" style="background: var(--past-day);"></span>Day (click!)</div>
+    <!-- "Most recent day" row hidden in retrospective mode. Restore for future Caminos: -->
+    <!-- <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div> -->
     <div class="row"><span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/><g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="24" x2="6.5" y2="18.5"/><line x1="16" y1="24" x2="10" y2="11"/><line x1="16" y1="24" x2="16" y2="8"/><line x1="16" y1="24" x2="22" y2="11"/><line x1="16" y1="24" x2="25.5" y2="18.5"/></g></svg></span>Santiago</div>
     <div class="row"><span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><rect x="9" y="24" width="14" height="2" fill="#003399"/><polygon points="11.5,24 20.5,24 19.5,10.5 12.5,10.5" fill="#fff" stroke="#003399" stroke-width="1"/><rect x="12.5" y="15" width="7" height="3" fill="#c0502b"/><rect x="10.5" y="9.2" width="11" height="1.6" fill="#003399"/><rect x="13" y="5.8" width="6" height="3.6" fill="#FFCC00" stroke="#003399" stroke-width="0.8"/><polygon points="12,5.8 20,5.8 16,2.8" fill="#003399"/></svg></span>Ocean endings</div>
   </div>
@@ -519,43 +519,11 @@
     // RENDER
     // -------------------------------------------------------------
     function renderTrip(routeData, journal, extensionData) {
-      // 1. Draw the full route as a dashed terracotta line. Warm color
-      //    contrasts well against satellite + topo basemaps. Wide dash gaps
-      //    so the dashes read distinctly even when zoomed all the way out.
-      const fullRoute = L.geoJSON(routeData, {
-        attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        style: {
-          color: "#c0502b",          // matches --terracotta
-          weight: 3,
-          opacity: 0.85,
-          dashArray: "5 12",
-          lineCap: "round"
-        }
-      }).addTo(map);
+      // Post-journey mode: no dashed "yet to walk" lines. Sarah has completed
+      // the Norte + the Finisterre-Muxía extension. The map now shows only her
+      // walked path plus day markers, as a retrospective view.
 
-      // 1b. Draw the Finisterre-Muxía extension (stretch goal beyond Santiago),
-      //     if the file loaded. Same terracotta dashed style — reads as more
-      //     of the "route yet to walk" visual.
-      let extensionRoute = null;
-      if (extensionData) {
-        extensionRoute = L.geoJSON(extensionData, {
-          style: {
-            color: "#c0502b",
-            weight: 3,
-            opacity: 0.85,
-            dashArray: "5 12",
-            lineCap: "round"
-          }
-        }).addTo(map);
-      }
-
-      // Fit map to the combined route (main + extension if present)
-      const boundsSource = extensionRoute
-        ? L.featureGroup([fullRoute, extensionRoute])
-        : fullRoute;
-      map.fitBounds(boundsSource.getBounds(), { padding: [40, 40] });
-
-      // 2. Compute the "walked so far" portion of the route using turf.
+      // Compute the walked route using turf.
       const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
       allEntries = entries;
       journalStartDate = journal.startDate || "";
@@ -586,15 +554,17 @@
       }
       const startPt = turf.point(journeyLine.geometry.coordinates[0]);
 
-      // Only draw the walked-line once at least one walking day has happened.
-      // Pre-launch (only Day 0), there's nothing to draw.
+      // Draw the walked-line. This is now the ONLY route line on the map —
+      // the traveled path from Irún to Fisterra.
+      let walkedLayer = null;
       if (walkedEntries.length > 0) {
         const latest = walkedEntries[walkedEntries.length - 1];
         const latestPt = turf.point([latest.coords[1], latest.coords[0]]);  // [lng, lat]
         const snapped = turf.nearestPointOnLine(journeyLine, latestPt, { units: "kilometers" });
         const walked = turf.lineSlice(startPt, snapped, journeyLine);
 
-        L.geoJSON(walked, {
+        walkedLayer = L.geoJSON(walked, {
+          attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
           style: {
             color: "#003399",
             weight: 5,
@@ -603,6 +573,14 @@
             lineJoin: "round"
           }
         }).addTo(map);
+      }
+
+      // Fit map to the walked route (the whole journey).
+      if (walkedLayer) {
+        map.fitBounds(walkedLayer.getBounds(), { padding: [40, 40] });
+      } else {
+        // Fallback pre-journey (shouldn't hit in post-Camino mode)
+        map.fitBounds(L.geoJSON(routeData).getBounds(), { padding: [40, 40] });
       }
 
       // 3. Markers for each day's entry
