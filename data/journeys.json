@@ -1,0 +1,50 @@
+{
+  "family": "The McNeils",
+  "title": "Family Caminos",
+  "journeys": [
+    {
+      "slug": "sarah-norte-2026",
+      "pilgrim": "Sarah",
+      "camino": "Camino del Norte",
+      "startCity": "Irún",
+      "endCity": "Fisterra",
+      "startDate": "2026-06-19",
+      "endDate": "2026-07-26",
+      "status": "completed",
+      "timezone": "Europe/Madrid",
+      "palette": {
+        "walked": "#003399",
+        "marker": "#FFCC00",
+        "pastDay": "#a8915a",
+        "milestoneMarker": "#FFCC00",
+        "milestoneAccent": "#003399"
+      },
+      "route": "data/journeys/sarah-norte-2026/route.geojson",
+      "extension": "data/journeys/sarah-norte-2026/extension.geojson",
+      "journal": "data/journeys/sarah-norte-2026/journal.json",
+      "photos": "photos/sarah-norte-2026/"
+    },
+    {
+      "slug": "michael-portugues-2026",
+      "pilgrim": "Michael",
+      "camino": "Camino Portugués",
+      "startCity": "Porto",
+      "endCity": "Santiago de Compostela",
+      "startDate": "2026-09-07",
+      "endDate": null,
+      "status": "upcoming",
+      "timezone": "Europe/Lisbon",
+      "palette": {
+        "walked": "#ffffff",
+        "marker": "#14335c",
+        "pastDay": "#7f8fa0",
+        "milestoneMarker": "#14335c",
+        "milestoneAccent": "#ffffff"
+      },
+      "route": "data/journeys/michael-portugues-2026/route.geojson",
+      "extension": null,
+      "journal": "data/journeys/michael-portugues-2026/journal.json",
+      "photos": "photos/michael-portugues-2026/"
+    }
+  ]
+}

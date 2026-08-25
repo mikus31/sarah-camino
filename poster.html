@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sarah's Camino del Norte — Poster</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="">
+
+  <style>
+    @page {
+      size: 36in 24in;
+      margin: 0;
+    }
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    :root {
+      --ink: #2b2118;
+      --cream: #f7f1e8;
+      --camino-blue: #003399;
+      --terracotta: #c0502b;
+      --camino-yellow: #FFCC00;
+      --past-day: #a8915a;
+      --hairline: rgba(43, 33, 24, 0.18);
+      --leader: rgba(192, 80, 43, 0.65);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .poster {
+      width: 36in;
+      height: 24in;
+      position: relative;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    /* Basemap fills the whole poster */
+    #map {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: #eae3d1;
+    }
+    .leaflet-container {
+      background: #eae3d1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .leaflet-control-zoom,
+    .leaflet-control-layers { display: none !important; }
+    .leaflet-control-attribution {
+      background: rgba(247, 241, 232, 0.9);
+      font-size: 8pt;
+      padding: 3pt 8pt;
+    }
+
+    /* Title band, upper-left */
+    .title-band {
+      position: absolute;
+      top: 0.5in;
+      left: 0.7in;
+      z-index: 20;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .title-band h1 {
+      font-family: Georgia, serif;
+      font-size: 62pt;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin: 0;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .title-band .sub {
+      font-size: 14pt;
+      margin-top: 8pt;
+      color: rgba(43, 33, 24, 0.7);
+      font-style: italic;
+      font-family: Georgia, serif;
+    }
+
+    /* Hero stats, upper-right */
+    .hero-stats {
+      position: absolute;
+      top: 0.55in;
+      right: 0.7in;
+      z-index: 20;
+      display: flex;
+      gap: 0.55in;
+      pointer-events: none;
+    }
+    .hero-stats .stat { text-align: center; }
+    .hero-stats .value {
+      font-family: Georgia, serif;
+      font-size: 42pt;
+      font-weight: 400;
+      color: var(--camino-blue);
+      line-height: 1;
+    }
+    .hero-stats .label {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 9pt;
+      color: rgba(43, 33, 24, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      margin-top: 5pt;
+    }
+
+    /* Footer band, lower-center */
+    .footer-band {
+      position: absolute;
+      bottom: 0.35in;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      text-align: center;
+      pointer-events: none;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 15pt;
+      color: rgba(43, 33, 24, 0.7);
+    }
+
+    /* Sheet indicator (only visible in split-sheet mode) */
+    .sheet-indicator {
+      position: absolute;
+      bottom: 0.35in;
+      right: 0.7in;
+      z-index: 20;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 10pt;
+      color: rgba(43, 33, 24, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      pointer-events: none;
+    }
+
+    /* Leader-line overlay */
+    #leader-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Popup overlays */
+    #popup-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      pointer-events: none;
+    }
+    .popup {
+      position: absolute;
+      width: 3.4in;
+      height: 2.4in;
+      background: #fff;
+      border: 0.5px solid var(--hairline);
+      border-radius: 5pt;
+      padding: 0.09in;
+      display: grid;
+      grid-template-columns: 1.3in 1fr;
+      gap: 0.09in;
+      box-sizing: border-box;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+    .popup .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #d3d1c7;
+      border-radius: 3pt;
+    }
+    .popup .no-photo {
+      background: var(--past-day);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3pt;
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: 30pt;
+      opacity: 0.75;
+    }
+    .popup .body {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .popup .hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 3pt;
+    }
+    .popup .day-num {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--terracotta);
+      letter-spacing: 0.05em;
+    }
+    .popup.milestone .day-num { color: var(--camino-blue); }
+    .popup .date {
+      font-size: 9pt;
+      color: rgba(43, 33, 24, 0.55);
+    }
+    .popup .loc {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 3pt;
+    }
+    .popup .stats {
+      font-size: 8pt;
+      color: rgba(43, 33, 24, 0.55);
+      letter-spacing: 0.04em;
+      margin-bottom: 5pt;
+    }
+    .popup .cap {
+      font-family: Georgia, serif;
+      font-size: 8.5pt;
+      line-height: 1.32;
+      color: rgba(43, 33, 24, 0.85);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 8;
+      -webkit-box-orient: vertical;
+    }
+
+    /* Day pins */
+    .day-pin {
+      width: 22px;
+      height: 22px;
+      background: var(--past-day);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: -apple-system, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+    }
+    .day-pin.day-0 { background: var(--terracotta); }
+    .day-pin.milestone {
+      width: 28px;
+      height: 28px;
+      background: var(--camino-yellow);
+      color: var(--camino-blue);
+      font-size: 12px;
+      border-width: 3px;
+    }
+
+    /* Screen preview (browser) — shrink to fit while keeping aspect */
+    @media screen {
+      body {
+        background: #d3d1c7;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .screen-hint {
+        max-width: 36in;
+        margin: 0 auto 12px;
+        font-family: -apple-system, sans-serif;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.55);
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 6px;
+        line-height: 1.5;
+      }
+      .poster {
+        margin: 0 auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      }
+    }
+    @media print {
+      .screen-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen-hint">
+    <strong>Poster preview — 36 × 24″ landscape.</strong>
+    Two-sheet split view: open
+    <a href="?sheet=1">?sheet=1</a> (Days 0–18) and
+    <a href="?sheet=2">?sheet=2</a> (Days 19–38) separately, save each as a 36×24 PDF, print both, tape together for a 72×24 mural.
+    To print: <em>File → Print → Save as PDF → Paper size: custom 36×24 in landscape → Margins: none</em>.
+  </div>
+
+  <div class="poster">
+    <div id="map"></div>
+    <svg id="leader-svg"></svg>
+    <div id="popup-layer"></div>
+
+    <div class="title-band">
+      <h1>Sarah's Camino</h1>
+      <div class="sub" id="date-range">Loading…</div>
+    </div>
+
+    <div class="hero-stats" id="hero-stats"></div>
+
+    <div class="footer-band">Irún → Muxía → Fisterra · Buen camino, Sarah.</div>
+    <div class="sheet-indicator" id="sheet-indicator"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+
+  <script>
+    // -------------------------------------------------------------
+    // Landscape poster with popups overlaid on the map.
+    // Chronological east→west progression; leader lines never cross.
+    // -------------------------------------------------------------
+    const POPUP_W_IN = 3.4;      // inches; matches .popup CSS
+    const POPUP_H_IN = 2.4;
+    const POPUP_MIN_GAP_IN = 0.5;   // horizontal gap between same-tier popups
+    const TIER_H_IN = 2.95;         // vertical spacing between tiers (more air between)
+    const TRAIL_KEEPOUT_IN = 1.7;   // vertical no-popup zone above/below trail (keep line clean)
+    const HEADER_KEEPOUT_IN = 1.5;  // top keepout for title/stats
+    const FOOTER_KEEPOUT_IN = 0.7;  // bottom keepout for footer band
+    const SIDE_KEEPOUT_IN = 0.35;
+    const IN_PX = 96;               // CSS px per inch
+    const TIERS_PER_SIDE = 5;       // more available tiers = more room to escape collisions
+
+    // Manual offsets for individual day popups (inches; applied AFTER auto-layout).
+    // Object per day with optional `dx` (+right / -left) and `dy` (+down / -up).
+    // Leader line angles naturally to the pin. Add entries as needed.
+    const POPUP_OFFSETS_IN = {
+      29: { dx: -0.7 },                // Vilalba — angle left, away from Day 27
+      34: { dx:  0.7 },                // Negreira — angle right, away from Day 33/38
+      36: { dx:  0.9, dy: -2.0 },      // Vilastose — up and right, clear of Day 38
+      38: { dy:  2.2 }                 // Fisterra — well below the trail cluster
+    };
+
+    // Optional per-day leader-line style overrides. Default is "straight".
+    // "elbow" = straight down (or up) from pin, then horizontal to the popup — L-shape.
+    const LEADER_STYLES = {
+      38: "elbow"
+    };
+
+    // Per-day photo positioning overrides — controls the crop focal point when
+    // the source photo's subject isn't centered. Format: "H% V%" (both 0-100).
+    // Default is "50% 50%" (center). Try 20-30% V to reveal upper portion.
+    const PHOTO_POSITIONS = {
+      37: "50% 25%"    // Muxía — Sarah is higher in the frame
+    };
+
+    Promise.all([
+      fetch("data/route.geojson").then(r => r.json()),
+      fetch("data/journal.json").then(r => r.json()),
+      fetch("data/camino-de-fisterra-muxia.json").then(r => r.ok ? r.json() : null).catch(() => null)
+    ]).then(([routeData, journal, extensionData]) => {
+      renderPoster(routeData, journal, extensionData);
+    }).catch(err => {
+      console.error(err);
+      document.getElementById("date-range").textContent = "Could not load data.";
+    });
+
+    function renderPoster(routeData, journal, extensionData) {
+      // --- Sheet split: ?sheet=1 (Days 0-18) or ?sheet=2 (Days 19-38).
+      //     No param = full map (fallback). Sheets tape together to form a 72×24 mural.
+      const SHEET_SPLIT_DAY = 18; // Last day on sheet 1
+      const params = new URLSearchParams(window.location.search);
+      const sheetParam = params.get("sheet");
+      const sheetNum = (sheetParam === "1" || sheetParam === "2") ? parseInt(sheetParam, 10) : 0;
+
+      const allEntries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
+      // Entries used for popups/pins on this sheet
+      let entries;
+      if (sheetNum === 1) {
+        entries = allEntries.filter(e => e.day <= SHEET_SPLIT_DAY);
+      } else if (sheetNum === 2) {
+        entries = allEntries.filter(e => e.day > SHEET_SPLIT_DAY);
+      } else {
+        entries = allEntries;
+      }
+      const walkedEntries = allEntries.filter(e => e.day >= 1); // full totals for hero stats
+
+      // --- Header ---
+      const startDate = journal.startDate || "";
+      const lastAll = allEntries[allEntries.length - 1];
+      const endDate = lastAll ? lastAll.date : "";
+      document.getElementById("date-range").textContent = formatDateRange(startDate, endDate);
+
+      // Sheet indicator (only when in split mode)
+      if (sheetNum) {
+        const el = document.getElementById("sheet-indicator");
+        if (el) el.textContent = "Part " + sheetNum + " of 2";
+      }
+
+      // Branding placement across the two sheets: when taped together,
+      // the full mural has the title in the upper-left (Sheet 2) and the
+      // hero stats in the upper-right (Sheet 1). Each sheet shows only its half.
+      const titleEl = document.querySelector(".title-band");
+      const statsEl = document.getElementById("hero-stats");
+      if (sheetNum === 1) {
+        if (titleEl) titleEl.style.display = "none";
+        // stats visible (default)
+      } else if (sheetNum === 2) {
+        if (statsEl) statsEl.style.display = "none";
+        // title visible (default)
+      }
+      // In full-map mode (no sheet param), both stay visible as before.
+
+      const totalDays = walkedEntries.length;
+      const totalKm = walkedEntries.reduce((s, e) => s + (e.distanceKm || 0), 0);
+      const totalMi = Math.round(totalKm * 0.621371);
+      const totalAscentFt = Math.round(walkedEntries.reduce((s, e) => s + (e.ascentM || 0), 0) * 3.28084);
+      const regions = 5;
+      document.getElementById("hero-stats").innerHTML = [
+        { value: totalDays.toString(), label: "days" },
+        { value: totalMi.toLocaleString(), label: "miles" },
+        { value: totalAscentFt.toLocaleString(), label: "ft climbed" },
+        { value: regions.toString(), label: "regions" }
+      ].map(s => `<div class="stat"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`).join("");
+
+      // --- Map ---
+      const map = L.map("map", {
+        zoomControl: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        dragging: false,
+        keyboard: false,
+        touchZoom: false,
+        attributionControl: true,
+        zoomSnap: 0.1
+      });
+
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Tiles © Esri · Route © OpenStreetMap contributors", maxZoom: 17 }
+      ).addTo(map);
+
+      // Journey line = Norte + Fisterra trunk
+      const routeLine = routeData.features[0];
+      let journeyLine = routeLine;
+      if (extensionData && extensionData.features.length > 0) {
+        const g = extensionData.features[0].geometry;
+        let ec;
+        if (g.type === "LineString") ec = g.coordinates;
+        else if (g.type === "MultiLineString" && g.coordinates.length > 0) ec = g.coordinates[0];
+        if (ec && ec.length > 1) {
+          journeyLine = turf.lineString(routeLine.geometry.coordinates.concat(ec.slice(1)));
+        }
+      }
+
+      // Walked slice — from start to Sarah's final position
+      if (walkedEntries.length > 0) {
+        const latest = walkedEntries[walkedEntries.length - 1];
+        const latestPt = turf.point([latest.coords[1], latest.coords[0]]);
+        const startPt = turf.point(journeyLine.geometry.coordinates[0]);
+        const snapped = turf.nearestPointOnLine(journeyLine, latestPt, { units: "kilometers" });
+        const walked = turf.lineSlice(startPt, snapped, journeyLine);
+        L.geoJSON(walked, {
+          style: { color: "#003399", weight: 4, opacity: 0.95, lineCap: "round", lineJoin: "round" }
+        }).addTo(map);
+      }
+
+      // Numbered pins
+      const markerLayers = [];
+      const dayMarkers = {};
+      entries.forEach(entry => {
+        const loc = entry.location || "";
+        const isSantiago = /santiago/i.test(loc);
+        const isLighthouse = /mux[ií]a|fisterra|finisterre/i.test(loc);
+        const milestone = isSantiago || isLighthouse;
+        const cls = "day-pin" + (entry.day === 0 ? " day-0" : "") + (milestone ? " milestone" : "");
+        const icon = L.divIcon({
+          className: "",
+          html: `<div class="${cls}">${entry.day}</div>`,
+          iconSize: milestone ? [28, 28] : [22, 22],
+          iconAnchor: milestone ? [14, 14] : [11, 11]
+        });
+        const marker = L.marker(entry.coords, { icon }).addTo(map);
+        markerLayers.push(marker);
+        dayMarkers[entry.day] = { entry, marker };
+      });
+
+      // Fit map bounds to the walked route + all markers, with keepouts baked in.
+      // Call fitBounds directly — it sets the initial view, triggering tile + marker render.
+      const bounds = L.featureGroup(markerLayers).getBounds();
+      map.fitBounds(bounds, {
+        paddingTopLeft: [0.7 * IN_PX, HEADER_KEEPOUT_IN * IN_PX],
+        paddingBottomRight: [0.7 * IN_PX, FOOTER_KEEPOUT_IN * IN_PX]
+      });
+      // Wait for tiles + positions to settle before laying out popups
+      setTimeout(() => layoutPopups(map, entries, dayMarkers), 500);
+    }
+
+    function layoutPopups(map, entries, dayMarkers) {
+      const posterW_px = 36 * IN_PX;
+      const posterH_px = 24 * IN_PX;
+      const popupW_px = POPUP_W_IN * IN_PX;
+      const popupH_px = POPUP_H_IN * IN_PX;
+      const minGap_px = POPUP_MIN_GAP_IN * IN_PX;
+      const trailKeep_px = TRAIL_KEEPOUT_IN * IN_PX;
+      const headerKeep_px = HEADER_KEEPOUT_IN * IN_PX;
+      const footerKeep_px = FOOTER_KEEPOUT_IN * IN_PX;
+      const sideKeep_px = SIDE_KEEPOUT_IN * IN_PX;
+      const tierH_px = TIER_H_IN * IN_PX;
+
+      // Compute pin container positions
+      const items = entries.map(entry => {
+        const pt = map.latLngToContainerPoint(L.latLng(entry.coords[0], entry.coords[1]));
+        return { entry, pin: { x: pt.x, y: pt.y } };
+      });
+
+      // Sort by pin.x descending (rightmost = east = day 0 first)
+      items.sort((a, b) => b.pin.x - a.pin.x);
+
+      // All pin positions — used for collision detection so popups never cover a pin
+      const allPins = items.map(it => ({ x: it.pin.x, y: it.pin.y }));
+
+      // Compute a candidate popup box for a given pin + side + tier.
+      // Returns { px, py } for popup TOP-LEFT.
+      function boxFor(pin, side, tier) {
+        let px = pin.x - popupW_px / 2;
+        px = Math.max(sideKeep_px, Math.min(px, posterW_px - popupW_px - sideKeep_px));
+        let py;
+        if (side === "above") {
+          py = pin.y - trailKeep_px - tier * tierH_px - popupH_px;
+        } else {
+          py = pin.y + trailKeep_px + tier * tierH_px;
+        }
+        py = Math.max(headerKeep_px, Math.min(py, posterH_px - footerKeep_px - popupH_px));
+        return { px, py };
+      }
+
+      // Check if a popup box would cover any pin other than its own.
+      function coversOtherPin(box, ownPin) {
+        for (const p of allPins) {
+          if (p.x === ownPin.x && p.y === ownPin.y) continue;
+          // Add small padding so the pin+border stays clear
+          const pad = 14;
+          if (p.x >= box.px - pad && p.x <= box.px + popupW_px + pad &&
+              p.y >= box.py - pad && p.y <= box.py + popupH_px + pad) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      // Tier state — track last placed popup center x per side/tier
+      const tierState = {
+        above: Array.from({ length: TIERS_PER_SIDE }, () => []),
+        below: Array.from({ length: TIERS_PER_SIDE }, () => [])
+      };
+
+      const placements = [];
+
+      items.forEach((it, i) => {
+        const preferAbove = (i % 2 === 0);
+        const sides = preferAbove ? ["above", "below"] : ["below", "above"];
+
+        let placed = null;
+        for (const side of sides) {
+          for (let tier = 0; tier < TIERS_PER_SIDE; tier++) {
+            // Same-tier horizontal collision check
+            const priorXs = tierState[side][tier];
+            if (priorXs.length > 0) {
+              const lastCenter = priorXs[priorXs.length - 1];
+              if ((lastCenter - it.pin.x) < (popupW_px + minGap_px)) continue;
+            }
+            // Pin-collision check for this candidate position
+            const box = boxFor(it.pin, side, tier);
+            if (coversOtherPin(box, it.pin)) continue;
+            // Passed both — place here
+            placed = { side, tier, popup: { x: box.px, y: box.py } };
+            tierState[side][tier].push(it.pin.x);
+            break;
+          }
+          if (placed) break;
+        }
+
+        if (!placed) {
+          // Fallback: farthest tier of preferred side, accept the position (may overlap; visible in preview so we can tune)
+          const side = sides[0];
+          const tier = TIERS_PER_SIDE - 1;
+          const box = boxFor(it.pin, side, tier);
+          placed = { side, tier, popup: { x: box.px, y: box.py } };
+          tierState[side][tier].push(it.pin.x);
+        }
+        placements.push({ ...it, ...placed });
+      });
+
+      // Apply any manual offsets — makes specific popups angle or shift
+      placements.forEach(p => {
+        const off = POPUP_OFFSETS_IN[p.entry.day];
+        if (!off) return;
+        if (typeof off.dx === "number") {
+          p.popup.x += off.dx * IN_PX;
+          p.popup.x = Math.max(sideKeep_px, Math.min(p.popup.x, posterW_px - popupW_px - sideKeep_px));
+        }
+        if (typeof off.dy === "number") {
+          p.popup.y += off.dy * IN_PX;
+          p.popup.y = Math.max(headerKeep_px, Math.min(p.popup.y, posterH_px - footerKeep_px - popupH_px));
+        }
+      });
+
+      // Render popups + leader lines
+      const popupLayer = document.getElementById("popup-layer");
+      const svg = document.getElementById("leader-svg");
+      svg.setAttribute("viewBox", `0 0 ${posterW_px} ${posterH_px}`);
+      svg.setAttribute("width", posterW_px);
+      svg.setAttribute("height", posterH_px);
+      popupLayer.innerHTML = "";
+      let svgInner = "";
+
+      placements.forEach(p => {
+        const html = popupHtml(p.entry);
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        const el = div.firstElementChild;
+        el.style.left = p.popup.x + "px";
+        el.style.top = p.popup.y + "px";
+        popupLayer.appendChild(el);
+
+        // Leader-line: from popup edge nearest the pin to the pin
+        const popupCenterX = p.popup.x + popupW_px / 2;
+        const popupTop = p.popup.y;
+        const popupBottom = p.popup.y + popupH_px;
+        // Attach to the edge facing the pin
+        const attachY = (p.side === "above") ? popupBottom : popupTop;
+        const style = LEADER_STYLES[p.entry.day] || "straight";
+        if (style === "elbow") {
+          // Straight down/up from pin, elbow horizontally with a small gap above
+          // the popup, then a short final drop into the card.
+          const elbowGap = 0.4 * IN_PX;
+          const elbowY = (p.side === "above") ? attachY + elbowGap : attachY - elbowGap;
+          svgInner += `<polyline points="${p.pin.x},${p.pin.y} ${p.pin.x},${elbowY} ${popupCenterX},${elbowY} ${popupCenterX},${attachY}" fill="none" stroke="var(--leader)" stroke-width="1.5" stroke-linejoin="round" />`;
+        } else {
+          svgInner += `<line x1="${popupCenterX}" y1="${attachY}" x2="${p.pin.x}" y2="${p.pin.y}" stroke="var(--leader)" stroke-width="1.5" />`;
+        }
+      });
+
+      svg.innerHTML = svgInner;
+    }
+
+    function averagePinY(items) {
+      if (!items.length) return 0;
+      return items.reduce((s, it) => s + it.pin.y, 0) / items.length;
+    }
+
+    function popupHtml(e) {
+      const isSantiago = /santiago/i.test(e.location || "");
+      const isLighthouse = /mux[ií]a|fisterra|finisterre/i.test(e.location || "");
+      const milestone = isSantiago || isLighthouse;
+      const cls = "popup" + (milestone ? " milestone" : "");
+      const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
+      const posOverride = PHOTO_POSITIONS[e.day];
+      const posStyle = posOverride ? ` style="object-position: ${posOverride}"` : "";
+      const photoEl = e.photo
+        ? `<img class="photo"${posStyle} src="${escapeHtml(e.photo)}" alt="${escapeHtml(e.location || "")}" onerror="this.outerHTML='<div class=\\'no-photo\\'>${e.day}</div>'">`
+        : `<div class="no-photo">${e.day}</div>`;
+      const mi = e.distanceKm ? Math.round(e.distanceKm * 0.621371 * 10) / 10 : 0;
+      const ft = e.ascentM ? Math.round(e.ascentM * 3.28084) : 0;
+      const parts = [];
+      if (mi) parts.push(`${mi} mi`);
+      if (ft) parts.push(`${ft.toLocaleString()} ft`);
+      const stats = parts.length ? parts.join(" · ") : "&nbsp;";
+      return `
+        <div class="${cls}">
+          ${photoEl}
+          <div class="body">
+            <div class="hdr">
+              <span class="day-num">${dayLabel}</span>
+              <span class="date">${formatShortDate(e.date)}</span>
+            </div>
+            <div class="loc">${escapeHtml(e.location || "")}</div>
+            <div class="stats">${stats}</div>
+            <div class="cap">${escapeHtml(e.caption || "")}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function formatShortDate(iso) {
+      if (!iso) return "";
+      const [y, m, d] = iso.split("-").map(Number);
+      if (!y || !m || !d) return iso;
+      return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+    function formatDateRange(a, b) {
+      const fmt = (iso) => {
+        if (!iso) return "";
+        const [y, m, d] = iso.split("-").map(Number);
+        return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+      };
+      return `${fmt(a)} – ${fmt(b)}`;
+    }
+    function escapeHtml(s) {
+      return String(s)
+        .split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;")
+        .split('"').join("&quot;").split("'").join("&#039;");
+    }
+  </script>
+</body>
+</html>

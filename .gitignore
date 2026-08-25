@@ -16,3 +16,10 @@ data/route-*.backup.geojson
 # Raw OG image source (kept local for re-cropping). The cropped 1200x630
 # og-image.jpg is what ships.
 og-preview.png
+
+# Local-only reorganization archive (deduplicated Sarah photos etc.)
+photos/_archive/
+
+# Raw source GPX for Michael's Camino Portugués — stitched output is
+# route.geojson which is what the app uses at runtime.
+data/journeys/michael-portugues-2026/*.gpx

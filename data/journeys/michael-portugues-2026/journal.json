@@ -1,0 +1,17 @@
+{
+  "pilgrim": "Michael",
+  "camino": "Camino Portugués",
+  "startDate": "2026-09-07",
+  "entries": [
+    {
+      "day": 0,
+      "date": "2026-09-06",
+      "location": "Porto — the start",
+      "coords": [41.1461, -8.6108],
+      "distanceKm": 0,
+      "ascentM": 0,
+      "photo": "",
+      "caption": "Michael's Camino Portugués: Porto to Santiago via the Portuguese coast, the Spiritual Variant, and a boat translatio across the Ría de Arousa. Roughly 310 km (193 miles)."
+    }
+  ]
+}

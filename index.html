@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sarah's Camino del Norte</title>
-  <meta name="description" content="Follow Sarah's 40-day pilgrimage along the Camino del Norte — Spain's coastal route from Irún to Santiago de Compostela.">
+  <title>Family Caminos — The McNeils</title>
+  <meta name="description" content="An interactive family map tracking the McNeils' pilgrimages along the Caminos de Santiago.">
 
   <!-- Don't index this personal page in search engines -->
   <meta name="robots" content="noindex, nofollow">
 
-  <!-- Theme color for mobile browser chrome (matches the Camino blue) -->
+  <!-- Theme color for mobile browser chrome -->
   <meta name="theme-color" content="#003399">
 
   <!-- Favicons -->
@@ -17,21 +17,21 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
-  <!-- OpenGraph (iMessage, WhatsApp, Facebook, LinkedIn) -->
+  <!-- OpenGraph -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Sarah's Camino del Norte">
-  <meta property="og:title" content="Sarah's Camino del Norte">
-  <meta property="og:description" content="Follow Sarah's 40-day pilgrimage along Spain's northern coast — Irún to Santiago de Compostela. Daily photos and progress on an interactive map.">
+  <meta property="og:site_name" content="Family Caminos">
+  <meta property="og:title" content="Family Caminos — The McNeils">
+  <meta property="og:description" content="An interactive family map tracking the McNeils' pilgrimages along the Caminos de Santiago.">
   <meta property="og:url" content="https://mikus31.github.io/sarah-camino/">
   <meta property="og:image" content="https://mikus31.github.io/sarah-camino/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Map of northern Spain showing Sarah's Camino del Norte route from Irún to Santiago.">
+  <meta property="og:image:alt" content="Map of northern Iberia showing the McNeils' Camino routes.">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Sarah's Camino del Norte">
-  <meta name="twitter:description" content="Follow Sarah's 40-day pilgrimage along Spain's northern coast — Irún to Santiago de Compostela.">
+  <meta name="twitter:title" content="Family Caminos — The McNeils">
+  <meta name="twitter:description" content="An interactive family map tracking the McNeils' pilgrimages along the Caminos de Santiago.">
   <meta name="twitter:image" content="https://mikus31.github.io/sarah-camino/og-image.jpg">
 
   <!-- Leaflet CSS -->
@@ -47,8 +47,8 @@
       --camino-blue: #003399;
       --camino-blue-soft: rgba(0, 51, 153, 0.18);
       --camino-yellow: #FFCC00;
-      --past-day: #a8915a;            /* dulled warm-tan version of yellow for past days */
-      --terracotta: #c0502b;          /* dashed full-route color */
+      --past-day: #a8915a;
+      --terracotta: #c0502b;
       --shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
 
@@ -58,95 +58,159 @@
     /* Header card */
     .banner {
       position: absolute;
-      top: 14px;
-      left: 14px;
+      top: 16px;
+      left: 16px;
+      z-index: 500;
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      max-width: 420px;
+      line-height: 1.35;
+    }
+    .banner h1 {
+      margin: 0 0 3px 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .banner .family-sub {
+      font-size: 14px;
+      color: #6b5a48;
+      margin-bottom: 10px;
+    }
+
+    /* Chip bar: one chip per journey */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 6px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px 6px 10px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      background: #ede4d4;
+      color: #6b5a48;
+      border: 1px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+    }
+    .chip:hover { background: #e2d6bf; }
+    .chip .chip-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      box-sizing: border-box;
+    }
+    .chip.active {
+      background: var(--cream);
+      color: var(--ink);
+      border-color: rgba(0,0,0,0.15);
+    }
+    .chip.inactive { opacity: 0.55; text-decoration: line-through; }
+
+    /* Per-journey block in the banner */
+    .journey-row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .journey-row:first-of-type { border-top: none; padding-top: 6px; margin-top: 6px; }
+    .journey-row.hidden { display: none; }
+    .journey-row .name {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .journey-row .name .swatch {
+      width: 16px;
+      height: 5px;
+      border-radius: 2px;
+      display: inline-block;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    }
+    .journey-row .sub {
+      font-size: 13px;
+      color: #6b5a48;
+      margin-top: 2px;
+    }
+    .journey-row .stats {
+      margin-top: 5px;
+      font-size: 13px;
+    }
+    .journey-row .stats b { font-weight: 700; }
+    .journey-row .remaining {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #6b5a48;
+    }
+    .journey-row .remaining b { color: var(--terracotta); font-weight: 700; }
+    .journey-row .weather {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #8b7765;
+      font-variant-numeric: tabular-nums;
+    }
+    .journey-row .weather b { font-weight: 600; }
+    .banner .time {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #8b7765;
+      font-variant-numeric: tabular-nums;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding-top: 8px;
+    }
+    .banner .time b { color: var(--camino-blue); font-weight: 600; }
+
+    /* Legend (bottom-left) */
+    .legend {
+      position: absolute;
+      bottom: 24px;
+      left: 16px;
       z-index: 500;
       background: var(--cream);
       border-radius: 10px;
       padding: 12px 16px;
       box-shadow: var(--shadow);
+      font-size: 14px;
+      line-height: 1.65;
       max-width: 320px;
-      line-height: 1.35;
     }
-    .banner h1 {
-      margin: 0 0 2px 0;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-    }
-    .banner .sub { font-size: 13px; color: #6b5a48; }
-    .banner .stats {
-      margin-top: 8px;
-      display: flex;
-      gap: 14px;
-      font-size: 13px;
-    }
-    .banner .stats b { color: var(--camino-blue); font-weight: 700; }
-    .banner .time {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #8b7765;
-      font-variant-numeric: tabular-nums;
-    }
-    .banner .time b { color: var(--camino-blue); font-weight: 600; }
-    .banner .remaining {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #6b5a48;
-    }
-    .banner .remaining b { color: var(--terracotta); font-weight: 700; }
-    .banner .weather {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #8b7765;
-      font-variant-numeric: tabular-nums;
-    }
-    .banner .weather b { color: var(--camino-blue); font-weight: 600; }
-
-    /* Legend (bottom-left) */
-    .legend {
-      position: absolute;
-      bottom: 22px;
-      left: 14px;
-      z-index: 500;
-      background: var(--cream);
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: var(--shadow);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-    .legend .row { display: flex; align-items: center; gap: 8px; }
+    .legend .row { display: flex; align-items: center; gap: 10px; }
     .legend .swatch {
       display: inline-block;
-      width: 18px;
-      height: 10px;
+      width: 22px;
+      height: 5px;
       border-radius: 2px;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
     }
-    /* "Full route" swatch: a dashed terracotta line approximation of how the
-       unwalked portion appears on the map. */
     .legend .scallop-mini {
       display: inline-block;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       flex-shrink: 0;
     }
     .legend .scallop-mini svg { display: block; width: 100%; height: 100%; }
-    .legend .swatch-dashed {
-      background: transparent;
-      border-radius: 0;
-      border-top: 3px dashed var(--terracotta);
-      opacity: 0.85;
-      align-self: center;
-      height: 0;
-    }
     .legend .dot {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       border: 2px solid white;
       box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
+      flex-shrink: 0;
     }
 
     /* Popup styling */
@@ -156,13 +220,13 @@
     }
     .leaflet-popup-content {
       margin: 0;
-      width: 260px !important;
+      width: 300px !important;
     }
     .day-popup { font-family: inherit; color: var(--ink); }
     .day-popup img {
       display: block;
       width: 100%;
-      height: 180px;
+      height: 210px;
       object-fit: cover;
       border-radius: 10px 10px 0 0;
       background: #ddd;
@@ -261,26 +325,35 @@
       #lightbox-prev { left: 8px; }
       #lightbox-next { right: 8px; }
     }
-    .day-popup .pad { padding: 10px 12px 12px 12px; }
+    .day-popup .pad { padding: 12px 14px 14px 14px; }
     .day-popup .hdr {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 4px;
-      padding-right: 22px; /* reserve space for Leaflet's close X */
+      margin-bottom: 6px;
+      padding-right: 22px;
     }
     .day-popup .day {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--camino-blue);
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
-    .day-popup .date { font-size: 12px; color: #6b5a48; }
-    .day-popup .loc { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-    .day-popup .caption { font-size: 13px; line-height: 1.45; color: #3a2d22; }
-    .day-popup .miles { font-size: 11px; color: #8b7765; margin-top: 6px; }
+    .day-popup .date { font-size: 13px; color: #6b5a48; }
+    .day-popup .loc { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .day-popup .pilgrim-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+    .day-popup .caption { font-size: 14px; line-height: 1.5; color: #3a2d22; }
+    .day-popup .miles { font-size: 12px; color: #8b7765; margin-top: 6px; }
 
     /* Countdown block, shown inside the Day 0 popup pre-departure */
     .day-popup .countdown {
@@ -292,71 +365,63 @@
       line-height: 1.15;
     }
     .day-popup .countdown .cnt-num {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--camino-blue);
     }
     .day-popup .countdown .cnt-sub {
-      font-size: 11px;
+      font-size: 12px;
       color: #6b5a48;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-top: 3px;
+      margin-top: 4px;
     }
 
-    /* Current-day pulsing marker */
-    .current-marker {
+    /* Marker styles — sized by role, colored per-journey inline */
+    /* Pulsing marker: used for a journey's "live" position — the most recent
+       day while walking, or the Day-0 start city for an upcoming journey.
+       Color comes from --pulse-rgb ("r, g, b") set inline. */
+    .pulse-marker {
       width: 22px;
       height: 22px;
-      background: var(--camino-yellow);
       border: 3px solid #fff;
       border-radius: 50%;
-      box-shadow: 0 0 0 rgba(255, 204, 0, 0.7);
-      animation: pulse 1.8s ease-out infinite;
+      animation: pulse-any 1.8s ease-out infinite;
     }
-    @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
-      70%  { box-shadow: 0 0 0 22px rgba(255, 204, 0, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+    @keyframes pulse-any {
+      0%   { box-shadow: 0 0 0 0    rgba(var(--pulse-rgb, 255, 204, 0), 0.7); }
+      70%  { box-shadow: 0 0 0 22px rgba(var(--pulse-rgb, 255, 204, 0), 0);   }
+      100% { box-shadow: 0 0 0 0    rgba(var(--pulse-rgb, 255, 204, 0), 0);   }
     }
-    /* Santiago milestone marker: the pilgrim scallop shell. Slightly larger
-       than the current marker and always bright yellow — never fades. */
-    .santiago-marker {
+    .santiago-marker, .lighthouse-marker {
       width: 28px;
       height: 28px;
       filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
     }
-    .santiago-marker svg {
+    .santiago-marker svg, .lighthouse-marker svg {
       display: block;
       width: 100%;
       height: 100%;
     }
-    /* Lighthouse milestone marker: for Muxía and Finisterre, the two ocean
-       endings of the Camino. Same size and prominence as Santiago. */
-    .lighthouse-marker {
-      width: 28px;
-      height: 28px;
-      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
-    }
-    .lighthouse-marker svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
     .past-marker {
       width: 12px;
       height: 12px;
-      background: var(--past-day);
       border: 2px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+    }
+    .start-marker {
+      width: 16px;
+      height: 16px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
     }
 
     /* Responsive: shrink banner on phones */
     @media (max-width: 520px) {
       .banner { max-width: calc(100% - 40px); }
-      .legend { font-size: 11px; }
+      .legend { font-size: 11px; max-width: 200px; }
     }
   </style>
 </head>
@@ -364,22 +429,14 @@
   <div id="map"></div>
 
   <div class="banner">
-    <h1 id="banner-title">Camino del Norte</h1>
-    <div class="sub" id="banner-sub">Loading journey…</div>
-    <div class="stats" id="banner-stats"></div>
-    <div class="remaining" id="banner-remaining"></div>
+    <h1 id="banner-title">Family Caminos</h1>
+    <div class="family-sub" id="banner-family-sub">The McNeils</div>
+    <div class="chips" id="chips"></div>
+    <div id="journey-rows"></div>
     <div class="time" id="banner-time"></div>
-    <div class="weather" id="banner-weather"></div>
   </div>
 
-  <div class="legend">
-    <div class="row"><span class="swatch" style="background: var(--camino-blue);"></span>Sarah's Camino</div>
-    <div class="row"><span class="dot" style="background: var(--past-day);"></span>Day (click!)</div>
-    <!-- "Most recent day" row hidden in retrospective mode. Restore for future Caminos: -->
-    <!-- <div class="row"><span class="dot" style="background: var(--camino-yellow); width: 14px; height: 14px;"></span>Most recent day</div> -->
-    <div class="row"><span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/><g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="24" x2="6.5" y2="18.5"/><line x1="16" y1="24" x2="10" y2="11"/><line x1="16" y1="24" x2="16" y2="8"/><line x1="16" y1="24" x2="22" y2="11"/><line x1="16" y1="24" x2="25.5" y2="18.5"/></g></svg></span>Santiago</div>
-    <div class="row"><span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><rect x="9" y="24" width="14" height="2" fill="#003399"/><polygon points="11.5,24 20.5,24 19.5,10.5 12.5,10.5" fill="#fff" stroke="#003399" stroke-width="1"/><rect x="12.5" y="15" width="7" height="3" fill="#c0502b"/><rect x="10.5" y="9.2" width="11" height="1.6" fill="#003399"/><rect x="13" y="5.8" width="6" height="3.6" fill="#FFCC00" stroke="#003399" stroke-width="0.8"/><polygon points="12,5.8 20,5.8 16,2.8" fill="#003399"/></svg></span>Ocean endings</div>
-  </div>
+  <div class="legend" id="legend"></div>
 
   <!-- Lightbox overlay (hidden until a photo is clicked) -->
   <div id="lightbox" aria-hidden="true" role="dialog">
@@ -403,20 +460,20 @@
 
   <script>
     // -------------------------------------------------------------
-    // CONFIG - paste your keys here (see README for how to get them)
+    // CONFIG
     // -------------------------------------------------------------
     const CONFIG = {
       MAPTILER_KEY: "emnksKueX1bIKbJb2CSR",
       MAPBOX_TOKEN: "pk.eyJ1IjoibWlrdXMzMSIsImEiOiJjbW9hNjB4N28wM21uMnFvaWQ1azNpdnNuIn0.8JL2073-UWgbSYFdN4VkyA"
     };
 
-    // Shared: the full sorted list of journal entries (used by both markers and the lightbox)
-    var allEntries = [];
-    var journalStartDate = "";   // set from journal.json; drives the Day 0 countdown
-    var journalPilgrim = "";
+    // Global state: array of loaded journey objects.
+    // Each journey holds { config, entries, layers, visible, stats }.
+    var JOURNEYS = [];
+    // Combined, flat list of all entries across visible journeys (drives lightbox)
+    var lightboxEntries = [];
 
-    // Returns { days: N, pretty: "June 18" } where days is whole-day diff
-    // from local today to startDate (positive = future). Null if invalid.
+    // Returns { days: N, pretty: "June 18" }
     function startsInText(startDateStr) {
       if (!startDateStr) return null;
       var parts = String(startDateStr).split("-");
@@ -432,12 +489,13 @@
     }
 
     // -------------------------------------------------------------
-    // INIT MAP
+    // INIT MAP - fit the whole Iberian peninsula initially; we
+    // fitBounds() again once journey data has loaded.
     // -------------------------------------------------------------
     const map = L.map("map", {
       zoomControl: false,
       scrollWheelZoom: true
-    }).setView([43.3, -4.8], 7);
+    }).setView([42.5, -6.5], 6);
 
     L.control.zoom({ position: "topright" }).addTo(map);
 
@@ -446,473 +504,584 @@
     // -------------------------------------------------------------
     const esriTopo = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "Tiles &copy; Esri",
-        maxZoom: 17
-      }
+      { attribution: "Tiles &copy; Esri", maxZoom: 17 }
     );
-
     const esriImagery = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "Tiles &copy; Esri",
-        maxZoom: 19
-      }
+      { attribution: "Tiles &copy; Esri", maxZoom: 19 }
     );
-
     function makeEsriLabelsOverlay() {
       return L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-        {
-          attribution: "Labels &copy; Esri",
-          maxZoom: 19,
-          pane: "overlayPane"
-        }
+        { attribution: "Labels &copy; Esri", maxZoom: 19, pane: "overlayPane" }
       );
     }
-
     const esriImageryLabeled = L.layerGroup([esriImagery, makeEsriLabelsOverlay()]);
-
-    // MapTiler Aquarelle (retina-sharp 512px tiles)
     const maptilerAquarelle = L.tileLayer(
       "https://api.maptiler.com/maps/aquarelle/{z}/{x}/{y}.png?key=" + CONFIG.MAPTILER_KEY,
       {
-        attribution: '\u0026copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> \u0026copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
-        maxZoom: 18,
-        tileSize: 512,
-        zoomOffset: -1,
-        crossOrigin: true
+        attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
+        maxZoom: 18, tileSize: 512, zoomOffset: -1, crossOrigin: true
       }
     );
-
-    // Esri Satellite + Labels as default (no key required)
     esriImageryLabeled.addTo(map);
-
     const baseLayers = {
       "Esri Satellite + Labels": esriImageryLabeled,
       "Esri Topographic": esriTopo
     };
-    if (CONFIG.MAPTILER_KEY) {
-      baseLayers["MapTiler Aquarelle"] = maptilerAquarelle;
-    }
-
+    if (CONFIG.MAPTILER_KEY) baseLayers["MapTiler Aquarelle"] = maptilerAquarelle;
     L.control.layers(baseLayers, null, { position: "topright", collapsed: true }).addTo(map);
 
     // -------------------------------------------------------------
     // LOAD DATA
     // -------------------------------------------------------------
-    Promise.all([
-      fetch("data/route.geojson").then(r => r.json()),
-      fetch("data/journal.json").then(r => r.json()),
-      // Finisterre-Muxía extension (stretch goal beyond Santiago). Optional —
-      // if the file is missing or fails to load, the extension just doesn't render.
-      fetch("data/camino-de-fisterra-muxia.json").then(r => r.ok ? r.json() : null).catch(() => null)
-    ]).then(([routeData, journal, extensionData]) => {
-      renderTrip(routeData, journal, extensionData);
-    }).catch(err => {
-      console.error(err);
-      document.getElementById("banner-sub").textContent =
-        "Could not load route or journal data. See console.";
-    });
+    fetch("data/journeys.json")
+      .then(r => r.json())
+      .then(index => {
+        const journeys = index.journeys || [];
+        // For each journey, kick off its file fetches. Any file that fails to
+        // load (or is null in the index) simply gets a null in that slot.
+        return Promise.all(journeys.map(cfg => {
+          const routeP = cfg.route ? fetch(cfg.route).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+          const extP   = cfg.extension ? fetch(cfg.extension).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+          const jrnlP  = cfg.journal ? fetch(cfg.journal).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+          return Promise.all([routeP, extP, jrnlP]).then(([route, ext, jrnl]) => ({
+            cfg: cfg, route: route, extension: ext, journal: jrnl
+          }));
+        })).then(loaded => ({ index, loaded }));
+      })
+      .then(({ index, loaded }) => {
+        document.getElementById("banner-title").textContent = index.title || "Family Caminos";
+        document.getElementById("banner-family-sub").textContent = index.family || "";
+        loaded.forEach(item => JOURNEYS.push(buildJourney(item)));
+        renderChips();
+        renderJourneyRows();
+        renderLegend();
+        rebuildLightboxIndex();
+        fitToVisible();
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("banner-family-sub").textContent = "Could not load journeys.json — see console.";
+      });
 
     // -------------------------------------------------------------
-    // RENDER
+    // BUILD A SINGLE JOURNEY (returns state object, adds layers to map)
     // -------------------------------------------------------------
-    function renderTrip(routeData, journal, extensionData) {
-      // Post-journey mode: no dashed "yet to walk" lines. Sarah has completed
-      // the Norte + the Finisterre-Muxía extension. The map now shows only her
-      // walked path plus day markers, as a retrospective view.
+    function buildJourney(item) {
+      const cfg = item.cfg;
+      const routeData = item.route;
+      const extensionData = item.extension;
+      const journal = item.journal || { entries: [] };
 
-      // Compute the walked route using turf.
+      // Journey-owned Leaflet layer groups. Toggling visibility just
+      // add/remove-Layer's these three from the map.
+      const trailLayer = L.layerGroup();
+      const markersLayer = L.layerGroup();
+      // startsGroup is separate so the initial "start-city dot" for
+      // upcoming journeys always renders even without a route.
+      const startsLayer = L.layerGroup();
+
       const entries = (journal.entries || []).slice().sort((a, b) => a.day - b.day);
-      allEntries = entries;
-      journalStartDate = journal.startDate || "";
-      journalPilgrim = journal.pilgrim || "";
-      const walkedEntries = entries.filter(function (e) { return e.day >= 1; });
-      const routeLine = routeData.features[0];          // Turf expects a Feature<LineString>
+      const walkedEntries = entries.filter(e => e.day >= 1);
+      // Tag every entry with its journey so the lightbox can look up palette
+      entries.forEach(e => { e._journeySlug = cfg.slug; e._journeyCfg = cfg; });
 
-      // Build a "journey line" for walked-line slicing. If we have the extension
-      // data, concatenate the Norte + the extension's main trunk (F0 = Santiago
-      // to Fisterra) so the walked-line can extend past Santiago along the
-      // stretch goal naturally.
-      let journeyLine = routeLine;
-      if (extensionData && extensionData.features.length > 0) {
-        const extGeom = extensionData.features[0].geometry;
-        // Extract the first LineString from the extension. F0 may be either
-        // a LineString directly, or a MultiLineString whose first segment is the trunk.
-        let extCoords;
-        if (extGeom.type === "LineString") {
-          extCoords = extGeom.coordinates;
-        } else if (extGeom.type === "MultiLineString" && extGeom.coordinates.length > 0) {
-          extCoords = extGeom.coordinates[0];
-        }
-        if (extCoords && extCoords.length > 1) {
-          // Concat, skipping F0's first point (essentially the same as route's last point)
-          const combined = routeLine.geometry.coordinates.concat(extCoords.slice(1));
-          journeyLine = turf.lineString(combined);
-        }
-      }
-      const startPt = turf.point(journeyLine.geometry.coordinates[0]);
-
-      // Draw the walked-line. This is now the ONLY route line on the map —
-      // the traveled path from Irún to Fisterra.
+      // --- Route line assembly ---
+      // Prefer the route.geojson; if none, we skip the walked-line entirely.
       let walkedLayer = null;
-      if (walkedEntries.length > 0) {
-        const latest = walkedEntries[walkedEntries.length - 1];
-        const latestPt = turf.point([latest.coords[1], latest.coords[0]]);  // [lng, lat]
-        const snapped = turf.nearestPointOnLine(journeyLine, latestPt, { units: "kilometers" });
-        const walked = turf.lineSlice(startPt, snapped, journeyLine);
-
-        walkedLayer = L.geoJSON(walked, {
-          attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-          style: {
-            color: "#003399",
-            weight: 5,
-            opacity: 0.95,
-            lineCap: "round",
-            lineJoin: "round"
+      let journeyLine = null;
+      let totalRouteKm = 0;
+      if (routeData && routeData.features && routeData.features.length > 0) {
+        const routeLine = routeData.features[0];
+        journeyLine = routeLine;
+        // Splice in the extension (Fisterra-Muxía trunk) if we have it
+        if (extensionData && extensionData.features && extensionData.features.length > 0) {
+          const extGeom = extensionData.features[0].geometry;
+          let extCoords = null;
+          if (extGeom.type === "LineString") extCoords = extGeom.coordinates;
+          else if (extGeom.type === "MultiLineString" && extGeom.coordinates.length > 0) extCoords = extGeom.coordinates[0];
+          if (extCoords && extCoords.length > 1) {
+            const combined = routeLine.geometry.coordinates.concat(extCoords.slice(1));
+            journeyLine = turf.lineString(combined);
           }
-        }).addTo(map);
+        }
+        totalRouteKm = turf.length(routeLine, { units: "kilometers" });
+
+        // Draw the FULL planned route as a dashed preview line if the
+        // pilgrim hasn't finished yet. This gives friends and family a way
+        // to see the whole route before it's been walked. Once the journey
+        // is marked "completed" the dashed line is dropped and only the
+        // walked-line remains (matching Sarah's retrospective view).
+        if (journeyLine && cfg.status !== "completed") {
+          const plannedLayer = L.geoJSON(journeyLine, {
+            interactive: false,       // don't intercept clicks on markers
+            style: {
+              color: cfg.palette.walked,
+              weight: 3.5,
+              opacity: 0.85,
+              dashArray: "8, 8",
+              lineCap: "round",
+              lineJoin: "round"
+            }
+          });
+          plannedLayer.addTo(trailLayer);
+        }
+
+        // Draw walked-line if we have any walked entries
+        if (walkedEntries.length > 0 && journeyLine) {
+          const startPt = turf.point(journeyLine.geometry.coordinates[0]);
+          const latest = walkedEntries[walkedEntries.length - 1];
+          const latestPt = turf.point([latest.coords[1], latest.coords[0]]);
+          const snapped = turf.nearestPointOnLine(journeyLine, latestPt, { units: "kilometers" });
+          const walked = turf.lineSlice(startPt, snapped, journeyLine);
+
+          walkedLayer = L.geoJSON(walked, {
+            attribution: 'Route &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            style: {
+              color: cfg.palette.walked,
+              weight: 5,
+              opacity: 0.95,
+              lineCap: "round",
+              lineJoin: "round"
+            }
+          });
+          walkedLayer.addTo(trailLayer);
+        }
       }
 
-      // Fit map to the walked route (the whole journey).
-      if (walkedLayer) {
-        map.fitBounds(walkedLayer.getBounds(), { padding: [40, 40] });
-      } else {
-        // Fallback pre-journey (shouldn't hit in post-Camino mode)
-        map.fitBounds(L.geoJSON(routeData).getBounds(), { padding: [40, 40] });
-      }
-
-      // 3. Markers for each day's entry
+      // --- Markers ---
       const mostRecentDay = entries.length > 0 ? entries[entries.length - 1].day : null;
 
-      // Scallop-shell SVG for the Santiago milestone marker
-      const SCALLOP_SVG =
+      const SCALLOP_SVG = buildScallopSvg(cfg.palette);
+      const LIGHTHOUSE_SVG = buildLighthouseSvg(cfg.palette);
+
+      entries.forEach(entry => {
+        const loc = entry.location || "";
+        const isSantiago = /santiago/i.test(loc);
+        const isLighthouse = /mux[ií]a|fisterra|finisterre/i.test(loc);
+        const isRecent = entry.day === mostRecentDay && cfg.status !== "upcoming";
+        const isDayZero = entry.day === 0;
+        // Anything currently "live" pulses. Two cases: an active journey's
+        // most recent day, OR an upcoming journey's Day 0 start city.
+        const isPulsing = (isRecent && cfg.status === "active")
+                       || (isDayZero && cfg.status === "upcoming");
+        const pulseRgb = hexToRgbTriple(cfg.palette.marker);
+
+        let iconHtml, iconSize, iconAnchor, zIdx;
+        if (isSantiago) {
+          iconHtml = '<div class="santiago-marker">' + SCALLOP_SVG + '</div>';
+          iconSize = [28, 28]; iconAnchor = [14, 14]; zIdx = 500;
+        } else if (isLighthouse) {
+          iconHtml = '<div class="lighthouse-marker">' + LIGHTHOUSE_SVG + '</div>';
+          iconSize = [28, 28]; iconAnchor = [14, 14]; zIdx = 500;
+        } else if (isPulsing) {
+          iconHtml = '<div class="pulse-marker" style="background:' + cfg.palette.marker
+                   + ';--pulse-rgb:' + pulseRgb + ';"></div>';
+          iconSize = [22, 22]; iconAnchor = [11, 11]; zIdx = 1000;
+        } else if (isDayZero) {
+          // Static start-city marker (used only if this journey's Day 0 isn't already pulsing)
+          iconHtml = '<div class="start-marker" style="background:' + cfg.palette.marker + ';"></div>';
+          iconSize = [16, 16]; iconAnchor = [8, 8]; zIdx = 700;
+        } else {
+          iconHtml = '<div class="past-marker" style="background:' + (cfg.palette.pastDay || cfg.palette.marker) + ';"></div>';
+          iconSize = [12, 12]; iconAnchor = [6, 6]; zIdx = 0;
+        }
+
+        const icon = L.divIcon({ className: "", html: iconHtml, iconSize: iconSize, iconAnchor: iconAnchor });
+        const marker = L.marker(entry.coords, { icon: icon, zIndexOffset: zIdx, riseOnHover: true });
+        marker.bindPopup(buildPopup(entry, cfg), { maxWidth: 280, minWidth: 260, closeButton: true, autoPan: true });
+
+        // Auto-open the "live" pin on load: the most recent day of an active
+        // journey, or Day 0 of an upcoming journey (start city). Skips
+        // completed journeys — no popup blast on Sarah's finished map.
+        if (isPulsing) {
+          setTimeout(function () { marker.openPopup(); }, 700);
+        }
+
+        if (isDayZero) marker.addTo(startsLayer);
+        else marker.addTo(markersLayer);
+      });
+
+      // Add layers to map by default (both journeys visible on landing)
+      trailLayer.addTo(map);
+      markersLayer.addTo(map);
+      startsLayer.addTo(map);
+
+      // Compute stats for the banner row
+      const totalKm = walkedEntries.reduce((s, e) => s + (e.distanceKm || 0), 0);
+      const totalAscentM = walkedEntries.reduce((s, e) => s + (e.ascentM || 0), 0);
+
+      return {
+        cfg: cfg,
+        entries: entries,
+        walkedEntries: walkedEntries,
+        totalKm: totalKm,
+        totalAscentM: totalAscentM,
+        totalRouteKm: totalRouteKm,
+        trailLayer: trailLayer,
+        markersLayer: markersLayer,
+        startsLayer: startsLayer,
+        visible: true,
+        lastWeatherCoords: null,
+        lastWeatherHtml: ""
+      };
+    }
+
+    // -------------------------------------------------------------
+    // MILESTONE SVGs — parameterized by journey palette
+    // -------------------------------------------------------------
+    function buildScallopSvg(p) {
+      const stroke = p.milestoneAccent || p.walked;
+      const fill = p.milestoneMarker || p.marker;
+      return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
-          '<circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/>' +
-          '<path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/>' +
-          '<g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+          '<circle cx="16" cy="16" r="15" fill="#fff" stroke="' + stroke + '" stroke-width="1.5"/>' +
+          '<path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="' + fill + '"/>' +
+          '<g stroke="' + stroke + '" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
             '<line x1="16" y1="24" x2="6.5" y2="18.5"/>' +
             '<line x1="16" y1="24" x2="10" y2="11"/>' +
             '<line x1="16" y1="24" x2="16" y2="8"/>' +
             '<line x1="16" y1="24" x2="22" y2="11"/>' +
             '<line x1="16" y1="24" x2="25.5" y2="18.5"/>' +
           '</g>' +
-        '</svg>';
-
-      // Lighthouse SVG for the ocean-ending markers (Muxía + Finisterre)
-      const LIGHTHOUSE_SVG =
+        '</svg>'
+      );
+    }
+    function buildLighthouseSvg(p) {
+      const stroke = p.milestoneAccent || p.walked;
+      const light = p.milestoneMarker || p.marker;
+      return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
-          '<circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/>' +
-          // Ground base
-          '<rect x="9" y="24" width="14" height="2" fill="#003399"/>' +
-          // Tower body (slightly tapered)
-          '<polygon points="11.5,24 20.5,24 19.5,10.5 12.5,10.5" fill="#fff" stroke="#003399" stroke-width="1"/>' +
-          // Red horizontal stripe
+          '<circle cx="16" cy="16" r="15" fill="#fff" stroke="' + stroke + '" stroke-width="1.5"/>' +
+          '<rect x="9" y="24" width="14" height="2" fill="' + stroke + '"/>' +
+          '<polygon points="11.5,24 20.5,24 19.5,10.5 12.5,10.5" fill="#fff" stroke="' + stroke + '" stroke-width="1"/>' +
           '<rect x="12.5" y="15" width="7" height="3" fill="#c0502b"/>' +
-          // Lantern platform
-          '<rect x="10.5" y="9.2" width="11" height="1.6" fill="#003399"/>' +
-          // Lantern (yellow light chamber)
-          '<rect x="13" y="5.8" width="6" height="3.6" fill="#FFCC00" stroke="#003399" stroke-width="0.8"/>' +
-          // Dome roof
-          '<polygon points="12,5.8 20,5.8 16,2.8" fill="#003399"/>' +
-        '</svg>';
+          '<rect x="10.5" y="9.2" width="11" height="1.6" fill="' + stroke + '"/>' +
+          '<rect x="13" y="5.8" width="6" height="3.6" fill="' + light + '" stroke="' + stroke + '" stroke-width="0.8"/>' +
+          '<polygon points="12,5.8 20,5.8 16,2.8" fill="' + stroke + '"/>' +
+        '</svg>'
+      );
+    }
 
-      entries.forEach(entry => {
-        const loc = entry.location || "";
-        const isSantiago = /santiago/i.test(loc);
-        const isLighthouse = /mux[ií]a|fisterra|finisterre/i.test(loc);
-        const isRecent = entry.day === mostRecentDay;
+    // -------------------------------------------------------------
+    // CHIP BAR - one toggle per journey
+    // -------------------------------------------------------------
+    function renderChips() {
+      const wrap = document.getElementById("chips");
+      wrap.innerHTML = "";
+      JOURNEYS.forEach((j, i) => {
+        const c = document.createElement("div");
+        c.className = "chip " + (j.visible ? "active" : "inactive");
+        c.innerHTML =
+          '<span class="chip-swatch" style="background:' + j.cfg.palette.walked + ';"></span>' +
+          escapeHtml(j.cfg.pilgrim);
+        c.title = j.cfg.camino;
+        c.addEventListener("click", () => toggleJourney(i));
+        wrap.appendChild(c);
+      });
+    }
 
-        let iconHtml, iconSize, iconAnchor, zIdx;
-        if (isSantiago) {
-          iconHtml = '<div class="santiago-marker">' + SCALLOP_SVG + '</div>';
-          iconSize = [28, 28];
-          iconAnchor = [14, 14];
-          zIdx = 500;
-        } else if (isLighthouse) {
-          iconHtml = '<div class="lighthouse-marker">' + LIGHTHOUSE_SVG + '</div>';
-          iconSize = [28, 28];
-          iconAnchor = [14, 14];
-          zIdx = 500;
-        } else if (isRecent) {
-          iconHtml = '<div class="current-marker"></div>';
-          iconSize = [22, 22];
-          iconAnchor = [11, 11];
-          zIdx = 1000;
+    function toggleJourney(i) {
+      const j = JOURNEYS[i];
+      j.visible = !j.visible;
+      if (j.visible) {
+        j.trailLayer.addTo(map);
+        j.markersLayer.addTo(map);
+        j.startsLayer.addTo(map);
+      } else {
+        map.removeLayer(j.trailLayer);
+        map.removeLayer(j.markersLayer);
+        map.removeLayer(j.startsLayer);
+      }
+      renderChips();
+      renderJourneyRows();
+      renderLegend();
+      rebuildLightboxIndex();
+      fitToVisible();
+    }
+
+    // -------------------------------------------------------------
+    // BANNER - one row per journey, weather only for single-visible
+    // -------------------------------------------------------------
+    function renderJourneyRows() {
+      const wrap = document.getElementById("journey-rows");
+      wrap.innerHTML = "";
+      JOURNEYS.forEach(j => {
+        if (!j.visible) return;
+        const row = document.createElement("div");
+        row.className = "journey-row";
+        const cfg = j.cfg;
+
+        let subText = "";
+        if (cfg.status === "completed") {
+          subText = cfg.camino + " · " + cfg.startCity + " → " + cfg.endCity;
+        } else if (cfg.status === "active") {
+          subText = cfg.camino + " · walking now";
+        } else if (cfg.status === "upcoming") {
+          const c = startsInText(cfg.startDate);
+          if (c && c.days > 1) subText = cfg.camino + " · starts in " + c.days + " days";
+          else if (c && c.days === 1) subText = cfg.camino + " · starts tomorrow";
+          else if (c && c.days === 0) subText = cfg.camino + " · starts today!";
+          else subText = cfg.camino;
         } else {
-          iconHtml = '<div class="past-marker"></div>';
-          iconSize = [12, 12];
-          iconAnchor = [6, 6];
-          zIdx = 0;
+          subText = cfg.camino;
         }
 
-        const icon = L.divIcon({
-          className: "",
-          html: iconHtml,
-          iconSize: iconSize,
-          iconAnchor: iconAnchor
-        });
-
-        const marker = L.marker(entry.coords, {
-          icon: icon,
-          zIndexOffset: zIdx,
-          riseOnHover: true
-        }).addTo(map);
-
-        marker.bindPopup(buildPopup(entry), {
-          maxWidth: 280,
-          minWidth: 260,
-          closeButton: true,
-          autoPan: true
-        });
-
-        // Auto-open the most recent day's popup on load
-        if (isRecent) {
-          setTimeout(function () { marker.openPopup(); }, 600);
+        // Stats row (only meaningful once walking has begun)
+        let statsHtml = "";
+        if (j.walkedEntries.length > 0) {
+          const totalDays = j.walkedEntries.length;
+          const daysWord = totalDays === 1 ? "day" : "days";
+          const totalMiles = kmToMiles(j.totalKm);
+          const totalAscentFt = metersToFeet(j.totalAscentM);
+          statsHtml = '<div class="stats"><b>' + totalDays + '</b> ' + daysWord
+            + ' &middot; <b>' + totalMiles + '</b> mi'
+            + (totalAscentFt > 0 ? ' &middot; <b>' + totalAscentFt.toLocaleString() + '</b> ft' : '')
+            + '</div>';
         }
+
+        row.innerHTML =
+          '<div class="name"><span class="swatch" style="background:' + cfg.palette.walked
+            + ';border:1px solid ' + (cfg.palette.walked === '#ffffff' ? '#999' : 'transparent') + '"></span>'
+            + escapeHtml(cfg.pilgrim) + '</div>'
+          + '<div class="sub">' + escapeHtml(subText) + '</div>'
+          + statsHtml;
+        wrap.appendChild(row);
       });
 
-      // 4. Update the banner with stats. Day 0 doesn't count as "walked".
-      const totalDays = walkedEntries.length;
-      const totalKm = walkedEntries.reduce(function (s, e) { return s + (e.distanceKm || 0); }, 0);
-      const totalMiles = kmToMiles(totalKm);
-      const totalAscentM = walkedEntries.reduce(function (s, e) { return s + (e.ascentM || 0); }, 0);
-      const totalAscentFt = metersToFeet(totalAscentM);
-      document.getElementById("banner-title").textContent =
-        (journalPilgrim ? journalPilgrim + " \u2014 " : "") + "Camino del Norte";
-      renderBannerSub();
-      const daysWord = totalDays === 1 ? "day" : "days";
-      document.getElementById("banner-stats").innerHTML = totalDays
-        ? "<div>Total: <b>" + totalDays + "</b> " + daysWord
-          + " &middot; <b>" + totalMiles + "</b> mi"
-          + (totalAscentFt > 0 ? " &middot; <b>" + totalAscentFt.toLocaleString() + "</b> ft climbed" : "")
-          + "</div>"
-        : "";
-
-      // 5. Compute remaining distance to Santiago and the Finisterre stretch goal.
-      //    Total route length comes from the geometry; Finisterre extension is the
-      //    well-documented ~89 km traditional pilgrim walk from Santiago to Cabo Fisterra.
-      const FINISTERRE_EXTENSION_KM = 89;
-      // Our OSM-derived geometry (819 km) is a few km short of published Camino
-      // del Norte figures (~828 km). Bump the total so the "miles to Santiago"
-      // display matches guidebooks and pilgrim reports.
-      const SANTIAGO_EXTRA_KM = 9;
-      const totalRouteKm = turf.length(routeLine, { units: "kilometers" }) + SANTIAGO_EXTRA_KM;
-      const remainingSantiagoKm = Math.max(0, totalRouteKm - totalKm);
-      // Once she walks past Santiago, decrement the Finisterre remaining by the
-      // amount she's covered on the extension.
-      const walkedPastSantiagoKm = Math.max(0, totalKm - totalRouteKm);
-      const remainingFinisterreKm = remainingSantiagoKm + Math.max(0, FINISTERRE_EXTENSION_KM - walkedPastSantiagoKm);
-      const remainingSantiagoMi = kmToMiles(remainingSantiagoKm);
-      const remainingFinisterreMi = kmToMiles(remainingFinisterreKm);
-
-      // Detect if she took the Muxía branch and has arrived there. The coastal
-      // Muxía → Fisterra walk is ~29 km / ~18 mi if she continues to Finisterre.
-      const MUXIA_TO_FINISTERRE_KM = 29;
-      const latestWalkedLocation = walkedEntries.length > 0
-        ? (walkedEntries[walkedEntries.length - 1].location || "")
-        : "";
-      const atMuxia = /mux[ií]a/i.test(latestWalkedLocation);
-
-      var remHtml;
-      if (remainingSantiagoKm > 0.5) {
-        // Standard case: still walking toward Santiago
-        remHtml = "<b>" + remainingSantiagoMi + "</b> mi to Santiago "
-                + "(<b>" + remainingFinisterreMi + "</b> mi to Finisterre)";
-      } else if (atMuxia) {
-        // Muxía reached — she took the northern branch. Still ~18 mi coastal
-        // walk south to Finisterre if she chooses to continue.
-        const muxiaToFisterraMi = kmToMiles(MUXIA_TO_FINISTERRE_KM);
-        remHtml = "Muxía reached · <b>" + muxiaToFisterraMi + "</b> mi to Finisterre";
-      } else if (remainingFinisterreKm > 0.5) {
-        // Santiago reached, still going toward Finisterre
-        remHtml = "Santiago reached · <b>" + remainingFinisterreMi + "</b> mi to Finisterre";
-      } else {
-        // Both reached
-        remHtml = "Finisterre reached 🌊";
+      // Weather: fetch for the "live" journey (whichever is upcoming or
+      // active). Shown at the bottom of the banner, next to the clock in
+      // that pilgrim's local timezone.
+      const live = getLiveJourney();
+      if (live && live.entries.length > 0) {
+        const latest = live.entries[live.entries.length - 1];
+        fetchWeatherFor(live, latest.coords[0], latest.coords[1]);
       }
-      document.getElementById("banner-remaining").innerHTML = remHtml;
-
-      // Kick off weather for the most recent entry's location
-      if (entries.length > 0) {
-        var latestEntry = entries[entries.length - 1];
-        fetchAndRenderWeather(latestEntry.coords[0], latestEntry.coords[1]);
-      }
+      renderLiveClock();
     }
 
-    // Banner subtitle: countdown pre-launch, "Latest: ..." once walking.
-    // Pulled out so it can be ticked from the clock interval.
-    function renderBannerSub() {
-      var el = document.getElementById("banner-sub");
-      if (!el) return;
-      var walked = (allEntries || []).filter(function (e) { return e.day >= 1; });
-      if (walked.length > 0) {
-        el.textContent = "Latest: " + walked[walked.length - 1].location;
+    // Returns the journey we should feature in the bottom weather/clock strip.
+    // Preference: active > upcoming > most-recent completed.
+    function getLiveJourney() {
+      const active = JOURNEYS.find(j => j.cfg.status === "active");
+      if (active) return active;
+      const upcoming = JOURNEYS.find(j => j.cfg.status === "upcoming");
+      if (upcoming) return upcoming;
+      return JOURNEYS[JOURNEYS.length - 1] || null;
+    }
+
+    // -------------------------------------------------------------
+    // LEGEND - regenerated to match visible journeys
+    // -------------------------------------------------------------
+    function renderLegend() {
+      const wrap = document.getElementById("legend");
+      wrap.innerHTML = "";
+      const visibleJourneys = JOURNEYS.filter(j => j.visible);
+      if (visibleJourneys.length === 0) {
+        wrap.innerHTML = '<div class="row" style="color:#8b7765;">No journeys shown</div>';
         return;
       }
-      var c = startsInText(journalStartDate);
-      if (!c) { el.textContent = "Planning the journey\u2026"; return; }
-      if (c.days > 1) el.textContent = "Starts in " + c.days + " days \u00b7 " + c.pretty;
-      else if (c.days === 1) el.textContent = "Starts tomorrow \u00b7 " + c.pretty;
-      else if (c.days === 0) el.textContent = "Walking today! \u00b7 " + c.pretty;
-      else el.textContent = "Underway since " + c.pretty;
+      visibleJourneys.forEach(j => {
+        const row = document.createElement("div");
+        row.className = "row";
+        const isDashed = j.cfg.status !== "completed" && j.walkedEntries.length === 0;
+        const swatch = isDashed
+          ? '<span class="swatch swatch-dashed" style="border-top:3px dashed ' + j.cfg.palette.walked + ';background:transparent;box-shadow:none;height:0;"></span>'
+          : '<span class="swatch" style="background:' + j.cfg.palette.walked + ';"></span>';
+        const suffix = isDashed ? " (planned)" : "";
+        row.innerHTML =
+          swatch
+          + escapeHtml(j.cfg.pilgrim) + '’s ' + escapeHtml(j.cfg.camino) + suffix;
+        wrap.appendChild(row);
+      });
+      // Universal legend rows: what the shared icons mean
+      const days = document.createElement("div");
+      days.className = "row";
+      days.innerHTML = '<span class="dot" style="background: #a8915a;"></span>Day marker (click!)';
+      wrap.appendChild(days);
+      const santiago = document.createElement("div");
+      santiago.className = "row";
+      santiago.innerHTML = '<span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><path d="M 5 19 A 11 11 0 0 1 27 19 L 16 26 Z" fill="#FFCC00"/><g stroke="#003399" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="24" x2="6.5" y2="18.5"/><line x1="16" y1="24" x2="10" y2="11"/><line x1="16" y1="24" x2="16" y2="8"/><line x1="16" y1="24" x2="22" y2="11"/><line x1="16" y1="24" x2="25.5" y2="18.5"/></g></svg></span>Santiago';
+      wrap.appendChild(santiago);
+      // Only show the lighthouse row if a Muxía / Fisterra entry is in view
+      const anyOcean = visibleJourneys.some(j => j.entries.some(e => /mux[ií]a|fisterra|finisterre/i.test(e.location || "")));
+      if (anyOcean) {
+        const oc = document.createElement("div");
+        oc.className = "row";
+        oc.innerHTML = '<span class="scallop-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff" stroke="#003399" stroke-width="1.5"/><rect x="9" y="24" width="14" height="2" fill="#003399"/><polygon points="11.5,24 20.5,24 19.5,10.5 12.5,10.5" fill="#fff" stroke="#003399" stroke-width="1"/><rect x="12.5" y="15" width="7" height="3" fill="#c0502b"/><rect x="10.5" y="9.2" width="11" height="1.6" fill="#003399"/><rect x="13" y="5.8" width="6" height="3.6" fill="#FFCC00" stroke="#003399" stroke-width="0.8"/><polygon points="12,5.8 20,5.8 16,2.8" fill="#003399"/></svg></span>Ocean endings';
+        wrap.appendChild(oc);
+      }
     }
 
-    // ---------- Weather (Open-Meteo, no API key required) ----------
-    // WMO weather code -> emoji + short label. Day icons; clear-sky swaps
-    // to the moon at night via the is_day flag.
+    // -------------------------------------------------------------
+    // fitToVisible - Combined bounds of all visible journeys
+    // -------------------------------------------------------------
+    function fitToVisible() {
+      const visible = JOURNEYS.filter(j => j.visible);
+      if (visible.length === 0) return;
+      // Build a bounds object from every marker + trail-layer bounds
+      let bounds = null;
+      visible.forEach(j => {
+        // Trail bounds
+        try {
+          if (j.trailLayer.getLayers().length > 0) {
+            j.trailLayer.eachLayer(function (sub) {
+              const b = sub.getBounds ? sub.getBounds() : null;
+              if (b) bounds = bounds ? bounds.extend(b) : L.latLngBounds(b.getSouthWest(), b.getNorthEast());
+            });
+          }
+        } catch (e) {}
+        // Marker bounds
+        j.entries.forEach(e => {
+          const ll = L.latLng(e.coords[0], e.coords[1]);
+          bounds = bounds ? bounds.extend(ll) : L.latLngBounds(ll, ll);
+        });
+      });
+      if (bounds) map.fitBounds(bounds, { padding: [50, 50] });
+    }
+
+    // -------------------------------------------------------------
+    // WEATHER
+    // -------------------------------------------------------------
     var WEATHER_CODES = {
-      0:  { day: "\u2600\ufe0f",   night: "\ud83c\udf19", label: "clear sky" },
-      1:  { day: "\ud83c\udf24\ufe0f", night: "\ud83c\udf19", label: "mostly clear" },
-      2:  { day: "\u26c5",         night: "\u2601\ufe0f",     label: "partly cloudy" },
-      3:  { day: "\u2601\ufe0f",   night: "\u2601\ufe0f",     label: "overcast" },
-      45: { day: "\ud83c\udf2b\ufe0f", night: "\ud83c\udf2b\ufe0f", label: "fog" },
-      48: { day: "\ud83c\udf2b\ufe0f", night: "\ud83c\udf2b\ufe0f", label: "rime fog" },
-      51: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "light drizzle" },
-      53: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "drizzle" },
-      55: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "heavy drizzle" },
-      61: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "light rain" },
-      63: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "rain" },
-      65: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "heavy rain" },
-      71: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "light snow" },
-      73: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow" },
-      75: { day: "\u2744\ufe0f",       night: "\u2744\ufe0f",       label: "heavy snow" },
-      77: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow grains" },
-      80: { day: "\ud83c\udf26\ufe0f", night: "\ud83c\udf26\ufe0f", label: "rain showers" },
-      81: { day: "\ud83c\udf27\ufe0f", night: "\ud83c\udf27\ufe0f", label: "rain showers" },
-      82: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "violent showers" },
-      85: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow showers" },
-      86: { day: "\ud83c\udf28\ufe0f", night: "\ud83c\udf28\ufe0f", label: "snow showers" },
-      95: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm" },
-      96: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm + hail" },
-      99: { day: "\u26c8\ufe0f",       night: "\u26c8\ufe0f",       label: "thunderstorm + hail" }
+      0:  { day: "☀️",   night: "🌙", label: "clear sky" },
+      1:  { day: "🌤️", night: "🌙", label: "mostly clear" },
+      2:  { day: "⛅",         night: "☁️",     label: "partly cloudy" },
+      3:  { day: "☁️",   night: "☁️",     label: "overcast" },
+      45: { day: "🌫️", night: "🌫️", label: "fog" },
+      48: { day: "🌫️", night: "🌫️", label: "rime fog" },
+      51: { day: "🌦️", night: "🌦️", label: "light drizzle" },
+      53: { day: "🌦️", night: "🌦️", label: "drizzle" },
+      55: { day: "🌧️", night: "🌧️", label: "heavy drizzle" },
+      61: { day: "🌦️", night: "🌦️", label: "light rain" },
+      63: { day: "🌧️", night: "🌧️", label: "rain" },
+      65: { day: "🌧️", night: "🌧️", label: "heavy rain" },
+      71: { day: "🌨️", night: "🌨️", label: "light snow" },
+      73: { day: "🌨️", night: "🌨️", label: "snow" },
+      75: { day: "❄️",       night: "❄️",       label: "heavy snow" },
+      77: { day: "🌨️", night: "🌨️", label: "snow grains" },
+      80: { day: "🌦️", night: "🌦️", label: "rain showers" },
+      81: { day: "🌧️", night: "🌧️", label: "rain showers" },
+      82: { day: "⛈️",       night: "⛈️",       label: "violent showers" },
+      85: { day: "🌨️", night: "🌨️", label: "snow showers" },
+      86: { day: "🌨️", night: "🌨️", label: "snow showers" },
+      95: { day: "⛈️",       night: "⛈️",       label: "thunderstorm" },
+      96: { day: "⛈️",       night: "⛈️",       label: "thunderstorm + hail" },
+      99: { day: "⛈️",       night: "⛈️",       label: "thunderstorm + hail" }
     };
 
-    var lastWeatherCoords = null;   // remember coords for the refresh interval
-
-    function fetchAndRenderWeather(lat, lng) {
-      lastWeatherCoords = [lat, lng];
-      var url = "https://api.open-meteo.com/v1/forecast"
+    function fetchWeatherFor(journey, lat, lng) {
+      journey.lastWeatherCoords = [lat, lng];
+      // timezone=auto: Open-Meteo resolves the IANA zone from lat/lng and
+      // returns it in the response. That's the source of truth for the
+      // banner clock — no manual updates required as Michael crosses the
+      // Minho from Portugal into Spain (Lisbon → Madrid).
+      const url = "https://api.open-meteo.com/v1/forecast"
         + "?latitude=" + encodeURIComponent(lat)
         + "&longitude=" + encodeURIComponent(lng)
         + "&current=temperature_2m,weather_code,is_day"
         + "&temperature_unit=fahrenheit"
-        + "&timezone=Europe%2FMadrid";
-
+        + "&timezone=auto";
       fetch(url)
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-        .then(function (data) {
-          var el = document.getElementById("banner-weather");
-          if (!el || !data.current) return;
-          var t = Math.round(data.current.temperature_2m);
-          var code = data.current.weather_code;
-          var isDay = data.current.is_day === 1;
-          var info = WEATHER_CODES[code] || { day: "", night: "", label: "" };
-          var icon = isDay ? info.day : info.night;
-          el.innerHTML = icon + " <b>" + t + "\u00b0F</b>"
-            + (info.label ? " \u00b7 " + info.label : "");
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(data => {
+          if (data && data.timezone) journey.effectiveTimezone = data.timezone;
+          if (!data.current) { renderLiveClock(); return; }
+          const t = Math.round(data.current.temperature_2m);
+          const info = WEATHER_CODES[data.current.weather_code] || { day: "", night: "", label: "" };
+          const icon = data.current.is_day === 1 ? info.day : info.night;
+          journey.lastWeatherHtml = icon + ' <b>' + t + '°F</b>' + (info.label ? ' · ' + info.label : '');
+          renderLiveClock();
         })
-        .catch(function () {
-          // Hide quietly on failure; weather is non-essential
-          var el = document.getElementById("banner-weather");
-          if (el) el.textContent = "";
-        });
+        .catch(() => {});
     }
 
-    function refreshWeather() {
-      if (lastWeatherCoords) fetchAndRenderWeather(lastWeatherCoords[0], lastWeatherCoords[1]);
+    // Map an IANA timezone to a human country label for the banner strip
+    function countryFromTz(tz) {
+      if (!tz) return "";
+      if (tz === "Europe/Lisbon" || tz === "Atlantic/Madeira" || tz === "Atlantic/Azores") return "Portugal";
+      if (tz === "Europe/Madrid" || tz === "Africa/Ceuta" || tz === "Atlantic/Canary") return "Spain";
+      if (tz === "Europe/Paris") return "France";
+      if (tz === "Europe/Andorra") return "Andorra";
+      // Fallback: last path segment ("Europe/Rome" → "Rome")
+      const parts = String(tz).split("/");
+      return parts[parts.length - 1] || "";
     }
-    // Refresh weather every 15 minutes
-    setInterval(refreshWeather, 15 * 60 * 1000);
 
-    // Live Spain clock in the banner \u2014 uses Europe/Madrid so DST is automatic.
-    function renderSpainClock() {
-      var el = document.getElementById("banner-time");
+    // Bottom strip: weather + clock for the "live" journey (currently
+    // upcoming or active). Falls back to the last completed journey if none.
+    // Timezone comes from the Open-Meteo response for that journey's latest
+    // coords (updated every 15 min), with a config fallback for first paint.
+    function renderLiveClock() {
+      const el = document.getElementById("banner-time");
       if (!el) return;
+      const j = getLiveJourney();
+      if (!j) { el.textContent = ""; return; }
+      const tz = j.effectiveTimezone || j.cfg.timezone || "Europe/Madrid";
+      const country = countryFromTz(tz);
+      // City to label — use the latest entry's location (falls back to the
+      // journey's startCity if there are no entries yet). Trim any suffix
+      // like " — the start" or ", Spain" for a cleaner label.
+      let city = j.cfg.startCity || "";
+      if (j.entries.length > 0) {
+        const latest = j.entries[j.entries.length - 1];
+        const loc = latest.location || "";
+        city = loc.split(/[—,]/)[0].trim() || city;
+      }
+      let timeHtml = "";
       try {
-        var fmt = new Intl.DateTimeFormat("en-US", {
-          timeZone: "Europe/Madrid",
+        const fmt = new Intl.DateTimeFormat("en-US", {
+          timeZone: tz,
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
           timeZoneName: "short"
         });
-        var parts = fmt.formatToParts(new Date());
-        var time = "", ampm = "", tzName = "";
-        parts.forEach(function (p) {
+        const parts = fmt.formatToParts(new Date());
+        let time = "", ampm = "", tzName = "";
+        parts.forEach(p => {
           if (p.type === "hour" || p.type === "minute" || p.type === "literal") time += p.value;
           else if (p.type === "dayPeriod") ampm = p.value;
           else if (p.type === "timeZoneName") tzName = p.value;
         });
-        el.innerHTML = "\ud83d\udd52 <b>" + time.trim() + " " + ampm + "</b> in Spain \u00b7 " + tzName;
-      } catch (e) {
-        el.textContent = "";
-      }
-    }
-    renderSpainClock();
-    setInterval(function () {
-      renderSpainClock();
-      renderBannerSub();   // keep the countdown fresh if the page is left open
-    }, 30 * 1000);
+        timeHtml = '🕒 <b>' + time.trim() + ' ' + ampm + '</b> · ' + tzName;
+      } catch (e) { timeHtml = ""; }
 
-    // Distance helper: km -> miles, rounded to 1 decimal (or whole number if >= 100)
+      const weatherHtml = j.lastWeatherHtml ? j.lastWeatherHtml : "";
+      const cityLine = escapeHtml(city) + (country ? ' · ' + escapeHtml(country) : '');
+      // Two-line strip: "<city> · <country>" then "<weather> · <time>"
+      el.innerHTML =
+        '<div style="font-weight:600;color:#6b5a48;">' + cityLine + '</div>'
+        + '<div style="margin-top:2px;">'
+          + (weatherHtml ? weatherHtml + ' · ' : '')
+          + timeHtml
+        + '</div>';
+    }
+
+    renderLiveClock();
+    setInterval(() => {
+      renderLiveClock();
+      renderJourneyRows();  // refresh countdown copy for upcoming journeys
+    }, 30 * 1000);
+    // Refresh weather every 15 minutes for the live journey
+    setInterval(() => {
+      const j = getLiveJourney();
+      if (j && j.lastWeatherCoords) fetchWeatherFor(j, j.lastWeatherCoords[0], j.lastWeatherCoords[1]);
+    }, 15 * 60 * 1000);
+
+    // -------------------------------------------------------------
+    // HELPERS
+    // -------------------------------------------------------------
     function kmToMiles(km) {
       if (!km) return 0;
       const mi = km * 0.621371;
       return mi >= 100 ? Math.round(mi) : Math.round(mi * 10) / 10;
     }
-    // Ascent helper: meters -> feet, integer
     function metersToFeet(m) {
       if (!m) return 0;
       return Math.round(m * 3.28084);
     }
-
-    function buildPopup(e) {
-      const hasPhoto = e.photo && e.photo.length > 0;
-      const photoHtml = hasPhoto
-        ? '<img data-day="' + e.day + '" src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
-        : "";
-      const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
-      const ascent = e.ascentM ? '<div class="miles">' + metersToFeet(e.ascentM).toLocaleString() + ' ft ascent</div>' : "";
-      const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
-
-      // For Day 0, prepend a live countdown to departure.
-      let countdownHtml = "";
-      if (e.day === 0) {
-        const c = startsInText(journalStartDate);
-        if (c) {
-          let num, sub;
-          if (c.days > 1) { num = c.days + " days"; sub = "until departure"; }
-          else if (c.days === 1) { num = "Tomorrow"; sub = "she starts walking"; }
-          else if (c.days === 0) { num = "Today!"; sub = "the journey begins"; }
-          else { num = "Underway"; sub = "the journey has begun"; }
-          countdownHtml =
-            '<div class="countdown">' +
-              '<div class="cnt-num">' + num + '</div>' +
-              '<div class="cnt-sub">' + sub + '</div>' +
-            '</div>';
-        }
-      }
-
-      return (
-        '<div class="day-popup">' +
-          photoHtml +
-          '<div class="pad">' +
-            '<div class="hdr">' +
-              '<span class="day">' + dayLabel + '</span>' +
-              '<span class="date">' + escapeHtml(e.date || "") + '</span>' +
-            '</div>' +
-            '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
-            countdownHtml +
-            '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
-            miles +
-            ascent +
-          '</div>' +
-        '</div>'
-      );
-    }
-
     function escapeHtml(s) {
       return String(s)
         .split("&").join("&amp;")
@@ -923,9 +1092,90 @@
     }
 
     // -------------------------------------------------------------
-    // LIGHTBOX - click any popup photo to enlarge, then navigate with
-    // arrows / keyboard / swipe.
+    // POPUP builder — now needs the journey config for palette + pilgrim tag
     // -------------------------------------------------------------
+    function buildPopup(e, cfg) {
+      const hasPhoto = e.photo && e.photo.length > 0;
+      const photoHtml = hasPhoto
+        ? '<img data-day="' + e.day + '" data-journey="' + escapeHtml(cfg.slug) + '" src="' + escapeHtml(e.photo) + '" alt="' + escapeHtml(e.location || "") + '" onerror="this.style.display=\'none\'">'
+        : "";
+      const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
+      const ascent = e.ascentM ? '<div class="miles">' + metersToFeet(e.ascentM).toLocaleString() + ' ft ascent</div>' : "";
+      const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
+      const dayColor = cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked;
+
+      // Day 0 countdown (only for upcoming journeys)
+      let countdownHtml = "";
+      if (e.day === 0 && cfg.status === "upcoming") {
+        const c = startsInText(cfg.startDate);
+        if (c) {
+          let num, sub;
+          if (c.days > 1) { num = c.days + " days"; sub = "until departure"; }
+          else if (c.days === 1) { num = "Tomorrow"; sub = cfg.pilgrim + " starts walking"; }
+          else if (c.days === 0) { num = "Today!"; sub = "the journey begins"; }
+          else { num = "Underway"; sub = "the journey has begun"; }
+          countdownHtml =
+            '<div class="countdown" style="background:' + hexToSoft(cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked) + ';">' +
+              '<div class="cnt-num" style="color:' + dayColor + ';">' + num + '</div>' +
+              '<div class="cnt-sub">' + sub + '</div>' +
+            '</div>';
+        }
+      }
+
+      const pilgrimTagBg = cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked;
+      const pilgrimTag = '<span class="pilgrim-tag" style="background:' + pilgrimTagBg + ';color:#fff;">' + escapeHtml(cfg.pilgrim) + ' · ' + escapeHtml(cfg.camino) + '</span>';
+
+      return (
+        '<div class="day-popup">' +
+          photoHtml +
+          '<div class="pad">' +
+            '<div class="hdr">' +
+              '<span class="day" style="color:' + dayColor + ';">' + dayLabel + '</span>' +
+              '<span class="date">' + escapeHtml(e.date || "") + '</span>' +
+            '</div>' +
+            pilgrimTag +
+            '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
+            countdownHtml +
+            '<div class="caption">' + escapeHtml(e.caption || "") + '</div>' +
+            miles +
+            ascent +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    // Convert #rrggbb to soft rgba(r,g,b,0.18) for countdown backgrounds
+    function hexToSoft(hex) {
+      const h = (hex || "#003399").replace("#", "");
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',0.18)';
+    }
+    // Convert #rrggbb to a bare "r, g, b" triple for use in CSS var
+    // (--pulse-rgb references it as `rgba(var(--pulse-rgb), 0.7)`)
+    function hexToRgbTriple(hex) {
+      const h = (hex || "#003399").replace("#", "");
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return r + ', ' + g + ', ' + b;
+    }
+
+    // -------------------------------------------------------------
+    // LIGHTBOX - unchanged behavior, but the entries list is the
+    // flat cross-journey list of currently-visible entries with photos
+    // -------------------------------------------------------------
+    function rebuildLightboxIndex() {
+      lightboxEntries = [];
+      JOURNEYS.forEach(j => {
+        if (!j.visible) return;
+        j.entries.forEach(e => {
+          if (e.photo) lightboxEntries.push(e);
+        });
+      });
+    }
+
     var lightbox = document.getElementById("lightbox");
     var lightboxImg = document.getElementById("lightbox-img");
     var lightboxCaption = document.getElementById("lightbox-caption");
@@ -935,18 +1185,19 @@
     var currentLightboxIdx = -1;
 
     function openLightboxAt(idx) {
-      if (idx < 0 || idx >= allEntries.length) return;
+      if (idx < 0 || idx >= lightboxEntries.length) return;
       currentLightboxIdx = idx;
-      var entry = allEntries[idx];
+      const entry = lightboxEntries[idx];
       lightboxImg.src = entry.photo;
       lightboxImg.alt = entry.location || "";
+      const pilgrim = entry._journeyCfg ? entry._journeyCfg.pilgrim + " · " : "";
       lightboxCaption.innerHTML =
-        '<span class="loc">Day ' + entry.day + ' \u00b7 ' + escapeHtml(entry.location || "") + '</span>' +
+        '<span class="loc">' + escapeHtml(pilgrim) + 'Day ' + entry.day + ' · ' + escapeHtml(entry.location || "") + '</span>' +
         escapeHtml(entry.caption || "");
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
       lightboxPrev.disabled = idx <= 0;
-      lightboxNext.disabled = idx >= allEntries.length - 1;
+      lightboxNext.disabled = idx >= lightboxEntries.length - 1;
     }
     function closeLightbox() {
       lightbox.classList.remove("open");
@@ -955,39 +1206,31 @@
       currentLightboxIdx = -1;
     }
     function lightboxStep(delta) {
-      var next = currentLightboxIdx + delta;
-      if (next >= 0 && next < allEntries.length) openLightboxAt(next);
+      const next = currentLightboxIdx + delta;
+      if (next >= 0 && next < lightboxEntries.length) openLightboxAt(next);
     }
 
-    // Click a popup photo -> open lightbox at that entry
     document.addEventListener("click", function (e) {
-      var img = e.target && e.target.closest ? e.target.closest(".day-popup img") : null;
+      const img = e.target && e.target.closest ? e.target.closest(".day-popup img") : null;
       if (!img) return;
-      var day = parseInt(img.getAttribute("data-day"), 10);
-      var idx = allEntries.findIndex(function (x) { return x.day === day; });
+      const day = parseInt(img.getAttribute("data-day"), 10);
+      const journeySlug = img.getAttribute("data-journey");
+      const idx = lightboxEntries.findIndex(x => x.day === day && x._journeySlug === journeySlug);
       if (idx >= 0) openLightboxAt(idx);
     });
 
-    // Prev / next buttons
     lightboxPrev.addEventListener("click", function (e) { e.stopPropagation(); lightboxStep(-1); });
     lightboxNext.addEventListener("click", function (e) { e.stopPropagation(); lightboxStep(1); });
-
-    // Close on backdrop click or close button (not on image, caption, or arrows)
     lightbox.addEventListener("click", function (e) {
       if (e.target === lightbox || e.target === lightboxClose) closeLightbox();
     });
-
-    // Keyboard: Esc closes, arrows navigate
     document.addEventListener("keydown", function (e) {
       if (!lightbox.classList.contains("open")) return;
       if (e.key === "Escape") closeLightbox();
       else if (e.key === "ArrowLeft") lightboxStep(-1);
       else if (e.key === "ArrowRight") lightboxStep(1);
     });
-
-    // Touch swipe (mobile): horizontal swipe > 50px = prev/next
-    var touchStartX = 0;
-    var touchStartY = 0;
+    var touchStartX = 0, touchStartY = 0;
     lightbox.addEventListener("touchstart", function (e) {
       if (e.changedTouches && e.changedTouches[0]) {
         touchStartX = e.changedTouches[0].screenX;
@@ -996,9 +1239,8 @@
     }, { passive: true });
     lightbox.addEventListener("touchend", function (e) {
       if (!e.changedTouches || !e.changedTouches[0]) return;
-      var dx = e.changedTouches[0].screenX - touchStartX;
-      var dy = e.changedTouches[0].screenY - touchStartY;
-      // Must be primarily horizontal to count as a swipe
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      const dy = e.changedTouches[0].screenY - touchStartY;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
         lightboxStep(dx > 0 ? -1 : 1);
       }

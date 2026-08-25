@@ -1,0 +1,513 @@
+{
+  "pilgrim": "Sarah's 40th",
+  "startDate": "2026-06-19",
+  "entries": [
+    {
+      "day": 0,
+      "date": "2026-06-18",
+      "location": "Irún — the start",
+      "coords": [
+        43.338,
+        -1.7893
+      ],
+      "distanceKm": 0,
+      "ascentM": 0,
+      "photo": "photos/sarah-norte-2026/day-00.jpg",
+      "caption": "Sarah arrives in Irún to begin her 40-day Camino del Norte. From Irún she'll follow the coast of the Cantabrian Sea west through Basque country, across Cantabria and Asturias, then turn inland through Galicia to reach Santiago — about 513 miles (825 km)."
+    },
+    {
+      "day": 1,
+      "date": "2026-06-19",
+      "location": "San Sebastián",
+      "coords": [
+        43.3179,
+        -1.9754
+      ],
+      "caption": "Just got settled into hostel. Going to shower and then FOOD!!",
+      "distanceKm": 29.548,
+      "ascentM": 1008.3,
+      "photo": "photos/sarah-norte-2026/day-01.jpg"
+    },
+    {
+      "day": 2,
+      "date": "2026-06-20",
+      "location": "Getaria",
+      "coords": [
+        43.3032,
+        -2.2033
+      ],
+      "caption": "Have I told you how insane the hydrangeas are here?!? There's sooo many. They're so big. I've seen color variations I've never seen before. They're in full bloom. It's incredible.",
+      "distanceKm": 26.055,
+      "ascentM": 741.9,
+      "photo": "photos/sarah-norte-2026/day-02.jpg"
+    },
+    {
+      "day": 3,
+      "date": "2026-06-21",
+      "location": "Deba",
+      "coords": [
+        43.2987,
+        -2.3531
+      ],
+      "caption": "We made it to a bar for the World Cup, saw Spain score so the girls decided we're going to the beach. The water here is amazing! Just got back from swimming in the ocean!",
+      "distanceKm": 20.246,
+      "ascentM": 664.8,
+      "photo": "photos/sarah-norte-2026/day-03.jpg"
+    },
+    {
+      "day": 4,
+      "date": "2026-06-22",
+      "location": "Markina-Xemein",
+      "coords": [
+        43.27,
+        -2.4977
+      ],
+      "caption": "Today was literally HELL!! It was SO HARD! SO HOT! And limited shade. 15+ miles. At least the views were pretty for a while!",
+      "distanceKm": 24.285,
+      "ascentM": 1160.7,
+      "photo": "photos/sarah-norte-2026/day-04.jpg"
+    },
+    {
+      "day": 5,
+      "date": "2026-06-23",
+      "location": "Mendata",
+      "coords": [
+        43.2979,
+        -2.6389
+      ],
+      "caption": "The trail is like every hike I've ever done all rolled into one. Some parts look like Louisiana, Alabama, or Arkansas, others like Utah and Arizona, and then definitely Hawaii -- and even threw in some Peruvian Incan stairs!",
+      "distanceKm": 17.992,
+      "ascentM": 593.4,
+      "photo": "photos/sarah-norte-2026/day-05.jpg"
+    },
+    {
+      "day": 6,
+      "date": "2026-06-24",
+      "location": "Pozueta",
+      "coords": [
+        43.3031,
+        -2.7252
+      ],
+      "caption": "My walking stick I found and my first signatures! I gave my stick to a carpenter to sign. He asked if he could carve into it. It's exciting to see what he did, and a guy from Japan signed too!",
+      "distanceKm": 14.066,
+      "ascentM": 459,
+      "photo": "photos/sarah-norte-2026/day-06.jpg"
+    },
+    {
+      "day": 7,
+      "date": "2026-06-25",
+      "location": "Bilbao",
+      "coords": [
+        43.2578,
+        -2.9104
+      ],
+      "caption": "I went to the 7:00 mass at the basilica near the albergue. The church is so beautiful. I didn't understand a single thing at the mass except padre, madre, and papa Leon ... and tu!",
+      "distanceKm": 19.167,
+      "ascentM": 355.7,
+      "photo": "photos/sarah-norte-2026/day-07.jpg"
+    },
+    {
+      "day": 8,
+      "date": "2026-06-26",
+      "location": "Portugalete",
+      "coords": [
+        43.3215,
+        -3.0189
+      ],
+      "caption": "I slept in, walked almost 10 miles, got to the town at 12:30, explored, went to a restaurant had a coke, went to the Irish pub, waited for albergue to open, showered, did laundry, rested, went to the store, iced my knee and it's not quite 6!",
+      "distanceKm": 15.755,
+      "ascentM": 326.4,
+      "photo": "photos/sarah-norte-2026/day-08.jpg"
+    },
+    {
+      "day": 9,
+      "date": "2026-06-27",
+      "location": "Castro Urdiales",
+      "coords": [
+        43.3882,
+        -3.2307
+      ],
+      "caption": "Today might have been my favorite yet!! It was hard because we're back to longer distances but we were along the coast with views of the gorgeous ocean for at least most of the route. Day 1 is still a close second.",
+      "distanceKm": 28.856,
+      "ascentM": 628.8,
+      "photo": "photos/sarah-norte-2026/day-09.jpg"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-28",
+      "location": "Laredo",
+      "coords": [
+        43.4106,
+        -3.411
+      ],
+      "caption": "Another amazing day on the trail. Zulu was everywhere. Starting off with 22.2 km to go at a break in the trail (we consider anything 2-2-2 a sign from Zulu). Also, I watched a calf be born! I'm staying in a monastery tonight and they had a small service with a pilgrim's blessing at the end where a nun prayed over each of us individually. Everything was in Spanish and then English. At one point, the nun walked over and said \"you speak English, right?\" I said yes and she handed me the microphone and book and asked me to read the English passage! IYKYK how big a deal that is for me!",
+      "distanceKm": 30.674,
+      "ascentM": 777.2,
+      "photo": "photos/sarah-norte-2026/day-10.jpg"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-29",
+      "location": "Güemes",
+      "coords": [
+        43.447,
+        -3.6451
+      ],
+      "caption": "Finally busted out the rain gear. It was raining as we left Laredo and had to put on all the rain things. Walked in my sandals the first 10 miles which was a nice break from my boots. A lot of us are feeling the blisters coming on from walking with wet feet (thank you for the blister pads Emily and Megan!!). I got to walk with my two American friends most of the day which was nice as it was flat and a lot of city and concrete.",
+      "distanceKm": 28.952,
+      "ascentM": 370.6,
+      "photo": "photos/sarah-norte-2026/day-11.jpg"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-30",
+      "location": "Santander",
+      "coords": [
+        43.4601,
+        -3.8094
+      ],
+      "caption": "Ernesto, the 89-year-old priest and albergue owner, signed my walking stick this morning. He enjoyed sharing the history of the property and its significance with all his guests. The roughly 6+miles than ran along the coast today were absolutely stunning and the clouds made for a dramatic and moody sky. Some frustration toward the end due to unmarked path but in the end I mae it and today's trail ended with a ferry ride into Santander.",
+      "distanceKm": 20.744,
+      "ascentM": 340.8,
+      "photo": "photos/sarah-norte-2026/day-12.jpg"
+    },
+    {
+      "day": 13,
+      "date": "2026-07-01",
+      "location": "Santillana Del Mar",
+      "coords": [
+        43.3746,
+        -4.041
+      ],
+      "caption": "It's hard to find the words to describe how wonderful today was. A group of us chose to do the coastal route (not even on my app!) and it was breathtaking to say the least. It had its challenges but we were rewarded with views so amazing the pictures don't do it justice (and the pictures are amazing!!).",
+      "distanceKm": 28.775,
+      "ascentM": 452.6,
+      "photo": "photos/sarah-norte-2026/day-13.jpg"
+    },
+    {
+      "day": 14,
+      "date": "2026-07-03",
+      "location": "Comillas",
+      "coords": [
+        43.3839,
+        -4.2878
+      ],
+      "caption": "We said goodbye to our Zola girl yesterday which forced me to have a much-needed rest day. Today the trail was a mix of mountain views, rolling hills, and beautiful sea views, sometimes all at once. I was surprised to see the ocean as I thought we'd be too far away. There was a wonderful breeze throughout the day and some beautiful churches open with stamps!!",
+      "distanceKm": 23.207,
+      "ascentM": 559.9,
+      "photo": "photos/sarah-norte-2026/day-14.jpg"
+    },
+    {
+      "day": 15,
+      "date": "2026-07-04",
+      "location": "La Franca",
+      "coords": [
+        43.3861,
+        -4.5747
+      ],
+      "caption": "Almost 21-mile day done! Roughly 80 percent concrete so a lot of pounding but beautiful ocean and mountain views for the first half before turning inland. Definitely warmed up toward the end and was a humid day. Hopefully there's not too many more long distance days!!",
+      "distanceKm": 33.507,
+      "ascentM": 698.6,
+      "photo": "photos/sarah-norte-2026/day-15.jpg"
+    },
+    {
+      "day": 16,
+      "date": "2026-07-05",
+      "location": "Llanes",
+      "coords": [
+        43.4214,
+        -4.7565
+      ],
+      "caption": "I took the coastal route today and although we didn't see the ocean as much as I expected, when we did it was a dramatic, jagged coast weathered by waves. We even went by bufones that make sound like thunder when the waves come near. Today's \"short\" distance allowed me and a group of friends the opportunity to relax at the beach. The ocean felt like a cold plunge and was amazing for our tired legs and feet!",
+      "distanceKm": 21.919,
+      "ascentM": 428.9,
+      "photo": "photos/sarah-norte-2026/day-16.jpg"
+    },
+    {
+      "day": 17,
+      "date": "2026-07-06",
+      "location": "San Esteban",
+      "coords": [
+        43.4643,
+        -5.1108
+      ],
+      "caption": "Another 22 miles (in the heat!) closer to Santiago. Today was walk with friends day! Kyla and I knocked out the first 11 before breaking for coffee and then parting ways. I got a little lost in the next few miles but found my way back to the trail and then stumbled into Tina at a cafe. We walked the final 4 miles to the albergue and met up with some other familiar faces. We made dinner together at the albergue and enjoyed a peaceful night in.",
+      "distanceKm": 36.564,
+      "ascentM": 581.6,
+      "photo": "photos/sarah-norte-2026/day-17.jpg"
+    },
+    {
+      "day": 18,
+      "date": "2026-07-07",
+      "location": "Priesca",
+      "coords": [
+        43.4849,
+        -5.3584
+      ],
+      "caption": "First half of the day flew by as Tina and I knocked out 6.5 miles while talking. We sat at a cafe to enjoy breakfast before parting ways as that was her stop for the day. Even though the fog and clouds kept the temperature down, the afternoon seemed to crawl. I made it to a very nice albergue where we got a private showing of the church next door and a group of us played card games!",
+      "distanceKm": 24.961,
+      "ascentM": 560.8,
+      "photo": "photos/sarah-norte-2026/day-18.jpg"
+    },
+    {
+      "day": 19,
+      "date": "2026-07-08",
+      "location": "Gijón",
+      "coords": [
+        43.5137,
+        -5.5984
+      ],
+      "caption": "Today was one of the days that confirm the Camino Del Norte is not for the weak. The day started off with a few minor elevation changes but all the elevation came in the 2nd half of the day. We were met with steep and long inclines, long, steady declines, and repeat. Thankfully it was cloudy and foggy, so semi cool but humid. We also passed through the apple and cider capital of Spain!",
+      "distanceKm": 32.992,
+      "ascentM": 853.7,
+      "photo": "photos/sarah-norte-2026/day-19.jpg"
+    },
+    {
+      "day": 20,
+      "date": "2026-07-09",
+      "location": "Avilés",
+      "coords": [
+        43.551,
+        -5.9191
+      ],
+      "caption": "So thankful I ran into Franklin today. After a few back-to-back long days I was thinking about only walking as far as I felt and then hopping a bus to the albergue because there's not a lot of options to shorten today. Met up with Franklin around mile 8 and we finished the day strong!! My feet are sore and tired. Thankful tomorrow is a \"short\" day -- only 14ish miles!",
+      "distanceKm": 36.677,
+      "ascentM": 386.8,
+      "photo": "photos/sarah-norte-2026/day-20.jpg"
+    },
+    {
+      "day": 21,
+      "date": "2026-07-10",
+      "location": "Muros de Nalon",
+      "coords": [
+        43.5414,
+        -6.0949
+      ],
+      "caption": "It was one of those days with Hawaii type rain. Misty long enough to get you wet but not quite enough for rain gear. I did put on the poncho to protect my bag. Tonight we enjoyed watching Spain beat Belgium in the World Cup at the albergue. A group of peregrinos who don't speak the same language bonding over food, vino, and futbol!",
+      "distanceKm": 21.501,
+      "ascentM": 485.5,
+      "photo": "photos/sarah-norte-2026/day-21.jpg"
+    },
+    {
+      "day": 22,
+      "date": "2026-07-11",
+      "location": "Soto de Luiña",
+      "coords": [
+        43.5636,
+        -6.2308
+      ],
+      "caption": "One of our shortest Camino walks right around 10 miles. What we lacked in distance we made up for in elevation as the day went up and down, up and down. The great thing about a short day is I slept in, hiked and made it to the next town before check-in time! I met up with my new Spanish friends who were so happy to see me as I brought some items they had left at the albergue. We enjoyed a wonderful meal together at a restaurant and then lots of drinks back at the albergue. Oh also my knees felt pretty good today!",
+      "distanceKm": 18.862,
+      "ascentM": 365.8,
+      "photo": "photos/sarah-norte-2026/day-22.jpg"
+    },
+    {
+      "day": 23,
+      "date": "2026-07-12",
+      "location": "Canero",
+      "coords": [
+        43.5461,
+        -6.466
+      ],
+      "caption": "Our route options today -- hard or harder. The coast or the mountains. Even though the mountains are the \"official route\" both the app and our albergue host strongly advised against taking it. The coastal route did not lack in elevation changes but gave us magnificient views throughout the day. It reminded me of Hawaii changing between tropical rainforest vibes to coast to farmland and the humidity that accompanies the island vibes! Back at the albergue dinner and drinks with friends and then a trek to the beach at 11p with a few other adventurous souls.",
+      "distanceKm": 26.957,
+      "ascentM": 457.2,
+      "photo": "photos/sarah-norte-2026/day-23.jpg"
+    },
+    {
+      "day": 24,
+      "date": "2026-07-13",
+      "location": "Piñera",
+      "coords": [
+        43.5442,
+        -6.6742
+      ],
+      "caption": "I'm learning that one of the hardest parts of the Camino is saying goodbye to friends. Tomorrow we say goodbye to two guys who have become dear friends in a few days. We enjoyed one last night together over food, drinks, and making memories. Until we meet again!",
+      "distanceKm": 24.124,
+      "ascentM": 507.2,
+      "photo": "photos/sarah-norte-2026/day-24.jpg"
+    },
+    {
+      "day": 25,
+      "date": "2026-07-14",
+      "location": "La Caridad",
+      "coords": [
+        43.5494,
+        -6.8256
+      ],
+      "caption": "A short day made time for more play! After settling into albergue we went to share a final meal and drinks before some of our friends started their trek home. We tried local seafood and dishes that this area of Spain is known for. All was delicious!",
+      "distanceKm": 14.774,
+      "ascentM": 182.9,
+      "photo": "photos/sarah-norte-2026/day-25.jpg"
+    },
+    {
+      "day": 26,
+      "date": "2026-07-15",
+      "location": "Vilela",
+      "coords": [
+        43.5068,
+        -7.0986
+      ],
+      "caption": "I almost cried when Marga left today. We went from a quizzical look and \"I'm sorry I understand but don't speak much English\" to good friends and her being my translator in a few short days. And she found me a black ink pen in Spain (which apparently is damn near impossible). I'm also saying goodbye to the sea (for now!).",
+      "distanceKm": 31.752,
+      "ascentM": 451.7,
+      "photo": "photos/sarah-norte-2026/day-26.jpg"
+    },
+    {
+      "day": 27,
+      "date": "2026-07-16",
+      "location": "Lourenzá",
+      "coords": [
+        43.4695,
+        -7.301
+      ],
+      "caption": "I kept hearing that as we got closer to Santiago there would be less hills. I learned today that was a LIE!! The good news is that we have shorter stages coming up. Today was the Feast of Our Lady of Mount Carmel so the church had mass which they don't normally on Thursdays. Even though we've left the coast, we're not far from it and she is the patron saint of seafarers and Spanish Navy so the coastal towns celebrate this day. I don't think they expected so many pilgrims to show up and we had to keep adding pews to the section they had set up. The priest mentioned peregrinos multiple times and asked each peregrino(a) where they were from. Beautiful even if I couldn't understand it all.",
+      "distanceKm": 19.698,
+      "ascentM": 365.8,
+      "photo": "photos/sarah-norte-2026/day-27.jpg"
+    },
+    {
+      "day": 28,
+      "date": "2026-07-17",
+      "location": "Gontán",
+      "coords": [
+        43.3676,
+        -7.468
+      ],
+      "caption": "One week until I reach Santiago!! Today's walk was beautiful with rolling hills and mountains but the elevation gains gave me flashbacks to week 1. We have definitely added more pilgrims to the mix and the route and albergues are more full.",
+      "distanceKm": 21.984,
+      "ascentM": 937.9,
+      "photo": "photos/sarah-norte-2026/day-28.jpg"
+    },
+    {
+      "day": 29,
+      "date": "2026-07-18",
+      "location": "Vilalba",
+      "coords": [
+        43.3082,
+        -7.6607
+      ],
+      "caption": "The weather today was phenomenal -- cool and breezy. No major elevation changes which was a plus after yesterday!! I finished early (12:15p) and had plenty of time to hang out with friends -- old and new -- at the albergue!",
+      "distanceKm": 19.827,
+      "ascentM": 310.6,
+      "photo": "photos/sarah-norte-2026/day-29.jpg"
+    },
+    {
+      "day": 30,
+      "date": "2026-07-19",
+      "location": "Parga",
+      "coords": [
+        43.1582,
+        -7.8382
+      ],
+      "caption": "Big day today! GEAUX ESPAGNA!! ⚽️🏆 and I crossed the 100km left marker today!! 🥾🥾🥾",
+      "distanceKm": 28.856,
+      "ascentM": 411.5,
+      "photo": "photos/sarah-norte-2026/day-30.jpg"
+    },
+    {
+      "day": 31,
+      "date": "2026-07-20",
+      "location": "Sobrado",
+      "coords": [
+        43.0386,
+        -8.023
+      ],
+      "caption": "Today’s walk was beautiful and reminded me some of Louisiana and some of our time in Iowa. I really liked the priest at mass and he joined a group of us at dinner for a bit. I got to hang out with a group from Wisconsin that I’ve crossed paths with a few times this week. Crazy how time goes so fast and seems like I’ve been here forever at the same time. 🌾🌽☀️🐄⛪",
+      "distanceKm": 25.878,
+      "ascentM": 438.3,
+      "photo": "photos/sarah-norte-2026/day-31.jpg"
+    },
+    {
+      "day": 32,
+      "date": "2026-07-21",
+      "location": "A Calle",
+      "coords": [
+        42.9153,
+        -8.2433
+      ],
+      "caption": "Today we combined with the Camino Francés and had a huge influx of peregrinos. About 30 km (18.6 miles) to get to Santiago. I will definitely be there by Thursday but depending on how tomorrow goes I may reach Santiago tomorrow. 🥳🥳 So bittersweet as I will say goodbye to so many friends in the next few days before heading to Muxia and Finisterre. ❤️❤️❤️",
+      "distanceKm": 28.646,
+      "ascentM": 411.5,
+      "photo": "photos/sarah-norte-2026/day-32.jpg"
+    },
+    {
+      "day": 33,
+      "date": "2026-07-22",
+      "location": "Santiago de Compostela",
+      "coords": [
+        42.8805,
+        -8.5445
+      ],
+      "caption": "Wow, I made it to Santiago!! Emotions were high. Tears were shed. Joy and gratitude abundant. ❤️❤️❤️ Thank you to everyone for your prayers, love and support. I felt them every day along the path. I don’t have all the words yet and not quite finished as I begin to Muxia and Finisterre, but I’m so grateful to have made it to Santiago (515 miles, 830.6 km) and I’m still in one piece 🤪🥾🥳🙏🍾",
+      "distanceKm": 30.256,
+      "ascentM": 396.2,
+      "photo": "photos/sarah-norte-2026/day-33.jpg"
+    },
+    {
+      "day": 34,
+      "date": "2026-07-23",
+      "location": "Negreira",
+      "coords": [
+        42.9094,
+        -8.7349
+      ],
+      "caption": "I started the hike to Muxia today! Then I took the bus back to Santiago to celebrate with friends as they finish their Camino and prepare for the festival of St. James (Santiago). I will continue on towards Muxia on Sunday. Today’s hike was a mix of new and old Spain and had way more elevation changes than I expected. Don’t worry, I’ll still do my mile the next two days and then be back to the longer distances Sunday. Also, there’s no shortage of elevation in Santiago so I’ll get plenty of steps and elevation changes the next few days while on “break”. 🥾🌎⛰️",
+      "distanceKm": 22.531,
+      "ascentM": 457.2,
+      "photo": "photos/sarah-norte-2026/day-34.jpg"
+    },
+    {
+      "day": 35,
+      "date": "2026-07-26",
+      "location": "Lago",
+      "coords": [
+        42.9619,
+        -8.9736
+      ],
+      "caption": "Putting on my backpack felt so weird this morning after being in Santiago for just two days!! Final 100 km to the end of the world has begun!! Today was beautiful weather cool into the early afternoon and breezy. Farm land and rolling hills. A slight detour to help an older local woman locate her phone. Only a few days left. ❤️🥾🌎😭",
+      "distanceKm": 28.872,
+      "ascentM": 696.5,
+      "photo": "photos/sarah-norte-2026/day-35.jpg"
+    },
+    {
+      "day": 36,
+      "date": "2026-07-27",
+      "location": "A Grixa",
+      "coords": [
+        43.049,
+        -9.153
+      ],
+      "caption": "As my time in Spain draws closer to ending, I’m realizing the Camino never ends. We’re always walking along our friends, neighbors, and strangers. We’re called to help and love one another and give grace to those around us just as we do on the Camino. Buen Camino.",
+      "distanceKm": 23.641,
+      "ascentM": 304.8,
+      "photo": "photos/sarah-norte-2026/day-36.jpg"
+    },
+    {
+      "day": 37,
+      "date": "2026-07-28",
+      "location": "Muxía",
+      "coords": [
+        43.1014,
+        -9.2154
+      ],
+      "caption": "Muxia (Moo-She-A) is absolutely beautiful!! The water is crystal clear and refreshingly chilly 🌊 Big day tomorrow in both distance and destination!! 🥾🌊🌎",
+      "distanceKm": 17.783,
+      "ascentM": 362.7,
+      "photo": "photos/sarah-norte-2026/day-37.jpg"
+    },
+    {
+      "day": 38,
+      "date": "2026-07-29",
+      "location": "Finisterre",
+      "coords": [
+        42.9051,
+        -9.2638
+      ],
+      "caption": "Today I made it to the end of the world…twice!! It may end up being my longest Camino day yet but what a way to end! After hiking 21+ miles, we decided to hike back up to the lighthouse to see the sunset 🌅 so lots of wine, cheese, and laughs later we made our way to the albergue in the dark. Oh and I found so much sea glass at the beach today. Iykyk. I’m so thankful I don’t have to carry my pack much further. 🤣🤣",
+      "distanceKm": 33.796,
+      "ascentM": 802.5,
+      "photo": "photos/sarah-norte-2026/day-38.jpg"
+    }
+  ]
+}
