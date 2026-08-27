@@ -5,8 +5,10 @@ node_modules/
 .idea/
 *.log
 
-# Admin tool \u2014 local only, never publish
-admin.html
+# Admin tool now published so it can be used from a phone. The HTML
+# itself contains no secrets \u2014 the fine-grained PAT lives only in the
+# user's browser localStorage on each device.
+# admin.html
 
 # Raw route source files \u2014 keep local, don't ship. The simplified
 # data/route.geojson is what the app uses at runtime.

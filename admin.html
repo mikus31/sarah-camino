@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Camino Admin</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+
+  <style>
+    :root {
+      --terracotta: #c0502b;
+      --terracotta-dark: #9e4123;
+      --cream: #f7f1e8;
+      --cream-darker: #efe6d5;
+      --ink: #3a2d22;
+      --ink-soft: #6b5a48;
+      --muted: #8b7765;
+      --border: #d9cdb9;
+      --success: #3f8a4b;
+      --danger: #b03a3a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--terracotta);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+    header h1 .sub {
+      font-weight: 400;
+      opacity: 0.85;
+      margin-left: 8px;
+    }
+    .header-btn {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .header-btn:hover { background: rgba(255,255,255,0.28); }
+
+    /* ---------- Layout ---------- */
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 16px 16px 120px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .card h2 {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink-soft);
+      margin: 0 0 12px;
+    }
+
+    /* ---------- Form fields ---------- */
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .field { flex: 1 1 0; min-width: 0; margin-bottom: 12px; }
+    .field.small { flex: 0 0 110px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .field input[type="text"],
+    .field input[type="number"],
+    .field input[type="date"],
+    .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(192,80,43,0.15);
+    }
+    .field textarea { resize: vertical; min-height: 72px; }
+    .field .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .field .hint.converted {
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    /* ---------- Coord picker map ---------- */
+    #picker-map {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 4px;
+    }
+    .coord-readout {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13px;
+      color: var(--ink-soft);
+      background: var(--cream-darker);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    /* ---------- Photo upload ---------- */
+    .photo-drop {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--cream);
+    }
+    .photo-drop:hover, .photo-drop.dragover {
+      border-color: var(--terracotta);
+      background: #fff;
+    }
+    .photo-drop input[type="file"] { display: none; }
+    .photo-drop-hint {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .photo-preview-wrap {
+      position: relative;
+      margin-top: 8px;
+      display: none;
+    }
+    .photo-preview-wrap.has-photo { display: block; }
+    .photo-preview-wrap img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+    .photo-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .photo-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* ---------- Past entries list ---------- */
+    .entry-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #fff;
+    }
+    .entry-row .thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--cream-darker);
+      flex-shrink: 0;
+    }
+    .entry-row .meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .entry-row .day-n {
+      font-size: 11px;
+      color: var(--terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-weight: 700;
+    }
+    .entry-row .loc {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .entry-row .cap {
+      font-size: 12px;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .entry-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--ink-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn:hover { background: var(--cream-darker); }
+    .icon-btn.danger:hover { background: #fce8e8; color: var(--danger); border-color: var(--danger); }
+
+    /* ---------- Sticky action bar ---------- */
+    .action-bar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      z-index: 40;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn.primary {
+      background: var(--terracotta);
+      color: #fff;
+    }
+    .btn.primary:hover { background: var(--terracotta-dark); }
+    .btn.primary:disabled {
+      background: #d5b6a7;
+      cursor: not-allowed;
+    }
+    .btn.secondary {
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--border);
+    }
+    .btn.secondary:hover { background: var(--cream); }
+
+    /* ---------- Modals / drawers ---------- */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .modal h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+    .modal .field { margin-bottom: 14px; }
+    .modal .row-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    /* ---------- Toasts ---------- */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s;
+      z-index: 2500;
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+
+    /* ---------- Banner status ---------- */
+    .banner {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .banner.warn { background: #fff3d6; border: 1px solid #e6c97a; color: #7a5a15; display: block; }
+    .banner.info { background: #e4efff; border: 1px solid #b3cfef; color: #24527f; display: block; }
+
+    /* ---------- Mobile tweaks ---------- */
+    @media (max-width: 560px) {
+      header h1 { font-size: 15px; }
+      header h1 .sub { display: none; }
+      main { padding: 12px 12px 110px; }
+      .card { padding: 14px; }
+      .field.small { flex: 1 1 calc(50% - 6px); }
+      #picker-map { height: 220px; }
+      .btn { padding: 11px 16px; font-size: 14px; }
+      .entry-row .thumb { width: 44px; height: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Camino Admin
+    <span class="sub" id="journey-label">\u2026</span>
+  </h1>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <select id="journey-select" class="header-btn" style="padding:6px 8px;" aria-label="Select journey"></select>
+    <button id="settings-btn" class="header-btn" aria-label="Settings">\u2699</button>
+  </div>
+</header>
+
+<main>
+  <div id="status-banner" class="banner"></div>
+
+  <div class="card">
+    <h2 id="form-title">New Day</h2>
+
+    <div class="row">
+      <div class="field small">
+        <label for="f-day">Day #</label>
+        <input id="f-day" type="number" min="1" inputmode="numeric">
+      </div>
+      <div class="field small">
+        <label for="f-date">Date</label>
+        <input id="f-date" type="date">
+      </div>
+      <div class="field">
+        <label for="f-location">Location</label>
+        <input id="f-location" type="text" placeholder="e.g. Deba \u2192 Markina-Xemein">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Pick today's spot on the map</label>
+      <div id="picker-map"></div>
+      <div>
+        <span class="coord-readout" id="coord-readout">Tap the map to set coordinates</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field small">
+        <label for="f-km">Distance (mi)</label>
+        <input id="f-km" type="number" min="0" step="0.01" inputmode="decimal">
+        <div class="hint converted" id="mi-hint">\u2014</div>
+      </div>
+      <div class="field small">
+        <label for="f-ascent">Ascent (ft)</label>
+        <input id="f-ascent" type="number" min="0" step="1" inputmode="numeric">
+        <div class="hint converted" id="ft-hint">\u2014</div>
+      </div>
+      <div class="field">
+        <label for="f-caption">Caption</label>
+        <textarea id="f-caption" placeholder="A sentence or two about today's walk\u2026"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Photo</label>
+      <label class="photo-drop" id="photo-drop">
+        <input id="f-photo" type="file" accept="image/*" capture="environment">
+        <div class="photo-drop-hint">
+          <strong>Tap to choose a photo</strong><br>
+          <span>or drag one in \u00b7 resized to 1400px before upload</span>
+        </div>
+      </label>
+      <div class="photo-preview-wrap" id="photo-preview-wrap">
+        <img id="photo-preview" alt="">
+        <button type="button" class="photo-remove" id="photo-remove" aria-label="Remove photo">&times;</button>
+        <div class="photo-meta">
+          <span id="photo-filename"></span>
+          <span id="photo-size"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Past Days (<span id="entry-count">0</span>)</h2>
+    <div id="entry-list"></div>
+    <div id="entry-empty" class="hint" style="color:var(--muted); font-size:13px;">No entries yet.</div>
+  </div>
+</main>
+
+<div class="action-bar">
+  <button id="reset-btn" class="btn secondary">Reset form</button>
+  <button id="publish-btn" class="btn primary">\ud83d\ude80 Publish</button>
+</div>
+
+<!-- Settings modal -->
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal">
+    <h3>GitHub Settings</h3>
+    <p class="hint" style="font-size:13px; color:var(--ink-soft); margin:-4px 0 14px;">
+      These are stored in your browser only. Use a <b>fine-grained PAT</b> scoped to just this one repo.
+    </p>
+    <div class="field">
+      <label for="s-owner">Owner</label>
+      <input id="s-owner" type="text" placeholder="mikus31">
+    </div>
+    <div class="field">
+      <label for="s-repo">Repo</label>
+      <input id="s-repo" type="text" placeholder="sarah-camino">
+    </div>
+    <div class="field">
+      <label for="s-branch">Branch</label>
+      <input id="s-branch" type="text" placeholder="main" value="main">
+    </div>
+    <div class="field">
+      <label for="s-token">Personal access token</label>
+      <input id="s-token" type="password" placeholder="github_pat_\u2026">
+    </div>
+    <div class="field">
+      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-weight:400;">
+        <input id="s-remember" type="checkbox">
+        Remember token on this device
+      </label>
+    </div>
+    <div class="row-actions">
+      <button class="btn secondary" id="settings-cancel">Cancel</button>
+      <button class="btn primary" id="settings-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit entry modal -->
+<div class="modal-backdrop" id="edit-modal">
+  <div class="modal">
+    <h3 id="edit-modal-title">Edit Day</h3>
+    <div class="field">
+      <label>Location</label>
+      <input id="e-location" type="text">
+    </div>
+    <div class="field">
+      <label>Caption</label>
+      <textarea id="e-caption"></textarea>
+    </div>
+    <div class="field">
+      <label>Distance (mi)</label>
+      <input id="e-km" type="number" min="0" step="0.01" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label>Ascent (ft)</label>
+      <input id="e-ascent" type="number" min="0" step="1" inputmode="numeric">
+    </div>
+    <div class="row-actions">
+      <button class="btn secondary" id="edit-cancel">Cancel</button>
+      <button class="btn primary" id="edit-save">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Publish preview modal -->
+<div class="modal-backdrop" id="publish-modal">
+  <div class="modal">
+    <h3>Ready to publish</h3>
+    <div id="publish-summary" style="font-size:14px; color:var(--ink-soft); margin-bottom:14px;"></div>
+    <div class="row-actions">
+      <button class="btn secondary" id="publish-cancel">Cancel</button>
+      <button class="btn primary" id="publish-confirm">\ud83d\ude80 Commit to GitHub</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // =====================================================================
+  // State
+  // =====================================================================
+  var state = {
+    journeys: [],                 // loaded from data/journeys.json
+    currentJourney: null,         // full config for the journey being edited
+    journal: { pilgrim: "", startDate: "", entries: [] },
+    journalSha: null,             // github file sha for update
+    editingDay: null,             // null = new entry; number = editing existing
+    editingInListDay: null,       // day being edited in the modal
+    photoBlob: null,              // resized jpeg blob for upload
+    photoDataUrl: null,           // base64 data url for preview
+    photoFilename: null,          // e.g. "day-04.jpg" (bare filename; folder joined via photoPath())
+    settings: loadSettings()
+  };
+
+  // ---------- Path helpers (per journey) ----------
+  function journalPath() {
+    if (!state.currentJourney) return "data/journal.json"; // legacy fallback
+    return state.currentJourney.journal
+        || ("data/journeys/" + state.currentJourney.slug + "/journal.json");
+  }
+  function photoDir() {
+    if (!state.currentJourney) return "photos/";
+    return state.currentJourney.photos
+        || ("photos/" + state.currentJourney.slug + "/");
+  }
+  function photoPathForDay(day) {
+    return photoDir() + "day-" + pad2(day) + ".jpg";
+  }
+
+  // =====================================================================
+  // DOM refs
+  // =====================================================================
+  var els = {
+    day: document.getElementById("f-day"),
+    date: document.getElementById("f-date"),
+    location: document.getElementById("f-location"),
+    km: document.getElementById("f-km"),
+    miHint: document.getElementById("mi-hint"),
+    ascent: document.getElementById("f-ascent"),
+    ftHint: document.getElementById("ft-hint"),
+    caption: document.getElementById("f-caption"),
+    photoInput: document.getElementById("f-photo"),
+    photoDrop: document.getElementById("photo-drop"),
+    photoPreview: document.getElementById("photo-preview"),
+    photoPreviewWrap: document.getElementById("photo-preview-wrap"),
+    photoRemove: document.getElementById("photo-remove"),
+    photoFilename: document.getElementById("photo-filename"),
+    photoSize: document.getElementById("photo-size"),
+    coordReadout: document.getElementById("coord-readout"),
+    entryList: document.getElementById("entry-list"),
+    entryEmpty: document.getElementById("entry-empty"),
+    entryCount: document.getElementById("entry-count"),
+    resetBtn: document.getElementById("reset-btn"),
+    publishBtn: document.getElementById("publish-btn"),
+    formTitle: document.getElementById("form-title"),
+    banner: document.getElementById("status-banner"),
+    journeyLabel: document.getElementById("journey-label"),
+    journeySelect: document.getElementById("journey-select"),
+    settingsBtn: document.getElementById("settings-btn"),
+    settingsModal: document.getElementById("settings-modal"),
+    sOwner: document.getElementById("s-owner"),
+    sRepo: document.getElementById("s-repo"),
+    sBranch: document.getElementById("s-branch"),
+    sToken: document.getElementById("s-token"),
+    sRemember: document.getElementById("s-remember"),
+    settingsCancel: document.getElementById("settings-cancel"),
+    settingsSave: document.getElementById("settings-save"),
+    editModal: document.getElementById("edit-modal"),
+    editTitle: document.getElementById("edit-modal-title"),
+    eLocation: document.getElementById("e-location"),
+    eCaption: document.getElementById("e-caption"),
+    eKm: document.getElementById("e-km"),
+    eAscent: document.getElementById("e-ascent"),
+    editCancel: document.getElementById("edit-cancel"),
+    editSave: document.getElementById("edit-save"),
+    publishModal: document.getElementById("publish-modal"),
+    publishSummary: document.getElementById("publish-summary"),
+    publishCancel: document.getElementById("publish-cancel"),
+    publishConfirm: document.getElementById("publish-confirm"),
+    toast: document.getElementById("toast")
+  };
+
+  // =====================================================================
+  // Helpers
+  // =====================================================================
+  function kmToMiles(km) {
+    if (!km) return 0;
+    var mi = km * 0.621371;
+    return mi >= 100 ? Math.round(mi) : Math.round(mi * 10) / 10;
+  }
+  function metersToFeet(m) {
+    if (!m) return 0;
+    return Math.round(m * 3.28084);
+  }
+  // Reverse converters: the admin form accepts mi/ft (from Garmin),
+  // but the JSON schema stores km/m. Convert at write time.
+  function milesToKm(mi) {
+    if (!mi) return 0;
+    return Math.round(mi * 1.609344 * 1000) / 1000;   // 3 decimal places
+  }
+  function feetToMeters(ft) {
+    if (!ft) return 0;
+    return Math.round(ft * 0.3048 * 10) / 10;         // 1 decimal place
+  }
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function addDays(isoDate, days) {
+    var d = new Date(isoDate + "T00:00:00");
+    d.setDate(d.getDate() + days);
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+  function escapeHtml(s) {
+    return String(s || "")
+      .split("&").join("&amp;")
+      .split("<").join("&lt;")
+      .split(">").join("&gt;")
+      .split('"').join("&quot;");
+  }
+  function toast(msg, kind) {
+    els.toast.textContent = msg;
+    els.toast.className = "toast show " + (kind || "");
+    setTimeout(function () { els.toast.className = "toast"; }, 2800);
+  }
+  function banner(msg, kind) {
+    els.banner.textContent = msg;
+    els.banner.className = "banner " + (kind || "");
+  }
+
+  // =====================================================================
+  // Settings (GitHub creds) \u2014 persisted in localStorage
+  // =====================================================================
+  function loadSettings() {
+    try {
+      var raw = localStorage.getItem("camino-admin-settings");
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        // Backfill defaults if any core fields are missing (first-run on a new device)
+        if (!parsed.owner) parsed.owner = "mikus31";
+        if (!parsed.repo) parsed.repo = "sarah-camino";
+        if (!parsed.branch) parsed.branch = "main";
+        return parsed;
+      }
+    } catch (e) {}
+    // Sensible defaults so on a new device (or phone) only the PAT needs pasting
+    return { owner: "mikus31", repo: "sarah-camino", branch: "main", token: "", remember: false };
+  }
+  function saveSettings(s) {
+    var toStore = { owner: s.owner, repo: s.repo, branch: s.branch, remember: !!s.remember };
+    if (s.remember) toStore.token = s.token; else toStore.token = "";
+    localStorage.setItem("camino-admin-settings", JSON.stringify(toStore));
+    state.settings = s; // keep token in-memory regardless
+  }
+  function openSettings() {
+    els.sOwner.value = state.settings.owner || "";
+    els.sRepo.value = state.settings.repo || "";
+    els.sBranch.value = state.settings.branch || "main";
+    els.sToken.value = state.settings.token || "";
+    els.sRemember.checked = !!state.settings.remember;
+    els.settingsModal.classList.add("open");
+  }
+  function closeSettings() { els.settingsModal.classList.remove("open"); }
+  els.settingsBtn.addEventListener("click", openSettings);
+  els.settingsCancel.addEventListener("click", closeSettings);
+  els.settingsSave.addEventListener("click", function () {
+    saveSettings({
+      owner: els.sOwner.value.trim(),
+      repo: els.sRepo.value.trim(),
+      branch: els.sBranch.value.trim() || "main",
+      token: els.sToken.value.trim(),
+      remember: els.sRemember.checked
+    });
+    closeSettings();
+    toast("Settings saved", "success");
+    updatePublishReadiness();
+  });
+
+  // =====================================================================
+  // Coord picker map
+  // =====================================================================
+  var pickerMap, pickerMarker, existingLayer;
+  function initPickerMap() {
+    pickerMap = L.map("picker-map", { zoomControl: true }).setView([43.3, -4.5], 7);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+      attribution: "Tiles \u00a9 Esri",
+      maxZoom: 18
+    }).addTo(pickerMap);
+    existingLayer = L.layerGroup().addTo(pickerMap);
+    pickerMap.on("click", function (e) {
+      setPickedCoord(e.latlng.lat, e.latlng.lng);
+    });
+  }
+  function setPickedCoord(lat, lng) {
+    if (!pickerMarker) {
+      pickerMarker = L.marker([lat, lng], { draggable: true }).addTo(pickerMap);
+      pickerMarker.on("dragend", function () {
+        var ll = pickerMarker.getLatLng();
+        setPickedCoord(ll.lat, ll.lng);
+      });
+    } else {
+      pickerMarker.setLatLng([lat, lng]);
+    }
+    els.coordReadout.textContent = lat.toFixed(4) + ", " + lng.toFixed(4);
+  }
+  function getPickedCoord() {
+    if (!pickerMarker) return null;
+    var ll = pickerMarker.getLatLng();
+    return [+ll.lat.toFixed(4), +ll.lng.toFixed(4)];
+  }
+  function renderExistingOnPicker() {
+    existingLayer.clearLayers();
+    var color = (state.currentJourney && state.currentJourney.palette && state.currentJourney.palette.marker) || "#c0502b";
+    var lastCoord = null;
+    state.journal.entries.forEach(function (e) {
+      if (!e.coords) return;
+      L.circleMarker(e.coords, {
+        radius: 5, color: color, fillColor: color, fillOpacity: 0.85, weight: 1
+      }).bindTooltip("Day " + e.day, { direction: "top" }).addTo(existingLayer);
+      lastCoord = e.coords;
+    });
+    // Center on latest entry (or Day 0 start city for upcoming journeys)
+    if (!pickerMarker) {
+      if (lastCoord) {
+        pickerMap.setView(lastCoord, 10);
+      } else if (state.currentJourney && state.currentJourney.status === "upcoming") {
+        // Fallback: journey-specific start view. Coord picked from Day 0 or hard-coded.
+        var startEntry = state.journal.entries.find(function (x) { return x.day === 0; });
+        if (startEntry && startEntry.coords) pickerMap.setView(startEntry.coords, 10);
+      }
+    }
+  }
+
+  // =====================================================================
+  // Km \u2192 miles live hint
+  // =====================================================================
+  els.km.addEventListener("input", function () {
+    var v = parseFloat(els.km.value);
+    els.miHint.textContent = v ? ("= " + milesToKm(v).toFixed(1) + " km") : "\u2014";
+  });
+  els.ascent.addEventListener("input", function () {
+    var v = parseFloat(els.ascent.value);
+    els.ftHint.textContent = v ? ("= " + Math.round(feetToMeters(v)).toLocaleString() + " m") : "\u2014";
+  });
+
+  // =====================================================================
+  // Photo upload + resize
+  // =====================================================================
+  els.photoDrop.addEventListener("dragover", function (e) {
+    e.preventDefault(); els.photoDrop.classList.add("dragover");
+  });
+  els.photoDrop.addEventListener("dragleave", function () {
+    els.photoDrop.classList.remove("dragover");
+  });
+  els.photoDrop.addEventListener("drop", function (e) {
+    e.preventDefault();
+    els.photoDrop.classList.remove("dragover");
+    var f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handlePhoto(f);
+  });
+  els.photoInput.addEventListener("change", function () {
+    var f = els.photoInput.files && els.photoInput.files[0];
+    if (f) handlePhoto(f);
+  });
+  els.photoRemove.addEventListener("click", function (e) {
+    e.preventDefault();
+    state.photoBlob = null;
+    state.photoDataUrl = null;
+    state.photoFilename = null;
+    els.photoInput.value = "";
+    els.photoPreviewWrap.classList.remove("has-photo");
+  });
+
+  function handlePhoto(file) {
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      var img = new Image();
+      img.onload = function () {
+        resizeAndStore(img, file.name);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resizeAndStore(img, origName) {
+    var MAX = 1400;
+    var w = img.naturalWidth, h = img.naturalHeight;
+    var scale = Math.min(1, MAX / Math.max(w, h));
+    var nw = Math.round(w * scale), nh = Math.round(h * scale);
+    var canvas = document.createElement("canvas");
+    canvas.width = nw; canvas.height = nh;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, nw, nh);
+    canvas.toBlob(function (blob) {
+      state.photoBlob = blob;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        state.photoDataUrl = e.target.result;
+        els.photoPreview.src = state.photoDataUrl;
+        els.photoPreviewWrap.classList.add("has-photo");
+        var day = parseInt(els.day.value, 10) || 1;
+        state.photoFilename = "day-" + pad2(day) + ".jpg";
+        els.photoFilename.textContent = state.photoFilename;
+        var kb = Math.round(blob.size / 1024);
+        els.photoSize.textContent = nw + "\u00d7" + nh + " \u00b7 " + kb + " KB";
+      };
+      reader.readAsDataURL(blob);
+    }, "image/jpeg", 0.85);
+  }
+
+  // =====================================================================
+  // Past entries list
+  // =====================================================================
+  function renderEntryList() {
+    var list = state.journal.entries.slice().sort(function (a, b) { return b.day - a.day; });
+    els.entryCount.textContent = list.length;
+    els.entryEmpty.style.display = list.length ? "none" : "block";
+    els.entryList.innerHTML = list.map(function (e) {
+      var thumb = e.photo
+        ? '<img class="thumb" src="' + escapeHtml(e.photo) + '" onerror="this.style.visibility=\'hidden\'">'
+        : '<div class="thumb"></div>';
+      return (
+        '<div class="entry-row" data-day="' + e.day + '">' +
+          thumb +
+          '<div class="meta">' +
+            '<div class="day-n">Day ' + e.day + ' \u00b7 ' + escapeHtml(e.date || "") + '</div>' +
+            '<div class="loc">' + escapeHtml(e.location || "") + '</div>' +
+            '<div class="cap">' + escapeHtml(e.caption || "") + '</div>' +
+          '</div>' +
+          '<div class="entry-actions">' +
+            '<button class="icon-btn" data-action="edit" title="Edit">\u270e</button>' +
+            '<button class="icon-btn danger" data-action="delete" title="Delete">\u2715</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+  }
+  els.entryList.addEventListener("click", function (e) {
+    var row = e.target.closest("[data-day]");
+    if (!row) return;
+    var action = e.target.getAttribute("data-action");
+    var day = parseInt(row.getAttribute("data-day"), 10);
+    if (action === "edit") openEditModal(day);
+    else if (action === "delete") deleteEntry(day);
+  });
+  function openEditModal(day) {
+    var entry = state.journal.entries.find(function (x) { return x.day === day; });
+    if (!entry) return;
+    state.editingInListDay = day;
+    els.editTitle.textContent = "Edit Day " + day;
+    els.eLocation.value = entry.location || "";
+    els.eCaption.value = entry.caption || "";
+    // Form is now in mi/ft; convert from stored km/m on read.
+    els.eKm.value = entry.distanceKm ? (entry.distanceKm * 0.621371).toFixed(2) : "";
+    els.eAscent.value = entry.ascentM ? Math.round(entry.ascentM * 3.28084) : "";
+    els.editModal.classList.add("open");
+  }
+  els.editCancel.addEventListener("click", function () {
+    els.editModal.classList.remove("open");
+  });
+  els.editSave.addEventListener("click", async function () {
+    if (!ensureConnected()) return;
+    var entry = state.journal.entries.find(function (x) { return x.day === state.editingInListDay; });
+    if (!entry) return;
+    var snapshot = JSON.parse(JSON.stringify(state.journal)); // rollback copy
+    entry.location = els.eLocation.value.trim();
+    entry.caption = els.eCaption.value.trim();
+    // Form values are mi/ft; convert to km/m for storage.
+    var miles = parseFloat(els.eKm.value);
+    if (miles > 0) entry.distanceKm = milesToKm(miles); else delete entry.distanceKm;
+    var feet = parseFloat(els.eAscent.value);
+    if (feet > 0) entry.ascentM = feetToMeters(feet); else delete entry.ascentM;
+    els.editModal.classList.remove("open");
+    renderEntryList();
+    toast("Saving day " + state.editingInListDay + "\u2026");
+    try {
+      await commitJournal("Edit day " + state.editingInListDay + " (" + (entry.location || "") + ")");
+      toast("Day " + state.editingInListDay + " saved", "success");
+    } catch (err) {
+      state.journal = snapshot;
+      renderEntryList();
+      renderExistingOnPicker();
+      toast("Save failed: " + err.message, "error");
+      console.error(err);
+    }
+  });
+  async function deleteEntry(day) {
+    if (!confirm("Delete Day " + day + "? This will commit the removal to GitHub.")) return;
+    if (!ensureConnected()) return;
+    var snapshot = JSON.parse(JSON.stringify(state.journal));
+    state.journal.entries = state.journal.entries.filter(function (x) { return x.day !== day; });
+    renderEntryList();
+    renderExistingOnPicker();
+    toast("Deleting Day " + day + "\u2026");
+    try {
+      await commitJournal("Delete day " + day);
+      toast("Day " + day + " deleted", "success");
+      prefillNewEntry();
+    } catch (err) {
+      state.journal = snapshot;
+      renderEntryList();
+      renderExistingOnPicker();
+      toast("Delete failed: " + err.message, "error");
+      console.error(err);
+    }
+  }
+  function ensureConnected() {
+    var s = state.settings;
+    var missing = [];
+    if (!s.owner) missing.push("owner");
+    if (!s.repo) missing.push("repo");
+    if (!s.token) missing.push("token");
+    if (missing.length) {
+      toast("Open Settings and fill in: " + missing.join(", "), "error");
+      openSettings();
+      return false;
+    }
+    return true;
+  }
+  async function commitJournal(message) {
+    var journalJson = JSON.stringify(state.journal, null, 2) + "\n";
+    await commitFile({
+      path: journalPath(),
+      contentBase64: utf8ToBase64(journalJson),
+      message: message,
+      sha: state.journalSha || undefined
+    });
+    await loadJournal(); // refresh sha for next commit
+  }
+
+  // =====================================================================
+  // Auto-fill next day/date
+  // =====================================================================
+  function prefillNewEntry() {
+    var entries = state.journal.entries;
+    var nextDay = entries.length
+      ? Math.max.apply(null, entries.map(function (e) { return e.day; })) + 1
+      : 1;
+    var nextDate;
+    if (entries.length) {
+      var last = entries.slice().sort(function (a, b) { return b.day - a.day; })[0];
+      nextDate = last.date ? addDays(last.date, 1) : new Date().toISOString().slice(0, 10);
+    } else {
+      nextDate = state.journal.startDate || new Date().toISOString().slice(0, 10);
+    }
+    els.day.value = nextDay;
+    els.date.value = nextDate;
+  }
+
+  els.resetBtn.addEventListener("click", function () {
+    els.location.value = "";
+    els.km.value = "";
+    els.miHint.textContent = "\u2014";
+    els.ascent.value = "";
+    els.ftHint.textContent = "\u2014";
+    els.caption.value = "";
+    state.photoBlob = null;
+    state.photoDataUrl = null;
+    state.photoFilename = null;
+    els.photoInput.value = "";
+    els.photoPreviewWrap.classList.remove("has-photo");
+    if (pickerMarker) { pickerMap.removeLayer(pickerMarker); pickerMarker = null; }
+    els.coordReadout.textContent = "Tap the map to set coordinates";
+    prefillNewEntry();
+    toast("Form reset");
+  });
+
+  // =====================================================================
+  // Publish flow
+  // =====================================================================
+  function updatePublishReadiness() {
+    var s = state.settings;
+    var ok = s.owner && s.repo && s.token;
+    // Keep the button always clickable \u2014 we validate on click and give a clear toast.
+    els.publishBtn.disabled = false;
+    if (!ok) {
+      banner("Open Settings to connect this form to your GitHub repo before publishing.", "warn");
+    } else {
+      banner("Connected to " + s.owner + "/" + s.repo + " (" + s.branch + ")", "info");
+    }
+  }
+
+  els.publishBtn.addEventListener("click", function () {
+    // Check GitHub settings first \u2014 without them we can't publish.
+    var s = state.settings;
+    var missing = [];
+    if (!s.owner) missing.push("owner");
+    if (!s.repo) missing.push("repo");
+    if (!s.token) missing.push("token");
+    if (missing.length) {
+      toast("Open Settings and fill in: " + missing.join(", "), "error");
+      openSettings();
+      return;
+    }
+
+    var day = parseInt(els.day.value, 10);
+    var date = els.date.value;
+    var location = els.location.value.trim();
+    var caption = els.caption.value.trim();
+    var miles = parseFloat(els.km.value);                  // form is now miles
+    var feet = parseFloat(els.ascent.value);               // form is now feet
+    var km = miles > 0 ? milesToKm(miles) : 0;             // convert for storage
+    var ascentM = feet > 0 ? feetToMeters(feet) : 0;
+    var coords = getPickedCoord();
+
+    if (!day || !date || !location || !coords) {
+      toast("Fill in day, date, location, and pick coordinates first.", "error");
+      return;
+    }
+
+    var entry = {
+      day: day,
+      date: date,
+      location: location,
+      coords: coords,
+      caption: caption
+    };
+    if (km > 0) entry.distanceKm = km;
+    if (ascentM > 0) entry.ascentM = ascentM;
+    if (state.photoFilename) entry.photo = photoDir() + state.photoFilename;
+
+    // If editing same day, replace; else append
+    var idx = state.journal.entries.findIndex(function (x) { return x.day === day; });
+    var isEdit = idx >= 0;
+    var preview = state.journal.entries.slice();
+    if (isEdit) preview[idx] = entry; else preview.push(entry);
+    preview.sort(function (a, b) { return a.day - b.day; });
+
+    var summary =
+      "<b>" + (isEdit ? "Replacing" : "Adding") + " Day " + day + "</b> \u2014 " + escapeHtml(location) + "<br>" +
+      (miles ? (miles + " mi / " + km.toFixed(1) + " km \u00b7 ") : "") +
+      (feet ? (feet.toLocaleString() + " ft / " + Math.round(ascentM).toLocaleString() + " m ascent \u00b7 ") : "") +
+      coords[0].toFixed(4) + ", " + coords[1].toFixed(4) + "<br><br>" +
+      "Will commit:<br>" +
+      '<code style="font-size:12px;">\u2022 ' + journalPath() + '</code>' +
+      (state.photoBlob ? '<br><code style="font-size:12px;">\u2022 ' + photoDir() + state.photoFilename + '</code>' : "");
+    els.publishSummary.innerHTML = summary;
+    els.publishModal.classList.add("open");
+
+    // stash pending publish
+    state._pending = { entry: entry, isEdit: isEdit, idx: idx };
+  });
+
+  els.publishCancel.addEventListener("click", function () {
+    els.publishModal.classList.remove("open");
+  });
+
+  els.publishConfirm.addEventListener("click", function () {
+    els.publishModal.classList.remove("open");
+    doPublish();
+  });
+
+  async function doPublish() {
+    var p = state._pending;
+    if (!p) return;
+    els.publishBtn.disabled = true;
+    toast("Publishing\u2026");
+
+    try {
+      // 1. apply to journal in memory
+      if (p.isEdit) state.journal.entries[p.idx] = p.entry;
+      else state.journal.entries.push(p.entry);
+      state.journal.entries.sort(function (a, b) { return a.day - b.day; });
+
+      // 2. commit photo (if any)
+      if (state.photoBlob) {
+        await commitFile({
+          path: photoDir() + state.photoFilename,
+          contentBase64: await blobToBase64(state.photoBlob),
+          message: "Add photo for day " + p.entry.day
+        });
+      }
+
+      // 3. commit updated journal.json
+      var journalJson = JSON.stringify(state.journal, null, 2) + "\n";
+      await commitFile({
+        path: journalPath(),
+        contentBase64: utf8ToBase64(journalJson),
+        message: (p.isEdit ? "Update" : "Add") + " day " + p.entry.day + " (" + p.entry.location + ")",
+        sha: state.journalSha || undefined
+      });
+
+      toast("Published! GitHub Pages rebuilds in ~1 min.", "success");
+      renderEntryList();
+      renderExistingOnPicker();
+      await loadJournal(); // refresh sha
+      prefillNewEntry();
+      // clear photo
+      state.photoBlob = null; state.photoDataUrl = null; state.photoFilename = null;
+      els.photoInput.value = ""; els.photoPreviewWrap.classList.remove("has-photo");
+    } catch (err) {
+      toast("Publish failed: " + err.message, "error");
+      console.error(err);
+    } finally {
+      els.publishBtn.disabled = false;
+    }
+  }
+
+  function utf8ToBase64(s) {
+    return btoa(unescape(encodeURIComponent(s)));
+  }
+  function blobToBase64(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var s = reader.result;
+        resolve(s.slice(s.indexOf(",") + 1));
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function commitFile(opts) {
+    var s = state.settings;
+    var url = "https://api.github.com/repos/" + s.owner + "/" + s.repo + "/contents/" + encodeURIComponent(opts.path).replace(/%2F/g, "/");
+    // need existing sha for updates
+    var sha = opts.sha;
+    if (!sha) {
+      var probe = await fetch(url + "?ref=" + encodeURIComponent(s.branch), {
+        headers: { Authorization: "Bearer " + s.token, Accept: "application/vnd.github+json" }
+      });
+      if (probe.ok) {
+        var pj = await probe.json();
+        sha = pj.sha;
+      }
+    }
+    var body = {
+      message: opts.message,
+      content: opts.contentBase64,
+      branch: s.branch
+    };
+    if (sha) body.sha = sha;
+    var res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + s.token,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      var err = await res.text();
+      throw new Error("GitHub " + res.status + ": " + err.slice(0, 140));
+    }
+    return res.json();
+  }
+
+  // =====================================================================
+  // Journey selector - load data/journeys.json and switch between journeys
+  // =====================================================================
+  async function loadJourneys() {
+    // Try GitHub API first (works even if the local file hasn't been fetched);
+    // fall back to a plain local fetch.
+    var s = state.settings;
+    var data = null;
+    if (s.owner && s.repo && s.token) {
+      try {
+        var url = "https://api.github.com/repos/" + s.owner + "/" + s.repo + "/contents/data/journeys.json?ref=" + encodeURIComponent(s.branch);
+        var res = await fetch(url, {
+          headers: { Authorization: "Bearer " + s.token, Accept: "application/vnd.github+json" }
+        });
+        if (res.ok) {
+          var j = await res.json();
+          var text = decodeURIComponent(escape(atob(j.content.replace(/\s/g, ""))));
+          data = JSON.parse(text);
+        }
+      } catch (e) { /* fall through to local */ }
+    }
+    if (!data) {
+      try {
+        var r = await fetch("data/journeys.json?t=" + Date.now());
+        if (r.ok) data = await r.json();
+      } catch (e) {}
+    }
+    state.journeys = (data && data.journeys) || [];
+  }
+
+  function pickDefaultJourney() {
+    // Prefer active > upcoming > most recently completed
+    var js = state.journeys;
+    return js.find(function (j) { return j.status === "active"; })
+        || js.find(function (j) { return j.status === "upcoming"; })
+        || js[js.length - 1]
+        || null;
+  }
+
+  function renderJourneySelector() {
+    var sel = els.journeySelect;
+    sel.innerHTML = "";
+    state.journeys.forEach(function (j) {
+      var opt = document.createElement("option");
+      opt.value = j.slug;
+      var badge = j.status === "active" ? " · walking" : j.status === "upcoming" ? " · upcoming" : "";
+      opt.textContent = j.pilgrim + badge;
+      if (state.currentJourney && state.currentJourney.slug === j.slug) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    // Update the header subtitle
+    if (state.currentJourney) {
+      els.journeyLabel.textContent = "· " + state.currentJourney.pilgrim + "'s " + state.currentJourney.camino;
+    }
+  }
+
+  async function setCurrentJourney(slug) {
+    var j = state.journeys.find(function (x) { return x.slug === slug; });
+    if (!j) return;
+    state.currentJourney = j;
+    state.journalSha = null;
+    state.journal = { pilgrim: "", startDate: "", entries: [] };
+    // Clear form state so nothing leaks across journeys
+    els.location.value = ""; els.km.value = ""; els.miHint.textContent = "—";
+    els.ascent.value = ""; els.ftHint.textContent = "—"; els.caption.value = "";
+    state.photoBlob = null; state.photoDataUrl = null; state.photoFilename = null;
+    els.photoInput.value = ""; els.photoPreviewWrap.classList.remove("has-photo");
+    if (pickerMarker) { pickerMap.removeLayer(pickerMarker); pickerMarker = null; }
+    els.coordReadout.textContent = "Tap the map to set coordinates";
+    renderJourneySelector();
+    await loadJournal();
+    renderEntryList();
+    renderExistingOnPicker();
+    prefillNewEntry();
+    updatePublishReadiness();
+  }
+
+  // =====================================================================
+  // Load existing journal.json (path is derived from currentJourney)
+  // =====================================================================
+  async function loadJournal() {
+    var s = state.settings;
+    var path = journalPath();
+    // Prefer GitHub API (gets sha) when creds are set; fall back to local fetch
+    if (s.owner && s.repo && s.token) {
+      try {
+        var url = "https://api.github.com/repos/" + s.owner + "/" + s.repo + "/contents/" + path + "?ref=" + encodeURIComponent(s.branch);
+        var res = await fetch(url, {
+          headers: { Authorization: "Bearer " + s.token, Accept: "application/vnd.github+json" }
+        });
+        if (res.ok) {
+          var j = await res.json();
+          state.journalSha = j.sha;
+          var text = decodeURIComponent(escape(atob(j.content.replace(/\s/g, ""))));
+          state.journal = JSON.parse(text);
+          return;
+        }
+      } catch (e) { /* fall through */ }
+    }
+    // local fallback
+    try {
+      var r = await fetch(path + "?t=" + Date.now());
+      if (r.ok) state.journal = await r.json();
+    } catch (e) {}
+  }
+
+  // =====================================================================
+  // Boot
+  // =====================================================================
+  els.journeySelect.addEventListener("change", function () {
+    setCurrentJourney(els.journeySelect.value);
+  });
+
+  (async function boot() {
+    initPickerMap();
+    await loadJourneys();
+    if (state.journeys.length === 0) {
+      banner("Could not load data/journeys.json — check GitHub settings.", "warn");
+      updatePublishReadiness();
+      return;
+    }
+    // Default to the "live" journey (active > upcoming > most recent)
+    var def = pickDefaultJourney();
+    if (def) await setCurrentJourney(def.slug);
+    updatePublishReadiness();
+  })();
+</script>
+</body>
+</html>
