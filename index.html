@@ -68,6 +68,13 @@
       max-width: 420px;
       line-height: 1.35;
     }
+    .banner-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .banner-header .titles { flex: 1; }
     .banner h1 {
       margin: 0 0 3px 0;
       font-size: 22px;
@@ -79,6 +86,33 @@
       color: #6b5a48;
       margin-bottom: 10px;
     }
+    /* Collapse/expand toggle button (works for both banner and legend) */
+    .card-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px;
+      margin: -4px -6px 0 0;
+      color: #6b5a48;
+      font-size: 16px;
+      line-height: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.2s;
+    }
+    .card-toggle:hover { background: rgba(0,0,0,0.06); }
+    .card-toggle svg { display: block; width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s; }
+    /* When card is collapsed, chevron points down (rotated 180deg from default up) */
+    .banner.collapsed .card-toggle svg,
+    .legend.collapsed .card-toggle svg { transform: rotate(180deg); }
+    /* Collapsed state: hide the body, tighten padding */
+    .banner.collapsed { padding: 10px 16px; }
+    .banner.collapsed .banner-body { display: none; }
+    .banner.collapsed .family-sub { margin-bottom: 0; }
+    .legend.collapsed { padding: 8px 14px; }
+    .legend.collapsed .legend-body { display: none; }
 
     /* Chip bar: one chip per journey */
     .chips {
@@ -187,6 +221,19 @@
       line-height: 1.65;
       max-width: 320px;
     }
+    .legend-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #6b5a48;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .legend.collapsed .legend-header { font-size: 12px; }
+    .legend-body { margin-top: 6px; }
     .legend .row { display: flex; align-items: center; gap: 10px; }
     .legend .swatch {
       display: inline-block;
@@ -428,15 +475,32 @@
 <body>
   <div id="map"></div>
 
-  <div class="banner">
-    <h1 id="banner-title">Family Caminos</h1>
-    <div class="family-sub" id="banner-family-sub">The McNeils</div>
-    <div class="chips" id="chips"></div>
-    <div id="journey-rows"></div>
-    <div class="time" id="banner-time"></div>
+  <div class="banner" id="banner">
+    <div class="banner-header">
+      <div class="titles">
+        <h1 id="banner-title">Family Caminos</h1>
+        <div class="family-sub" id="banner-family-sub">The McNeils</div>
+      </div>
+      <button class="card-toggle" id="banner-toggle" aria-label="Collapse or expand" aria-expanded="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
+      </button>
+    </div>
+    <div class="banner-body">
+      <div class="chips" id="chips"></div>
+      <div id="journey-rows"></div>
+      <div class="time" id="banner-time"></div>
+    </div>
   </div>
 
-  <div class="legend" id="legend"></div>
+  <div class="legend" id="legend">
+    <div class="legend-header">
+      <span>Legend</span>
+      <button class="card-toggle" id="legend-toggle" aria-label="Collapse or expand" aria-expanded="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
+      </button>
+    </div>
+    <div class="legend-body" id="legend-body"></div>
+  </div>
 
   <!-- Lightbox overlay (hidden until a photo is clicked) -->
   <div id="lightbox" aria-hidden="true" role="dialog">
@@ -486,6 +550,33 @@
       var days = Math.round((startDay - nowDay) / 86400000);
       var pretty = start.toLocaleDateString("en-US", { month: "long", day: "numeric" });
       return { days: days, pretty: pretty };
+    }
+
+    // -------------------------------------------------------------
+    // COLLAPSIBLE CARDS - both banner and legend can collapse to just
+    // their header. Auto-collapse on narrow viewports so the map isn't
+    // buried under UI on phones.
+    // -------------------------------------------------------------
+    function wireCardToggle(cardId, btnId) {
+      const card = document.getElementById(cardId);
+      const btn = document.getElementById(btnId);
+      if (!card || !btn) return;
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        card.classList.toggle("collapsed");
+        btn.setAttribute("aria-expanded", card.classList.contains("collapsed") ? "false" : "true");
+      });
+    }
+    wireCardToggle("banner", "banner-toggle");
+    wireCardToggle("legend", "legend-toggle");
+
+    // On phones, start both cards collapsed so the map is fully visible.
+    // Users tap the chevron to expand.
+    if (window.matchMedia && window.matchMedia("(max-width: 520px)").matches) {
+      document.getElementById("banner").classList.add("collapsed");
+      document.getElementById("banner-toggle").setAttribute("aria-expanded", "false");
+      document.getElementById("legend").classList.add("collapsed");
+      document.getElementById("legend-toggle").setAttribute("aria-expanded", "false");
     }
 
     // -------------------------------------------------------------
@@ -875,7 +966,7 @@
     // LEGEND - regenerated to match visible journeys
     // -------------------------------------------------------------
     function renderLegend() {
-      const wrap = document.getElementById("legend");
+      const wrap = document.getElementById("legend-body");
       wrap.innerHTML = "";
       const visibleJourneys = JOURNEYS.filter(j => j.visible);
       if (visibleJourneys.length === 0) {
