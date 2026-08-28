@@ -35,11 +35,11 @@
       "status": "upcoming",
       "timezone": "Europe/Lisbon",
       "palette": {
-        "walked": "#ffffff",
+        "walked": "#FFCC00",
         "marker": "#14335c",
-        "pastDay": "#7f8fa0",
+        "pastDay": "#6d8bab",
         "milestoneMarker": "#14335c",
-        "milestoneAccent": "#ffffff"
+        "milestoneAccent": "#FFCC00"
       },
       "route": "data/journeys/michael-portugues-2026/route.geojson",
       "extension": null,

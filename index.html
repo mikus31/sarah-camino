@@ -1201,7 +1201,10 @@
       const miles = e.distanceKm ? '<div class="miles">' + kmToMiles(e.distanceKm) + ' miles walked</div>' : "";
       const ascent = e.ascentM ? '<div class="miles">' + metersToFeet(e.ascentM).toLocaleString() + ' ft ascent</div>' : "";
       const dayLabel = e.day === 0 ? "Start" : "Day " + e.day;
-      const dayColor = cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked;
+      // For pilgrims whose "walked" color is light (white, yellow), text drawn
+      // in the walked color would disappear on the cream popup background —
+      // fall back to the marker color for text readability.
+      const dayColor = isLightHex(cfg.palette.walked) ? cfg.palette.marker : cfg.palette.walked;
 
       // Day 0 countdown (only for upcoming journeys)
       let countdownHtml = "";
@@ -1214,14 +1217,14 @@
           else if (c.days === 0) { num = "Today!"; sub = "the journey begins"; }
           else { num = "Underway"; sub = "the journey has begun"; }
           countdownHtml =
-            '<div class="countdown" style="background:' + hexToSoft(cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked) + ';">' +
+            '<div class="countdown" style="background:' + hexToSoft(dayColor) + ';">' +
               '<div class="cnt-num" style="color:' + dayColor + ';">' + num + '</div>' +
               '<div class="cnt-sub">' + sub + '</div>' +
             '</div>';
         }
       }
 
-      const pilgrimTagBg = cfg.palette.walked === '#ffffff' ? cfg.palette.marker : cfg.palette.walked;
+      const pilgrimTagBg = dayColor;
       const pilgrimTag = '<span class="pilgrim-tag" style="background:' + pilgrimTagBg + ';color:#fff;">' + escapeHtml(cfg.pilgrim) + ' · ' + escapeHtml(cfg.camino) + '</span>';
 
       return (
@@ -1250,6 +1253,19 @@
       const g = parseInt(h.substring(2, 4), 16);
       const b = parseInt(h.substring(4, 6), 16);
       return 'rgba(' + r + ',' + g + ',' + b + ',0.18)';
+    }
+    // Perceived-brightness check for a hex color. Uses the standard sRGB
+    // luminance formula; returns true when the color would be hard to read
+    // as text on a cream/white background (e.g. white, camino yellow).
+    function isLightHex(hex) {
+      const h = (hex || "").replace("#", "");
+      if (h.length !== 6) return false;
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      // Rec. 709 luminance; threshold at 0.6 catches yellow (~0.85), white (1.0)
+      const y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      return y > 0.6;
     }
     // Convert #rrggbb to a bare "r, g, b" triple for use in CSS var
     // (--pulse-rgb references it as `rgba(var(--pulse-rgb), 0.7)`)
