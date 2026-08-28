@@ -678,6 +678,14 @@
       // Tag every entry with its journey so the lightbox can look up palette
       entries.forEach(e => { e._journeySlug = cfg.slug; e._journeyCfg = cfg; });
 
+      // Derived status: an "upcoming" journey with any walked entries is
+      // effectively active. Lets the pulse + auto-popup follow the most
+      // recent day without needing to hand-edit journeys.json when the
+      // Camino kicks off.
+      if (cfg.status === "upcoming" && walkedEntries.length > 0) {
+        cfg.status = "active";
+      }
+
       // --- Route line assembly ---
       // Prefer the route.geojson; if none, we skip the walked-line entirely.
       let walkedLayer = null;
