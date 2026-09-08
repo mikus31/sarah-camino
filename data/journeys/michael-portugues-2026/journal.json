@@ -28,6 +28,19 @@
       "distanceKm": 4.667,
       "ascentM": 68,
       "photo": "photos/michael-portugues-2026/day-01.jpg"
+    },
+    {
+      "day": 2,
+      "date": "2026-09-08",
+      "location": "Vila Chá",
+      "coords": [
+        41.2978,
+        -8.7311
+      ],
+      "caption": "A successful day one of walking. If you like ocean views, this Camino is for you — all day ocean. Just keep it on your left and you’re good to go toward Santiago.",
+      "distanceKm": 20.921,
+      "ascentM": 82,
+      "photo": "photos/michael-portugues-2026/day-02.jpg"
     }
   ]
 }
