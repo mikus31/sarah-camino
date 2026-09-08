@@ -15,6 +15,19 @@
       "ascentM": 0,
       "photo": "",
       "caption": "Michael's Camino Portugués: Porto to Santiago via the Portuguese coastal, the Spiritual Variant, and a ferry transit across the Ría de Arousa. Roughly 310 km (193 miles)."
+    },
+    {
+      "day": 1,
+      "date": "2026-09-07",
+      "location": "Porto",
+      "coords": [
+        41.1481,
+        -8.6593
+      ],
+      "caption": "Made it to Porto and secured my pilgrim passport and first stamps at Sé do Porto. Beautiful walk toward the ocean along the Douro River for a few miles until the jet lag set in.",
+      "distanceKm": 4.667,
+      "ascentM": 68,
+      "photo": "photos/michael-portugues-2026/day-01.jpg"
     }
   ]
 }
