@@ -54,6 +54,19 @@
       "distanceKm": 24.301,
       "ascentM": 41.1,
       "photo": "photos/michael-portugues-2026/day-03.jpg"
+    },
+    {
+      "day": 4,
+      "date": "2026-09-10",
+      "location": "Vila Nova de Anha",
+      "coords": [
+        41.6667,
+        -8.7994
+      ],
+      "caption": "Well, today was different. We turned inland and walked through eucalyptus forests and hillside villages. Inland meant elevation gains though, so this was the most difficult day physically — probably the second hardest physical thing I’ve done behind only the ACI surgery and recovery. To cope I ate a whole pizza by myself 🤣",
+      "distanceKm": 26.554,
+      "ascentM": 356.9,
+      "photo": "photos/michael-portugues-2026/day-04.jpg"
     }
   ]
 }
