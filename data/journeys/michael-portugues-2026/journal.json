@@ -67,6 +67,19 @@
       "distanceKm": 26.554,
       "ascentM": 356.9,
       "photo": "photos/michael-portugues-2026/day-04.jpg"
+    },
+    {
+      "day": 5,
+      "date": "2026-09-11",
+      "location": "Carreço",
+      "coords": [
+        41.7543,
+        -8.8616
+      ],
+      "caption": "Today a shorter walk after yesterday’s effort. Near Viana do Castelo I went for a swim in these lovely man-made pools near the ocean. Water temp was probably mid-60s — it was warmer than the cold plunge at our gym — and I caught a little sunburn because I didn’t want to leave it.",
+      "distanceKm": 13.84,
+      "ascentM": 288.3,
+      "photo": "photos/michael-portugues-2026/day-05.jpg"
     }
   ]
 }
