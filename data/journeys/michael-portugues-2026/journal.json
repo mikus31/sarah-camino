@@ -93,6 +93,19 @@
       "distanceKm": 18.668,
       "ascentM": 307.5,
       "photo": "photos/michael-portugues-2026/day-06.jpg"
+    },
+    {
+      "day": 7,
+      "date": "2026-09-13",
+      "location": "Mougás",
+      "coords": [
+        42.0519,
+        -8.8864
+      ],
+      "caption": "This morning I crossed into Spain from Portugal at sunrise — and immediately lost an hour due to a time zone difference between the two countries. It was a long day with the most elevation gain yet, but a lovely walk through Galicia.",
+      "distanceKm": 25.428,
+      "ascentM": 393.8,
+      "photo": "photos/michael-portugues-2026/day-07.jpg"
     }
   ]
 }
