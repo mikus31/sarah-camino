@@ -106,6 +106,19 @@
       "distanceKm": 25.428,
       "ascentM": 393.8,
       "photo": "photos/michael-portugues-2026/day-07.jpg"
+    },
+    {
+      "day": 8,
+      "date": "2026-09-14",
+      "location": "Nigrán",
+      "coords": [
+        42.1504,
+        -8.8258
+      ],
+      "caption": "A difficult morning with lots of climbing. Views were 10/10 though. Finally some relief from elevation around lunchtime, when I descended into Baiona — a lovely beach town where news of the discovery of America by the first Europeans arrived in 1493. I swam at Praia América to celebrate this special connection to home 🇺🇸",
+      "distanceKm": 19.312,
+      "ascentM": 379.8,
+      "photo": "photos/michael-portugues-2026/day-08.jpg"
     }
   ]
 }
