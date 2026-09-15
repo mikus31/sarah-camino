@@ -119,6 +119,19 @@
       "distanceKm": 19.312,
       "ascentM": 379.8,
       "photo": "photos/michael-portugues-2026/day-08.jpg"
+    },
+    {
+      "day": 9,
+      "date": "2026-09-15",
+      "location": "Vigo",
+      "coords": [
+        42.2371,
+        -8.7175
+      ],
+      "caption": "Four days of swimming in a row! The water here is crystal clear and cold, so nice after a hot walk. I had a coffee next to a couple from Fort Worth, Texas, who just moved here two weeks ago and are in love with it so far, then ran into friends Mel and Katie for a swim at lunch time.",
+      "distanceKm": 19.634,
+      "ascentM": 295,
+      "photo": "photos/michael-portugues-2026/day-09.jpg"
     }
   ]
 }
