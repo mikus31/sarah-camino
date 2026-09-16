@@ -132,6 +132,19 @@
       "distanceKm": 19.634,
       "ascentM": 295,
       "photo": "photos/michael-portugues-2026/day-09.jpg"
+    },
+    {
+      "day": 10,
+      "date": "2026-09-16",
+      "location": "Arcade",
+      "coords": [
+        42.337,
+        -8.6065
+      ],
+      "caption": "I left Vigo in the dark and climbed away from the sprawling city into the forests above and was treated to stunning vistas most of the day. It felt like a cold front came through which kept the temps in the 60s most of the day and very windy. Feet and knees hurt but my spirits remain well.",
+      "distanceKm": 23.818,
+      "ascentM": 573.6,
+      "photo": "photos/michael-portugues-2026/day-10.jpg"
     }
   ]
 }
