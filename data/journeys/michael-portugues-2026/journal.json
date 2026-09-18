@@ -158,6 +158,19 @@
       "distanceKm": 23.979,
       "ascentM": 493.2,
       "photo": "photos/michael-portugues-2026/day-11.jpg"
+    },
+    {
+      "day": 12,
+      "date": "2026-09-18",
+      "location": "Ponte Arlenas",
+      "coords": [
+        42.5362,
+        -8.7551
+      ],
+      "caption": "After yesterday’s struggle I was dreading the walk today, especially after checking the elevation profile for this stage, which is my last 20+ km walking effort before Santiago. But instead of another suffer fest, I had a gentle, peaceful ramble over the mountain, through the forest, and along a babbling brook for much of the day, and a body that mostly cooperated. The Camino provides.",
+      "distanceKm": 22.209,
+      "ascentM": 538,
+      "photo": "photos/michael-portugues-2026/day-12.jpg"
     }
   ]
 }
