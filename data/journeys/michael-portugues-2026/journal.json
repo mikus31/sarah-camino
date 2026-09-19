@@ -171,6 +171,19 @@
       "distanceKm": 22.209,
       "ascentM": 538,
       "photo": "photos/michael-portugues-2026/day-12.jpg"
+    },
+    {
+      "day": 13,
+      "date": "2026-09-19",
+      "location": "Vilanova de Arousa",
+      "coords": [
+        42.563,
+        -8.8288
+      ],
+      "caption": "Just a 10K today to Vilanova de Arousa, where I will depart by boat tomorrow for Pontecesures. Owls — Zulu — keep showing up on this trip, and today I found the owl statue that sparked my inquiry into the significance of owls. Namely that they represent thresholds, or the passing of one chapter of life for the next.",
+      "distanceKm": 10.783,
+      "ascentM": 153.9,
+      "photo": "photos/michael-portugues-2026/day-13.jpg"
     }
   ]
 }
