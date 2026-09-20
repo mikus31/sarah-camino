@@ -184,6 +184,19 @@
       "distanceKm": 10.783,
       "ascentM": 153.9,
       "photo": "photos/michael-portugues-2026/day-13.jpg"
+    },
+    {
+      "day": 14,
+      "date": "2026-09-20",
+      "location": "A Escravitude",
+      "coords": [
+        42.7824,
+        -8.6503
+      ],
+      "caption": "A big day today, but don’t be fooled — most of it was by boat at the end of the Spiritual Variant. Only 10k by foot on the penultimate stage and a good thing, too, as it was hot today. Santiago tomorrow!",
+      "distanceKm": 37.82,
+      "ascentM": 118.6,
+      "photo": "photos/michael-portugues-2026/day-14.jpg"
     }
   ]
 }
