@@ -197,6 +197,19 @@
       "distanceKm": 37.82,
       "ascentM": 118.6,
       "photo": "photos/michael-portugues-2026/day-14.jpg"
+    },
+    {
+      "day": 15,
+      "date": "2026-09-21",
+      "location": "Santiago de Compostela",
+      "coords": [
+        42.8804,
+        -8.5458
+      ],
+      "caption": "On Monday afternoon I arrived at the cathedral in Santiago de Compostela. Two of my friends from the journey — Mel and Annie — were there to greet me in the square. It was such a relief to finish! Not sure if these feet could have carried me another day, but they made it all the way here so who knows where else they could go.",
+      "distanceKm": 18.668,
+      "ascentM": 437.4,
+      "photo": "photos/michael-portugues-2026/day-15.jpg"
     }
   ]
 }
